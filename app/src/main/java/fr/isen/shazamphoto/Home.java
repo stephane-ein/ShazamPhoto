@@ -5,31 +5,58 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 
 public class Home extends ActionBarActivity {
-    private Button button;
-    private ImageView mImageView;
+
+    // Items for the menu drawer
+    private String[] navigationArray;
+    private DrawerLayout drawerLayout;
+    private ListView drawerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_home);
+        setContentView(R.layout.activity_home);
+
+        // Initialization of the drawer
+        navigationArray = getResources().getStringArray(
+                R.array.navigation_array);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the adapter for the list view
+        drawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, navigationArray));
+        // Set the list's click listener
+        drawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                selectItem(position);
+            }
+        });
+
         /*if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }*/
 
-        button = (Button)findViewById(R.id.but_takePicture);
+       /* button = (Button)findViewById(R.id.but_takePicture);
         mImageView = (ImageView)findViewById(R.id.img_result);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -37,9 +64,10 @@ public class Home extends ActionBarActivity {
             public void onClick(View v) {
                 dispatchTakePictureIntent();
             }
-        });
-    }
+        });*/
 
+        setFragment(new Shazam(), "FRAGMENT", false);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,21 +107,48 @@ public class Home extends ActionBarActivity {
         }
     }
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    /** Swaps fragments in the main content view */
+    private void selectItem(int position) {
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        /*switch (position) {
+
+            case About.position:
+                fragment = new About();
+                break;
+            case FilmToSeeListFragment.POSTION:
+                fragment = createFilmListFragment(toSeeDAO,
+                        new FilmToSeeListFragment());
+                break;
+
+            case FilmAllListFragment.POSITION:
+                fragment = createFilmListFragment(filmDAO,
+                        new FilmAllListFragment());
+                break;
+
+            case FilmFavouriteListFragment.POSITION:
+                fragment = createFilmListFragment(favouriteDAO,
+                        new FilmFavouriteListFragment());
+                break;
         }
+
+        if (fragment != null) {
+            setFragment(fragment, STACK_FILMLIST, false);
+        }*/
+
+        // Highlight the selected item and close the drawer
+        drawerList.setItemChecked(position, true);
+        drawerLayout.closeDrawer(drawerList);
+
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mImageView.setImageBitmap(imageBitmap);
+    public void setFragment(Fragment fragment, String name, boolean disableDrawer) {
+        if (disableDrawer) {
+            //drawerToggle.setDrawerIndicatorEnabled(false);
         }
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.addToBackStack(name);
+        ft.replace(R.id.frame_fragment, fragment, name);
+        ft.commit();
     }
 }

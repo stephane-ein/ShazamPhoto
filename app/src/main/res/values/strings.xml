@@ -2,7 +2,17 @@
 <resources>
 
     <string name="app_name">Shazam Photo</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="navigation_array">
+        <item>Identify a monument</item>
+        <item>Favorite monuments</item>
+        <item>Monuments visited</item>
+        <item>The nearest monuments</item>
+        <item>Advanced search</item>
+        <item>About</item>
+    </string-array>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
