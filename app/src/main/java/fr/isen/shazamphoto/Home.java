@@ -1,22 +1,15 @@
 package fr.isen.shazamphoto;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 
@@ -26,6 +19,8 @@ public class Home extends ActionBarActivity {
     private String[] navigationArray;
     private DrawerLayout drawerLayout;
     private ListView drawerList;
+
+    static private String FRAGMENT_STACK = "fragmentStack";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +61,7 @@ public class Home extends ActionBarActivity {
             }
         });*/
 
-        setFragment(new Shazam(), "FRAGMENT", false);
+        selectItem(0);
     }
 
     @Override
@@ -91,49 +86,23 @@ public class Home extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-            return rootView;
-        }
-    }
-
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
+        Fragment fragment = null;
+        switch (position) {
 
-        /*switch (position) {
-
-            case About.position:
+            case Shazam.POSITION:
+                fragment = new Shazam();
+                break;
+            case About.POSITION:
                 fragment = new About();
-                break;
-            case FilmToSeeListFragment.POSTION:
-                fragment = createFilmListFragment(toSeeDAO,
-                        new FilmToSeeListFragment());
-                break;
-
-            case FilmAllListFragment.POSITION:
-                fragment = createFilmListFragment(filmDAO,
-                        new FilmAllListFragment());
-                break;
-
-            case FilmFavouriteListFragment.POSITION:
-                fragment = createFilmListFragment(favouriteDAO,
-                        new FilmFavouriteListFragment());
+                setTitle("About selected");
                 break;
         }
 
         if (fragment != null) {
-            setFragment(fragment, STACK_FILMLIST, false);
-        }*/
+            setFragment(fragment, FRAGMENT_STACK, false);
+        }
 
         // Highlight the selected item and close the drawer
         drawerList.setItemChecked(position, true);
@@ -150,5 +119,6 @@ public class Home extends ActionBarActivity {
         ft.addToBackStack(name);
         ft.replace(R.id.frame_fragment, fragment, name);
         ft.commit();
+
     }
 }
