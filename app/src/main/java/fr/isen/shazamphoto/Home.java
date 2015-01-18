@@ -1,74 +1,85 @@
 package fr.isen.shazamphoto;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
+import android.view.inputmethod.InputMethodManager;
+import android.widget.SearchView;
 
 public class Home extends ActionBarActivity {
 
-    // Items for the menu drawer
-    private String[] navigationArray;
-    private DrawerLayout drawerLayout;
-    private ListView drawerList;
+    private ViewPager mViewPager;
 
-    static private String FRAGMENT_STACK = "fragmentStack";
+    private SearchView searchView;
+    private MenuItem searchMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Initialization of the drawer
-        navigationArray = getResources().getStringArray(
-                R.array.navigation_array);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerList = (ListView) findViewById(R.id.left_drawer);
+        SectionsPagerAdapter mSectionsPagerAdapter;
 
-        // Set the adapter for the list view
-        drawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, navigationArray));
-        // Set the list's click listener
-        drawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                selectItem(position);
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        final ActionBar actionBar = getSupportActionBar();
+
+
+        // Create a tab listener that is called when the user changes tabs.
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
+                // When the tab is selected, switch to the
+                // corresponding page in the ViewPager.
+                mViewPager.setCurrentItem(tab.getPosition());
             }
-        });
 
-        /*if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }*/
-
-       /* button = (Button)findViewById(R.id.but_takePicture);
-        mImageView = (ImageView)findViewById(R.id.img_result);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dispatchTakePictureIntent();
+            public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
+                // hide the given tab
             }
-        });*/
 
-        selectItem(0);
+            public void onTabReselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
+                // probably ignore this event
+            }
+        };
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
+
+        searchMenuItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchMenuItem.getActionView();
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean queryTextFocused) {
+                if(!queryTextFocused) {
+                    // Close the keyboard
+                    InputMethodManager imm = (InputMethodManager)getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+                }
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -78,47 +89,14 @@ public class Home extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        // Set the  focus on the search bar
+        if(id == R.id.action_search){
+            searchView.setFocusable(true);
+            searchView.setIconified(false);
+            searchView.requestFocusFromTouch();
         }
+
 
         return super.onOptionsItemSelected(item);
-    }
-
-    /** Swaps fragments in the main content view */
-    private void selectItem(int position) {
-        Fragment fragment = null;
-        switch (position) {
-
-            case Shazam.POSITION:
-                fragment = new Shazam();
-                break;
-            case About.POSITION:
-                fragment = new About();
-                setTitle("About selected");
-                break;
-        }
-
-        if (fragment != null) {
-            setFragment(fragment, FRAGMENT_STACK, false);
-        }
-
-        // Highlight the selected item and close the drawer
-        drawerList.setItemChecked(position, true);
-        drawerLayout.closeDrawer(drawerList);
-
-    }
-
-    public void setFragment(Fragment fragment, String name, boolean disableDrawer) {
-        if (disableDrawer) {
-            //drawerToggle.setDrawerIndicatorEnabled(false);
-        }
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.addToBackStack(name);
-        ft.replace(R.id.frame_fragment, fragment, name);
-        ft.commit();
-
     }
 }
