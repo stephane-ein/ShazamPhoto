@@ -4,24 +4,14 @@
     <string name="app_name">Shazam Photo</string>
     <string name="action_settings">Settings</string>
 
-    <string-array name="navigation_array">
-        <item>Identify a monument</item>
-        <item>Favorite monuments</item>
-        <item>Monuments visited</item>
-        <item>The nearest monuments</item>
-        <item>Advanced search</item>
-        <item>About</item>
-    </string-array>
-
     <string name="about">An application under development</string>
     <string name="search_hint">Search a monument...</string>
     <string name="search_label">Search a monument</string>
     <string name="search_global_description">Search a monument</string>
 
     <string name="title_section1">Identify a monument</string>
-    <string name="title_section2">Clearest monument</string>
-    <string name="title_section3">Favorite monument</string>
-    <string name="title_section4">Monument visited</string>
-    <string name="title_section5">About</string>
+    <string name="title_section2">Nearest monument</string>
+    <string name="title_section3">Monument visited</string>
+    <string name="title_section4">Favorite monument</string>
 
 </resources>
