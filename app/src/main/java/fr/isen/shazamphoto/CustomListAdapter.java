@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -16,21 +17,21 @@ import fr.isen.shazamphoto.database.Monument;
 public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Monument> monumentItems;
+    private List<Monument> movieItems;
 
-    public CustomListAdapter(Activity activity, List<Monument> monumentItems) {
+    public CustomListAdapter(Activity activity, List<Monument> movieItems) {
         this.activity = activity;
-        this.monumentItems = monumentItems;
+        this.movieItems = movieItems;
     }
 
     @Override
     public int getCount() {
-        return monumentItems.size();
+        return movieItems.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return monumentItems.get(location);
+        return movieItems.get(location);
     }
 
     @Override
@@ -47,27 +48,21 @@ public class CustomListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.list_row, null);
 
-
+        ImageView image = (ImageView) convertView.findViewById(R.id.imageView);
         TextView title = (TextView) convertView.findViewById(R.id.title);
         TextView rating = (TextView) convertView.findViewById(R.id.rating);
         TextView genre = (TextView) convertView.findViewById(R.id.genre);
         TextView year = (TextView) convertView.findViewById(R.id.releaseYear);
 
-        // getting Monument data for the row
-        Monument m = monumentItems.get(position);
+        // getting movie data for the row
+        Monument m = movieItems.get(position);
 
-        // title
         title.setText(m.getName());
-
-        // rating
-        rating.setText("Rating: " + String.valueOf(m.getNbVisited()));
-
-        // release year
         year.setText(String.valueOf(m.getYear()));
+        int id = activity.getResources().getIdentifier("res:drawable/monument_1.jpg", null, null);
+        image.setImageResource(id);
 
         return convertView;
     }
 
 }
-
-

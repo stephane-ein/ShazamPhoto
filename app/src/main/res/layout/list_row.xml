@@ -5,21 +5,22 @@
     android:background="@drawable/list_row_selector"
     android:padding="8dp" >
 
-    <!-- Thumbnail Image -->
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/thumbnail"
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="8dp" />
+        android:layout_marginRight="8dp"
+        android:contentDescription="@string/image_text"
+        android:src="@drawable/monument_1" />
 
     <!-- Movie Title -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/thumbnail"
-        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_toRightOf="@+id/imageView"
         android:textSize="@dimen/title"
         android:textStyle="bold" />
 
@@ -30,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_marginTop="1dip"
-        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_toRightOf="@+id/imageView"
         android:textSize="@dimen/rating" />
 
     <!-- Genre -->
@@ -40,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/rating"
         android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_toRightOf="@+id/imageView"
         android:textColor="@color/genre"
         android:textSize="@dimen/genre" />
 
