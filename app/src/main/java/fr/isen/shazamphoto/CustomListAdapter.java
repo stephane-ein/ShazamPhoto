@@ -46,7 +46,15 @@ public class CustomListAdapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_row, null);
+        {
+            if(position%2 == 0){
+                convertView = inflater.inflate(R.layout.list_row_right, null);
+            }else{
+                convertView = inflater.inflate(R.layout.list_row_left, null);
+            }
+
+        }
+
 
         ImageView image = (ImageView) convertView.findViewById(R.id.imageView);
         TextView title = (TextView) convertView.findViewById(R.id.title);
