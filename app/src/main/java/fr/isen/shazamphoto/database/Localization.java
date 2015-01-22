@@ -1,7 +1,7 @@
 package fr.isen.shazamphoto.database;
 
 public class Localization {
-    int id;
+    long id;
     int latitude;
     int longitude;
 
@@ -9,17 +9,17 @@ public class Localization {
         this(0, 0, 0);
     }
 
-    public Localization(int id, int latitude, int longitude) {
+    public Localization(long id, int latitude, int longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

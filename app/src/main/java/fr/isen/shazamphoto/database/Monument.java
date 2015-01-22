@@ -1,7 +1,8 @@
 package fr.isen.shazamphoto.database;
 
 public class Monument {
-    int id;
+    long id;
+    String name;
     String photoPath;
     String description;
     int year;
@@ -10,25 +11,34 @@ public class Monument {
     Localization localization;
 
     public Monument() {
-        this(null, 0, "", "", 0, 0, 0);
+        this(0, "", "", "", 0, 0, 0, null);
     }
 
-    public Monument(Localization localization, int id, String photoPath, String description, int year, int nbVisitors, int nbVisited) {
-        this.localization = localization;
+    public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbVisited, Localization localization) {
         this.id = id;
+        this.name = name;
         this.photoPath = photoPath;
         this.description = description;
         this.year = year;
         this.nbVisitors = nbVisitors;
         this.nbVisited = nbVisited;
+        this.localization = localization;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPhotoPath() {
