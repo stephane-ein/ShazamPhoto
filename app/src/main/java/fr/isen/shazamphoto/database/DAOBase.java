@@ -1,13 +1,10 @@
-package database;
+package fr.isen.shazamphoto.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-/**
- * Created by Scay on 15/01/2015.
- */
 public abstract class DAOBase {
-    protected final static int VERSION = 8;
+    protected final static int VERSION = 1;
     protected final static String NOM = "monument_list.db";
 
     protected SQLiteDatabase mDb = null;
