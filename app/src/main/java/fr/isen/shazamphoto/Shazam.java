@@ -15,7 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,7 +72,7 @@ public class Shazam extends Fragment {
             Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
             mImageView.setImageBitmap(bitmap);
             ToIdentifyMonument monument = new ToIdentifyMonument(-1, mCurrentPhotoPath, new Localization());
-            ToIdentifyMonumentDAO dao = new ToIdentifyMonumentDAO(getActivity());
+            ToIdentifyMonumentDAO dao = new ToIdentifyMonumentDAO(activity);
             dao.open();
             dao.insert(monument);
             dao.close();
