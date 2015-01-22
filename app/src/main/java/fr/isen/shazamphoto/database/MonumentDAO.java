@@ -1,11 +1,11 @@
 package fr.isen.shazamphoto.database;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by .Sylvain on 22/01/2015.

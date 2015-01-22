@@ -3,15 +3,14 @@
 
     <string name="app_name">Shazam Photo</string>
     <string name="action_settings">Settings</string>
-
     <string name="about">An application under development</string>
     <string name="search_hint">Search a monument...</string>
     <string name="search_label">Search a monument</string>
     <string name="search_global_description">Search a monument</string>
-
     <string name="title_section1">Identify a monument</string>
     <string name="title_section2">Nearest monument</string>
     <string name="title_section3">Monument visited</string>
     <string name="title_section4">Favorite monument</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
