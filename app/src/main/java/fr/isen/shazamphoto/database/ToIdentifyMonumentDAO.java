@@ -16,7 +16,7 @@ public class ToIdentifyMonumentDAO extends DAOBase {
     }
 
     public long insert(ToIdentifyMonument monument) {
-        Cursor c = mDb.query(DatabaseHandler.LOCALIZATION_TABLE_NAME, DatabaseHandler.LOCALIZATION_ALL_COLUMNS, DatabaseHandler.LOCALIZATION_LATITUDE + " = ? AND DatabaseHandler.LOCALIZATION_LONGITUDE = ?", new String[] {String.valueOf(monument.getLocalization().getLatitude()), String.valueOf(monument.getLocalization().getLongitude())}, "", "", "");
+        Cursor c = mDb.query(DatabaseHandler.LOCALIZATION_TABLE_NAME, DatabaseHandler.LOCALIZATION_ALL_COLUMNS, DatabaseHandler.LOCALIZATION_LATITUDE + " = ? AND " + DatabaseHandler.LOCALIZATION_LONGITUDE + " = ?", new String[] {String.valueOf(monument.getLocalization().getLatitude()), String.valueOf(monument.getLocalization().getLongitude())}, "", "", "");
         if(c.moveToFirst()) {
             monument.getLocalization().setId(c.getLong(0));
         }
