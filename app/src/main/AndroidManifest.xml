@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Home"
+            android:name=".ui.Home"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,16 +32,12 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".DetailMonument"
+            android:name=".ui.DetailMonument"
             android:label="@string/detail_monument"
-            android:parentActivityName=".Home" >
+            android:parentActivityName=".ui.Home" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Home" />
-        </activity>
-        <activity
-            android:name=".database.activityToDelete"
-            android:label="@string/title_activity_activity_to_delete" >
+                android:value=".ui.Home" />
         </activity>
     </application>
 

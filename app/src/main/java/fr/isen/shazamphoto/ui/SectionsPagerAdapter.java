@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto;
+package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.Locale;
+
+import fr.isen.shazamphoto.R;
 
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {

@@ -1,9 +1,11 @@
-package fr.isen.shazamphoto;
+package fr.isen.shazamphoto.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import fr.isen.shazamphoto.R;
 
 
 public class DetailMonument extends ActionBarActivity {

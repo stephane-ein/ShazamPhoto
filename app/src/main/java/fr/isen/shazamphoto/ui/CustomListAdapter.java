@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto;
+package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
 
 

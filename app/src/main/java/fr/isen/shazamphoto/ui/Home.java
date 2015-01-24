@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto;
+package fr.isen.shazamphoto.ui;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
+
+import fr.isen.shazamphoto.R;
 
 public class Home extends ActionBarActivity {
 

@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto;
+package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.ToIdentifyMonument;
 import fr.isen.shazamphoto.database.ToIdentifyMonumentDAO;
