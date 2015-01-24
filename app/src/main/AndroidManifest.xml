@@ -33,7 +33,15 @@
         </activity>
         <activity
             android:name=".DetailMonument"
-            android:label="@string/title_activity_detail_monument" >
+            android:label="@string/detail_monument"
+            android:parentActivityName=".Home" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Home" />
+        </activity>
+        <activity
+            android:name=".database.activityToDelete"
+            android:label="@string/title_activity_activity_to_delete" >
         </activity>
     </application>
 

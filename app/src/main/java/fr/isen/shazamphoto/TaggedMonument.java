@@ -2,15 +2,14 @@ package fr.isen.shazamphoto;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import fr.isen.shazamphoto.database.Localization;
@@ -21,10 +20,9 @@ public class TaggedMonument extends Fragment {
 
     private Activity activity;
 
-    public static TaggedMonument newInstance(String param1, String param2) {
+    public static TaggedMonument newInstance(Activity act) {
         TaggedMonument fragment = new TaggedMonument();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
+        fragment.setActivity(act);
         return fragment;
     }
 
@@ -32,7 +30,7 @@ public class TaggedMonument extends Fragment {
 
     }
 
-    public TaggedMonument(Activity act){
+    public void setActivity(Activity act){
         this.activity = act;
     }
 

@@ -1,7 +1,5 @@
 package fr.isen.shazamphoto;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.location.Location;
@@ -120,5 +118,9 @@ public class Home extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void changeViewPager(int position){
+        this.mViewPager.setCurrentItem(position);
     }
 }

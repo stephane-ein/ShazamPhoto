@@ -22,12 +22,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
 
-        Fragment result = new About();
+        Fragment result = null;
 
         switch (position){
             case 0 : result = new Shazam();
                 break;
-            case 1 : result = new TaggedMonument(activity);
+            case 1 : result = TaggedMonument.newInstance(activity);
                 break;
             default: result = new About();
         }
