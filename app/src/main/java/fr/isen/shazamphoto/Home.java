@@ -1,5 +1,7 @@
 package fr.isen.shazamphoto;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.location.Location;
@@ -36,8 +38,6 @@ public class Home extends ActionBarActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        final ActionBar actionBar = getSupportActionBar();
 
 
         // Create a tab listener that is called when the user changes tabs.

@@ -1,12 +1,16 @@
 package fr.isen.shazamphoto;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import fr.isen.shazamphoto.database.Localization;
@@ -14,6 +18,8 @@ import fr.isen.shazamphoto.database.Monument;
 
 
 public class TaggedMonument extends Fragment {
+
+    private Activity activity;
 
     public static TaggedMonument newInstance(String param1, String param2) {
         TaggedMonument fragment = new TaggedMonument();
@@ -23,7 +29,11 @@ public class TaggedMonument extends Fragment {
     }
 
     public TaggedMonument() {
-        // Required empty public constructor
+
+    }
+
+    public TaggedMonument(Activity act){
+        this.activity = act;
     }
 
     @Override
@@ -46,6 +56,20 @@ public class TaggedMonument extends Fragment {
         listview.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int position, long arg3) {
+
+                Intent intent = new Intent(activity, DetailMonument.class);
+               // EditText editText = (EditText) findViewById(R.id.edit_message);
+               // String message = editText.getText().toString();
+               // intent.putExtra(EXTRA_MESSAGE, message);
+                startActivity(intent);
+
+
+            }
+        });
 
         return view;
     }

@@ -27,7 +27,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         switch (position){
             case 0 : result = new Shazam();
                 break;
-            case 1 : result = new TaggedMonument();
+            case 1 : result = new TaggedMonument(activity);
                 break;
             default: result = new About();
         }
