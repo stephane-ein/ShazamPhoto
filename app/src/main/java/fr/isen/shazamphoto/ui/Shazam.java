@@ -1,24 +1,35 @@
 package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
@@ -30,7 +41,6 @@ public class Shazam extends Fragment {
     private Button button;
     private ImageView mImageView;
     private Activity activity;
-
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     static final int POSITION = 0;
@@ -42,8 +52,33 @@ public class Shazam extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
-        
+
+        LocationManager lm = (LocationManager)activity.getSystemService(Context.LOCATION_SERVICE);
+
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                Toast.makeText(activity.getApplicationContext(), " Network Longitude :" + location.getLongitude() + "Latitutde : " +location.getLatitude(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

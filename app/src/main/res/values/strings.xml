@@ -17,5 +17,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="detail_monument">Detail monument</string>
     <string name="title_activity_activity_to_delete">activityToDelete</string>
+    <string name="text_view_favorite">Add to favorite</string>
 
 </resources>
