@@ -19,20 +19,13 @@ import fr.isen.shazamphoto.database.Monument;
 
 public class TaggedMonument extends Fragment {
 
-    private Activity activity;
-
-    public static TaggedMonument newInstance(Activity act) {
+    public static TaggedMonument newInstance() {
         TaggedMonument fragment = new TaggedMonument();
-        fragment.setActivity(act);
         return fragment;
     }
 
     public TaggedMonument() {
 
-    }
-
-    public void setActivity(Activity act){
-        this.activity = act;
     }
 
     @Override
@@ -61,7 +54,7 @@ public class TaggedMonument extends Fragment {
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int position, long arg3) {
 
-                Intent intent = new Intent(activity, DetailMonument.class);
+                Intent intent = new Intent(getActivity(), DetailMonument.class);
 
                 intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(position));
                 startActivity(intent);

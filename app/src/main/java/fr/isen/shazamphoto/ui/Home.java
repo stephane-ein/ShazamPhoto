@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import fr.isen.shazamphoto.R;
 
@@ -20,13 +21,12 @@ public class Home extends ActionBarActivity {
 
     private SearchView searchView;
     private MenuItem searchMenuItem;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        SectionsPagerAdapter mSectionsPagerAdapter;
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -35,7 +35,6 @@ public class Home extends ActionBarActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
 
         // Create a tab listener that is called when the user changes tabs.
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
@@ -102,4 +101,5 @@ public class Home extends ActionBarActivity {
     public void changeViewPager(int position){
         this.mViewPager.setCurrentItem(position);
     }
+
 }

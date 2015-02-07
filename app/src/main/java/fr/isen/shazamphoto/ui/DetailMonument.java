@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.MonumentDAO;
 import fr.isen.shazamphoto.database.TaggedMonumentDAO;
@@ -39,8 +40,6 @@ public class DetailMonument extends ActionBarActivity {
         linearLayoutLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
             }
         });
 
@@ -49,20 +48,27 @@ public class DetailMonument extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 addMonumentToDBB();
-                TaggedMonumentDAO taggedMonumentDAO = new TaggedMonumentDAO(acticity);
-                taggedMonumentDAO.open();
-                if (taggedMonumentDAO.select(monument.getId()) != null) {
-                    taggedMonumentDAO.delete(monument);
+                FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(acticity);
+                favouriteMonumentDAO.open();
+                if (favouriteMonumentDAO.select(monument.getId()) != null) {
+                    favouriteMonumentDAO.delete(monument);
                     favouriteTexView.setText("Add to favourites");
-                    Toast.makeText(getApplicationContext(), "Remove from favorites", Toast.LENGTH_LONG).show();
                 } else {
-                    taggedMonumentDAO.insert(monument);
+                    favouriteMonumentDAO.insert(monument);
                     favouriteTexView.setText("Remove from favourites");
-                    Toast.makeText(getApplicationContext(), "Add to favorites", Toast.LENGTH_LONG).show();
                 }
-                taggedMonumentDAO.close();
+                favouriteMonumentDAO.close();
             }
         });
+
+        FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(acticity);
+        favouriteMonumentDAO.open();
+        if (favouriteMonumentDAO.select(monument.getId()) != null) {
+            favouriteTexView.setText("Remove from favourites");
+        } else {
+            favouriteTexView.setText("Add to favourites");
+        }
+        favouriteMonumentDAO.close();
     }
 
 
