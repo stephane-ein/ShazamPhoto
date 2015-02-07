@@ -11,24 +11,24 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.isen.shazamphoto.R;
-import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.database.TaggedMonumentDAO;
 
-
-public class TaggedMonument extends Fragment {
+public class FavouriteMonument extends Fragment {
 
     private Activity activity;
 
-    public static TaggedMonument newInstance(Activity act) {
-        TaggedMonument fragment = new TaggedMonument();
+    public static FavouriteMonument newInstance(Activity act) {
+        FavouriteMonument fragment = new FavouriteMonument();
         fragment.setActivity(act);
         return fragment;
     }
 
-    public TaggedMonument() {
-
+    public FavouriteMonument() {
+        // Required empty public constructor
     }
 
     public void setActivity(Activity act){
@@ -44,15 +44,32 @@ public class TaggedMonument extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_tagged_monument, container, false);
+        View view = inflater.inflate(R.layout.fragment_favourite_monument, container, false);
 
-        final ArrayList<Monument> monuments = new ArrayList<>();
-        Monument m = new Monument(-1, "Tour Eiffel", "Date", "date", 1, 2, 3, new Localization());
-        monuments.add(m);
-        monuments.add(m);
+        TaggedMonumentDAO taggedMonumentDAO = new TaggedMonumentDAO(getActivity());
+        taggedMonumentDAO.open();
+        final List<Monument> monumentsList = taggedMonumentDAO.getAllMonuments();
+        taggedMonumentDAO.close();
+        Bundle args = null;
+        final ArrayList<Monument> monuments = new ArrayList<Monument>();
+        for (Monument monument : monumentsList) {
+            monuments.add(monument);
+           /* FileInputStream in = null;
+            try {
+                in = openFileInput(monument.getName() + ".png");
+                monument.setImage(BitmapFactory.decodeStream(in));
+            } catch (Exception e) {}
+            finally {
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                } catch (IOException e) {}
+            }*/
+        }
 
         CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
-        ListView listview = (ListView) view.findViewById(R.id.list_tagged_monument);
+        ListView listview = (ListView) view.findViewById(R.id.listview_favourite_monument);
         listview.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -65,11 +82,10 @@ public class TaggedMonument extends Fragment {
 
                 intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(position));
                 startActivity(intent);
-
             }
         });
         setRetainInstance(true);
+
         return view;
     }
-
 }

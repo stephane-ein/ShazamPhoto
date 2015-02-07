@@ -31,6 +31,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 break;
             case 1 : result = TaggedMonument.newInstance(activity);
                 break;
+            case 3 : result = FavouriteMonument.newInstance(activity);
+                break;
             default: result = new About();
         }
 

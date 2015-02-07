@@ -39,7 +39,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     MONUMENTS_NAME + " TEXT NOT NULL, " +
                     MONUMENTS_PHOTO_PATH + " TEXT, " +
                     MONUMENTS_DESCRIPTION + " TEXT, " +
-                    MONUMENTS_YEAR + " TEXT, " +
+                    MONUMENTS_YEAR + " INTEGER, " +
                     MONUMENTS_NB_VISITORS + " INTEGER, " +
                     MONUMENTS_NB_VISITED + " INTEGER, " +
                     MONUMENTS_LOCALISATION_KEY + " INTEGER, " +

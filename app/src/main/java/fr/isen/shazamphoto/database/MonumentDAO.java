@@ -88,4 +88,16 @@ public class MonumentDAO extends DAOBase {
     protected Monument cursorToMonument(Cursor cursor) {
         return new Monument(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4), cursor.getInt(5), cursor.getInt(6), null);
     }
+
+    public long getMonumentId(Monument film) {
+        long id = -1;
+        String columns[] = {DatabaseHandler.MONUMENTS_KEY};
+        String selectArgs = DatabaseHandler.MONUMENTS_NAME + " = ?";
+        String args[] = {film.getName()};
+        Cursor c = mDb.query(DatabaseHandler.MONUMENTS_TABLE_NAME, columns, selectArgs, args, "", "", "");
+        if(c.moveToFirst()) {
+            id = c.getLong(0);
+        }
+        return id;
+    }
 }

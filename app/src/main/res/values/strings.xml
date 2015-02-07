@@ -18,5 +18,6 @@
     <string name="detail_monument">Detail monument</string>
     <string name="title_activity_activity_to_delete">activityToDelete</string>
     <string name="text_view_favorite">Add to favorite</string>
+    <string name="text_view_like">I like it</string>
 
 </resources>

@@ -1,23 +1,68 @@
 package fr.isen.shazamphoto.ui;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.database.MonumentDAO;
+import fr.isen.shazamphoto.database.TaggedMonumentDAO;
 
 
 public class DetailMonument extends ActionBarActivity {
+
+    private Monument monument;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_monument);
-        Monument monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
+
+        // retrieve the monument and some element of the monument detail activity
+        monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
+        final TextView favouriteTexView = (TextView) findViewById(R.id.monument_textview_favourite);
+        final Activity acticity = this;
+
         setTitle(monument.getName());
+
+
+        LinearLayout linearLayoutLike = (LinearLayout) findViewById(R.id.linearLayoutLike);
+        linearLayoutLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+        LinearLayout linearLayoutFavorite = (LinearLayout) findViewById(R.id.linearLayoutFavorite);
+        linearLayoutFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addMonumentToDBB();
+                TaggedMonumentDAO taggedMonumentDAO = new TaggedMonumentDAO(acticity);
+                taggedMonumentDAO.open();
+                if (taggedMonumentDAO.select(monument.getId()) != null) {
+                    taggedMonumentDAO.delete(monument);
+                    favouriteTexView.setText("Add to favourites");
+                    Toast.makeText(getApplicationContext(), "Remove from favorites", Toast.LENGTH_LONG).show();
+                } else {
+                    taggedMonumentDAO.insert(monument);
+                    favouriteTexView.setText("Remove from favourites");
+                    Toast.makeText(getApplicationContext(), "Add to favorites", Toast.LENGTH_LONG).show();
+                }
+                taggedMonumentDAO.close();
+            }
+        });
     }
 
 
@@ -43,5 +88,21 @@ public class DetailMonument extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private void addMonumentToDBB() {
+        if (monument != null && monument.getId() == -1) {
+            MonumentDAO dao = new MonumentDAO(this);
+            dao.open();
+            long id = dao.getMonumentId(monument);
+            if (id == -1) {
+                id = dao.insert(monument);
+            }
+            monument.setId(id);
+            dao.close();
+           /* if (film.getImage() != null) {
+                saveImageToFile(film.getImage(), film.getName() + ".png");
+            }*/
+        }
     }
 }
