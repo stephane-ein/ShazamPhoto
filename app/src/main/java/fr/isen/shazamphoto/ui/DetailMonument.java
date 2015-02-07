@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Monument;
 
 
 public class DetailMonument extends ActionBarActivity {
@@ -14,6 +16,8 @@ public class DetailMonument extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_monument);
+        Monument monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
+        setTitle(monument.getName());
     }
 
 

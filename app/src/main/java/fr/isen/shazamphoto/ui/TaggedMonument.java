@@ -46,9 +46,10 @@ public class TaggedMonument extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_tagged_monument, container, false);
 
-        ArrayList<Monument> monuments = new ArrayList<>();
-        monuments.add(new Monument(123, "Tour Eiffel", "Date", "date", 1, 2, 3, new Localization()));
-        monuments.add(new Monument(123, "Tour Eiffel", "Date", "date", 1, 2, 3, new Localization()));
+        final ArrayList<Monument> monuments = new ArrayList<>();
+        Monument m = new Monument(123, "Tour Eiffel", "Date", "date", 1, 2, 3, new Localization());
+        monuments.add(m);
+        monuments.add(m);
 
         CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
         ListView listview = (ListView) view.findViewById(R.id.list_tagged_monument);
@@ -61,6 +62,8 @@ public class TaggedMonument extends Fragment {
                                     int position, long arg3) {
 
                 Intent intent = new Intent(activity, DetailMonument.class);
+
+                intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(position));
                // EditText editText = (EditText) findViewById(R.id.edit_message);
                // String message = editText.getText().toString();
                // intent.putExtra(EXTRA_MESSAGE, message);

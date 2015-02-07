@@ -1,6 +1,8 @@
 package fr.isen.shazamphoto.database;
 
-public class Localization {
+import java.io.Serializable;
+
+public class Localization implements Serializable{
     long id;
     int latitude;
     int longitude;

@@ -1,14 +1,18 @@
 package fr.isen.shazamphoto.database;
 
-public class Monument {
-    long id;
-    String name;
-    String photoPath;
-    String description;
-    int year;
-    int nbVisitors;
-    int nbVisited;
-    Localization localization;
+import java.io.Serializable;
+
+public class Monument implements Serializable {
+    private long id;
+    private String name;
+    private String photoPath;
+    private String description;
+    private int year;
+    private int nbVisitors;
+    private int nbVisited;
+    private  Localization localization;
+
+    public static final String NAME_SERIALIZABLE = "fr.isen.shazamphoto.database.monument_serializable";
 
     public Monument() {
         this(0, "", "", "", 0, 0, 0, null);
