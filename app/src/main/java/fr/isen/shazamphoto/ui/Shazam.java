@@ -37,7 +37,6 @@ public class Shazam extends Fragment {
     private Activity activity;
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    static final int POSITION = 0;
 
     public Shazam() {
     }
