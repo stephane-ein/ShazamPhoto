@@ -2,6 +2,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="fr.isen.shazamphoto.ui.DetailMonument">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        app:showAsAction="ifRoom|withText"
+        android:title="@string/delete_text"
+        android:titleCondensed="Delete">
+    </item>
+    <item
+        android:id="@+id/item_share"
+        android:actionProviderClass="android.widget.ShareActionProvider"
+        android:icon="@drawable/ic_action_share"
+        app:showAsAction="ifRoom|withText"
+        android:title="@string/share_text"
+        android:titleCondensed="Share">
+    </item>
 </menu>

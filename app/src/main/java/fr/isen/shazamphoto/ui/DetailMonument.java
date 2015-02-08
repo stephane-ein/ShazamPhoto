@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -90,6 +91,13 @@ public class DetailMonument extends ActionBarActivity {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.item_share:
+                finish();
+                return true;
+            case R.id.item_delete:
+                DeleteDialog deleteDialog = new DeleteDialog();
+                deleteDialog.show(getFragmentManager(), "test");
                 return true;
         }
         return super.onOptionsItemSelected(item);
