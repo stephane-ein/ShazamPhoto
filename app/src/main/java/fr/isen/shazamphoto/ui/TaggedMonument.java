@@ -1,6 +1,5 @@
 package fr.isen.shazamphoto.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -25,12 +25,12 @@ public class TaggedMonument extends Fragment {
     }
 
     public TaggedMonument() {
-
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Toast.makeText(getActivity(), "TaggedMonument - oncreate", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -39,6 +39,7 @@ public class TaggedMonument extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_tagged_monument, container, false);
 
+        Toast.makeText(getActivity(), "TaggedMonument - onCreateView", Toast.LENGTH_SHORT).show();
         final ArrayList<Monument> monuments = new ArrayList<>();
         Monument m = new Monument(-1, "Tour Eiffel", "Date", "date", 1, 2, 3, new Localization());
         monuments.add(m);

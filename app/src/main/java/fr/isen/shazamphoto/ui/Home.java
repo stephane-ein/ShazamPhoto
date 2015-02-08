@@ -4,54 +4,39 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import fr.isen.shazamphoto.R;
 
 public class Home extends ActionBarActivity {
 
-    private ViewPager mViewPager;
-
     private SearchView searchView;
     private MenuItem searchMenuItem;
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SlidingTabLayout mSlidingTabLayout;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
-
-        // Set up the ViewPager with the sections adapter.
+        // BEGIN_INCLUDE (setup_viewpager)
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(), this));
+        // END_INCLUDE (setup_viewpager)
 
-        // Create a tab listener that is called when the user changes tabs.
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-            public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
-                // When the tab is selected, switch to the
-                // corresponding page in the ViewPager.
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
+        // BEGIN_INCLUDE (setup_slidingtablayout)
+        // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
+        // it's PagerAdapter set.
+        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        mSlidingTabLayout.setViewPager(mViewPager);
+        // END_INCLUDE (setup_slidingtablayout)
 
-            public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
-                // hide the given tab
-            }
-
-            public void onTabReselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
-                // probably ignore this event
-            }
-        };
     }
 
     @Override
@@ -96,10 +81,6 @@ public class Home extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void changeViewPager(int position){
-        this.mViewPager.setCurrentItem(position);
     }
 
 }

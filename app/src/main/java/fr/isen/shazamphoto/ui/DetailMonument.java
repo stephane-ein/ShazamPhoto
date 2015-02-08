@@ -1,9 +1,6 @@
 package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
-import android.app.DialogFragment;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -11,13 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.MonumentDAO;
-import fr.isen.shazamphoto.database.TaggedMonumentDAO;
 
 
 public class DetailMonument extends ActionBarActivity {

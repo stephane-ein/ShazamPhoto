@@ -1,6 +1,5 @@
 package fr.isen.shazamphoto.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import java.util.List;
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.database.TaggedMonumentDAO;
 
 public class FavouriteMonument extends Fragment {
 
