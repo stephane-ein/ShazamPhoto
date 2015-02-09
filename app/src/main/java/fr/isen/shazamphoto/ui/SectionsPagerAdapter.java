@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import fr.isen.shazamphoto.R;
@@ -14,10 +17,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private Activity activity;
     private final int nbPage = 4;
+    private Shazam shazam;
 
     public SectionsPagerAdapter(FragmentManager fm, Activity act) {
         super(fm);
         activity = act;
+        shazam = null;
     }
 
     @Override
@@ -27,7 +32,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         Fragment result = null;
 
         switch (position){
-            case 0 : result = new Shazam();
+            case 0 :result = new Shazam();
                 break;
             case 2 : result = TaggedMonument.newInstance();
                 break;

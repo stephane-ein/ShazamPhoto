@@ -30,7 +30,6 @@ public class TaggedMonument extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toast.makeText(getActivity(), "TaggedMonument - oncreate", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -39,7 +38,6 @@ public class TaggedMonument extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_tagged_monument, container, false);
 
-        Toast.makeText(getActivity(), "TaggedMonument - onCreateView", Toast.LENGTH_SHORT).show();
         final ArrayList<Monument> monuments = new ArrayList<>();
         Monument m = new Monument(-1, "Tour Eiffel", "Date", "date", 1, 2, 3, new Localization());
         monuments.add(m);

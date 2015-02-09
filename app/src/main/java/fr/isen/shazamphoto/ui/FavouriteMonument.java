@@ -90,7 +90,6 @@ public class FavouriteMonument extends Fragment {
         super.onResume();
         if(getActivity() != null){
            this.onCreate(null);
-            Toast.makeText(getActivity(), "Refreshed", Toast.LENGTH_LONG).show();
             FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(getActivity());
             favouriteMonumentDAO.open();
             final List<Monument> monumentsList = favouriteMonumentDAO.getAllMonuments();

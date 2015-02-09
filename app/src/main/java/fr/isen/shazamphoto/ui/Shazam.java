@@ -18,15 +18,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
+import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.ToIdentifyMonument;
 import fr.isen.shazamphoto.database.ToIdentifyMonumentDAO;
 
@@ -88,6 +92,17 @@ public class Shazam extends Fragment {
             }
         });
 
+        final ArrayList<Monument> monuments = new ArrayList<>();
+        Monument m = new Monument(-1, "Tour Eiffel", "Date", "date", 1, 2, 3, new Localization());
+        monuments.add(m);
+        monuments.add(m);
+
+        CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
+        ListView listview = (ListView) view.findViewById(R.id.listview_result_monument);
+        listview.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        setRetainInstance(true);
         return view;
     }
 

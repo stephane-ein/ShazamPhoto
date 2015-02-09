@@ -9,7 +9,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -21,15 +25,16 @@ public class Home extends ActionBarActivity {
     private MenuItem searchMenuItem;
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
-
+    private SectionsPagerAdapter sectionsPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
         // BEGIN_INCLUDE (setup_viewpager)
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(), this));
+        mViewPager.setAdapter(sectionsPagerAdapter);
         // END_INCLUDE (setup_viewpager)
 
         // BEGIN_INCLUDE (setup_slidingtablayout)
@@ -73,7 +78,12 @@ public class Home extends ActionBarActivity {
             }
             @Override
             public boolean onQueryTextSubmit(String query) {
-               Toast.makeText(getApplicationContext(), query, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), query, Toast.LENGTH_LONG).show();
+                mViewPager.setCurrentItem(0);
+                Shazam shazam = (Shazam) sectionsPagerAdapter.getItem(0);
+                View listView = findViewById(R.id.listview_result_monument);
+                listView.setLayoutParams( new LinearLayout.LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
+                listView.setVisibility(View.VISIBLE);
                 // Close the keyboard
                 InputMethodManager imm = (InputMethodManager)getSystemService(
                         Context.INPUT_METHOD_SERVICE);
