@@ -92,17 +92,6 @@ public class Shazam extends Fragment {
             }
         });
 
-        final ArrayList<Monument> monuments = new ArrayList<>();
-        Monument m = new Monument(-1, "Tour Eiffel", "Date", "date", 1, 2, 3, new Localization());
-        monuments.add(m);
-        monuments.add(m);
-
-        CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
-        ListView listview = (ListView) view.findViewById(R.id.listview_result_monument);
-        listview.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-
-        setRetainInstance(true);
         return view;
     }
 

@@ -1,16 +1,22 @@
 package fr.isen.shazamphoto.database;
 
+import android.app.Activity;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class Monument implements Serializable {
     private long id;
-    private String name;
+    private HashMap<String, Characteristic> characteristics; // Value of the langue is the key
     private String photoPath;
-    private String description;
     private int year;
     private int nbVisitors;
-    private int nbVisited;
-    private  Localization localization;
+    private int nbLike;
+    private Localization localization;
 
     public static final String NAME_SERIALIZABLE = "fr.isen.shazamphoto.database.monument_serializable";
 
@@ -18,15 +24,47 @@ public class Monument implements Serializable {
         this(0, "", "", "", 0, 0, 0, null);
     }
 
-    public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbVisited, Localization localization) {
+    public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization) {
         this.id = id;
-        this.name = name;
+        this.characteristics = new HashMap<>();
+        Characteristic characteristic = new Characteristic(name, description, new Language(LanguageAvailable.DEFAULT_NAME, LanguageAvailable.DEFAULT_VALUE));
+        this.characteristics.put(characteristic.getLanguage().getValue(), characteristic);
         this.photoPath = photoPath;
-        this.description = description;
         this.year = year;
         this.nbVisitors = nbVisitors;
-        this.nbVisited = nbVisited;
+        this.nbLike = nbLike;
         this.localization = localization;
+    }
+    public Monument(JSONObject jsonMonument, TextView textView) {
+        try {
+            id = -1;
+            year = Integer.valueOf(jsonMonument.getString("year")).intValue();
+            photoPath = jsonMonument.getString("photoPath");
+            nbVisitors =  Integer.valueOf(jsonMonument.getInt("nbVisitors")).intValue();
+            nbLike =  Integer.valueOf(jsonMonument.getInt("nbLikes")).intValue();
+            localization = new Localization(jsonMonument.getJSONObject("localization"));
+
+            //Get all the characteristic monument
+            this.characteristics = new HashMap<>();
+            JSONArray characteristicsJSON = jsonMonument.getJSONArray("characteristics");
+            int nbCharacteristic = characteristicsJSON.length();
+            for(int i = 0 ; i<nbCharacteristic; i++){
+                JSONObject characteristicJSON = characteristicsJSON.getJSONObject(i);
+                Characteristic characteristic = new Characteristic(characteristicJSON, textView);
+                this.characteristics.put(characteristic.getLanguage().getValue(), characteristic);
+            }
+
+        } catch (Exception e) {
+            textView.setText(e.getMessage());
+
+        }
+    }
+
+    public HashMap<String, Characteristic> getCharacteristics() {
+        return characteristics;
+    }
+    public Characteristic getCharacteristByLanguage(String languageValue){
+        return this.characteristics.get(languageValue);
     }
 
     public long getId() {
@@ -38,11 +76,11 @@ public class Monument implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return characteristics.get(LanguageAvailable.DEFAULT_VALUE).getName();
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.characteristics.get(LanguageAvailable.DEFAULT_VALUE).setName(name);
     }
 
     public String getPhotoPath() {
@@ -54,11 +92,11 @@ public class Monument implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return characteristics.get(LanguageAvailable.DEFAULT_VALUE).getDescription();
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.characteristics.get(LanguageAvailable.DEFAULT_VALUE).setDescription(description);
     }
 
     public int getYear() {
@@ -77,12 +115,12 @@ public class Monument implements Serializable {
         this.nbVisitors = nbVisitors;
     }
 
-    public int getNbVisited() {
-        return nbVisited;
+    public int getNbLike() {
+        return nbLike;
     }
 
-    public void setNbVisited(int nbVisited) {
-        this.nbVisited = nbVisited;
+    public void setNbLike(int nbLike) {
+        this.nbLike = nbLike;
     }
 
     public Localization getLocalization() {

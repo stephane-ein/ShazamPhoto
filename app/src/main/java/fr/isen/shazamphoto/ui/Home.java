@@ -18,6 +18,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.utils.GetMonumentSearch;
 
 public class Home extends ActionBarActivity {
 
@@ -70,6 +71,7 @@ public class Home extends ActionBarActivity {
             }
         });
 
+        final Home home = this;
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -78,16 +80,17 @@ public class Home extends ActionBarActivity {
             }
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getApplicationContext(), query, Toast.LENGTH_LONG).show();
                 mViewPager.setCurrentItem(0);
                 Shazam shazam = (Shazam) sectionsPagerAdapter.getItem(0);
                 View listView = findViewById(R.id.listview_result_monument);
-                listView.setLayoutParams( new LinearLayout.LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
+                listView.setLayoutParams( new LinearLayout.LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT, 0, 0));
                 listView.setVisibility(View.VISIBLE);
                 // Close the keyboard
                 InputMethodManager imm = (InputMethodManager)getSystemService(
                         Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+                GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
+                getMonumentSearch.execute("Tour");
                 return true;
             }
         });
