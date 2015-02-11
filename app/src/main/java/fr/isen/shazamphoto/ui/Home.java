@@ -1,8 +1,12 @@
 package fr.isen.shazamphoto.ui;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -27,6 +31,7 @@ public class Home extends ActionBarActivity {
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
     private SectionsPagerAdapter sectionsPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +67,9 @@ public class Home extends ActionBarActivity {
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean queryTextFocused) {
-                if(!queryTextFocused) {
+                if (!queryTextFocused) {
                     // Close the keyboard
-                    InputMethodManager imm = (InputMethodManager)getSystemService(
+                    InputMethodManager imm = (InputMethodManager) getSystemService(
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
                 }
@@ -78,17 +83,23 @@ public class Home extends ActionBarActivity {
             public boolean onQueryTextChange(String newText) {
                 return true;
             }
+
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                //Set the view on the shazam fragment
                 mViewPager.setCurrentItem(0);
-                Shazam shazam = (Shazam) sectionsPagerAdapter.getItem(0);
+                sectionsPagerAdapter.getItem(0);
                 View listView = findViewById(R.id.listview_result_monument);
-                listView.setLayoutParams( new LinearLayout.LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
+                listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
                 listView.setVisibility(View.VISIBLE);
+
                 // Close the keyboard
-                InputMethodManager imm = (InputMethodManager)getSystemService(
+                InputMethodManager imm = (InputMethodManager) getSystemService(
                         Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+
+                //Make de search
                 GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
                 getMonumentSearch.execute(query);
                 return true;
@@ -106,7 +117,7 @@ public class Home extends ActionBarActivity {
         int id = item.getItemId();
 
         // Set the  focus on the search bar
-        if(id == R.id.action_search){
+        if (id == R.id.action_search) {
             searchView.setFocusable(true);
             searchView.setIconified(false);
             searchView.requestFocusFromTouch();

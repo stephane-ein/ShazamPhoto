@@ -1,9 +1,10 @@
 package fr.isen.shazamphoto.utils;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -20,20 +21,20 @@ import java.net.URI;
 import java.util.ArrayList;
 
 import fr.isen.shazamphoto.R;
-import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.ui.CustomListAdapter;
+import fr.isen.shazamphoto.ui.DetailMonument;
 import fr.isen.shazamphoto.ui.Home;
 
-public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
-    private static final String URL = "http://37.187.216.159/shazam/api.php?n=";
+public class IdentifyMonumentByLocalization extends AsyncTask<String, Void, JSONObject> {
+    private static final String URL = "http://37.187.216.159/shazam/api.php?";
     private HttpClient client;
     private Monument monument;
     private Home home;
     private  JSONObject jsonResponse;
     private String error;
 
-    public GetMonumentSearch(Activity act) {
+    public IdentifyMonumentByLocalization(Activity act) {
         client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
                 "android");
@@ -75,13 +76,14 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
             }catch(Exception e){
             }
 
-            CustomListAdapter adapter = new CustomListAdapter(home, monuments);
-            ListView listview = (ListView) home.findViewById(R.id.listview_result_monument);
-            listview.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+            Intent intent = new Intent(home, DetailMonument.class);
+
+            intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(0));
+            home.startActivity(intent);
+
 
         }else{
-            Toast.makeText(this.home, error, Toast.LENGTH_LONG).show();
+            Toast.makeText(this.home, "No monument found", Toast.LENGTH_LONG).show();
         }
     }
 }

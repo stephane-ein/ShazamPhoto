@@ -31,14 +31,18 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         Fragment result = null;
 
-        switch (position){
-            case 0 :result = new Shazam();
+        switch (position) {
+            case 0:
+                result = new Shazam();
                 break;
-            case 2 : result = TaggedMonument.newInstance();
+            case 2:
+                result = TaggedMonument.newInstance();
                 break;
-            case 3 : result = FavouriteMonument.newInstance();
+            case 3:
+                result = FavouriteMonument.newInstance();
                 break;
-            default: result = new About();
+            default:
+                result = new About();
         }
 
         return result;

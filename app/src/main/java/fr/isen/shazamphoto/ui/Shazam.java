@@ -33,6 +33,8 @@ import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.ToIdentifyMonument;
 import fr.isen.shazamphoto.database.ToIdentifyMonumentDAO;
+import fr.isen.shazamphoto.utils.GetMonumentSearch;
+import fr.isen.shazamphoto.utils.IdentifyMonumentByLocalization;
 
 public class Shazam extends Fragment {
 
@@ -40,7 +42,8 @@ public class Shazam extends Fragment {
     private ImageView mImageView;
     private Activity activity;
     static final int REQUEST_IMAGE_CAPTURE = 1;
-
+    private Location location;
+    private String mCurrentPhotoPath;
 
     public Shazam() {
     }
@@ -50,11 +53,13 @@ public class Shazam extends Fragment {
         super.onCreate(savedInstanceState);
         activity = getActivity();
 
-        LocationManager lm = (LocationManager)activity.getSystemService(Context.LOCATION_SERVICE);
+
+        LocationManager lm = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+        final Shazam shazam = this;
 
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                Toast.makeText(activity.getApplicationContext(), " Network Longitude :" + location.getLongitude() + "Latitutde : " +location.getLatitude(), Toast.LENGTH_LONG).show();
+                shazam.location = location;
             }
 
             @Override
@@ -82,8 +87,8 @@ public class Shazam extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shazam, container, false);
 
-        button = (Button)view.findViewById(R.id.but_takePicture);
-        mImageView = (ImageView)view.findViewById(R.id.img_result);
+        button = (Button) view.findViewById(R.id.but_takePicture);
+        mImageView = (ImageView) view.findViewById(R.id.img_result);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,15 +105,21 @@ public class Shazam extends Fragment {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == activity.RESULT_OK) {
             Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
             mImageView.setImageBitmap(bitmap);
-            ToIdentifyMonument monument = new ToIdentifyMonument(-1, mCurrentPhotoPath, new Localization());
+           /* ToIdentifyMonument monument = new ToIdentifyMonument(-1, mCurrentPhotoPath, new Localization());
             ToIdentifyMonumentDAO dao = new ToIdentifyMonumentDAO(activity);
             dao.open();
             dao.insert(monument);
-            dao.close();
+            dao.close();*/
+
+            //Send the request to the serveur
+            if (location != null) {
+                IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity);
+                identifyMonumentByLocalization.execute("la=" + Double.valueOf(location.getLatitude()+10.00).toString() + "&lo=" + Double.valueOf(location.getLongitude()+10.00).toString() + "&o=" + 1);
+            }else{
+                Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
+            }
         }
     }
-
-    String mCurrentPhotoPath;
 
     private File createImageFile() throws IOException {
         // Create an image file name

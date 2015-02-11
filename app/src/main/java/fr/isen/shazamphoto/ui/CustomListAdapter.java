@@ -46,11 +46,10 @@ public class CustomListAdapter extends BaseAdapter {
         if (inflater == null)
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null)
-        {
-            if(position%2 == 0){
+        if (convertView == null) {
+            if (position % 2 == 0) {
                 convertView = inflater.inflate(R.layout.list_row_right, null);
-            }else{
+            } else {
                 convertView = inflater.inflate(R.layout.list_row_left, null);
             }
 
