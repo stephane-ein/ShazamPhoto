@@ -114,7 +114,7 @@ public class Shazam extends Fragment {
             //Send the request to the serveur
             if (location != null) {
                 IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity);
-                identifyMonumentByLocalization.execute("la=" + Double.valueOf(location.getLatitude()+10.00).toString() + "&lo=" + Double.valueOf(location.getLongitude()+10.00).toString() + "&o=" + 1);
+                identifyMonumentByLocalization.execute("la=" + Double.valueOf(location.getLatitude()).toString() + "&lo=" + Double.valueOf(location.getLongitude()).toString() + "&o=" + 1);
             }else{
                 Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
             }
