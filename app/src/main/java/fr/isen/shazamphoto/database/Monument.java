@@ -35,7 +35,7 @@ public class Monument implements Serializable {
         this.nbLike = nbLike;
         this.localization = localization;
     }
-    public Monument(JSONObject jsonMonument, TextView textView) {
+    public Monument(JSONObject jsonMonument) {
         try {
             id = -1;
             year = Integer.valueOf(jsonMonument.getString("year")).intValue();
@@ -50,20 +50,19 @@ public class Monument implements Serializable {
             int nbCharacteristic = characteristicsJSON.length();
             for(int i = 0 ; i<nbCharacteristic; i++){
                 JSONObject characteristicJSON = characteristicsJSON.getJSONObject(i);
-                Characteristic characteristic = new Characteristic(characteristicJSON, textView);
+                Characteristic characteristic = new Characteristic(characteristicJSON);
                 this.characteristics.put(characteristic.getLanguage().getValue(), characteristic);
             }
 
         } catch (Exception e) {
-            textView.setText(e.getMessage());
-
         }
+
     }
 
     public HashMap<String, Characteristic> getCharacteristics() {
         return characteristics;
     }
-    public Characteristic getCharacteristByLanguage(String languageValue){
+    public Characteristic getCharacteristicByLanguage(String languageValue){
         return this.characteristics.get(languageValue);
     }
 

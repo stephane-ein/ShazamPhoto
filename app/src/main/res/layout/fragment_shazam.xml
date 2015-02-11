@@ -29,10 +29,6 @@
             android:layout_height="wrap_content"
             android:text="Take a picture"
             android:id="@+id/but_takePicture"/>
-        <TextView
-            android:id="@+id/textview_json"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
 
         <ImageView

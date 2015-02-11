@@ -2,6 +2,7 @@ package fr.isen.shazamphoto.utils;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,9 +17,12 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.ArrayList;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.ui.CustomListAdapter;
 import fr.isen.shazamphoto.ui.Home;
 
 public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
@@ -59,27 +63,26 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
     }
 
     public void onPostExecute(JSONObject result) {
-       // this.monument = new Monument(result);
         if(jsonResponse != null ) {
-            Monument monument = null;
+            ArrayList<Monument> monuments = new ArrayList<>();
             try{
                 JSONArray monumentsJSON = result.getJSONArray("Search");
                 TextView textView = (TextView) home.findViewById(R.id.textview_json);
                 int nbMonuments = monumentsJSON.length();
                 for(int i =0; i<nbMonuments; i++){
                     JSONObject monumentJSON = monumentsJSON.getJSONObject(i);
-                    monument = new Monument(monumentJSON, textView);
-                }
-                //textView.setText(result.getJSONArray("Search").getJSONObject(0).getJSONArray("characteristics").getJSONObject(0).getString("description").toString());
-                if(monument != null){
-                   // textView.setText("monument : "+ monument.getName());
-                }else{
-                   // textView.setText("Null");
+                    monuments.add(new Monument(monumentJSON));
                 }
             }catch(Exception e){
                 TextView textView = (TextView) home.findViewById(R.id.textview_json);
                 textView.setText(e.getMessage());
             }
+
+            CustomListAdapter adapter = new CustomListAdapter(home, monuments);
+            ListView listview = (ListView) home.findViewById(R.id.listview_result_monument);
+            listview.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+
         }else{
             Toast.makeText(this.home, error, Toast.LENGTH_LONG).show();
         }

@@ -1,5 +1,7 @@
 package fr.isen.shazamphoto.database;
 
+import android.widget.TextView;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -25,7 +27,6 @@ public class Localization implements Serializable{
             this.latitude = Float.valueOf(jsonObject.getString("latitude")).floatValue();
             this.longitude =  Float.valueOf(jsonObject.getString("longitude")).floatValue();
         }catch(Exception e){
-
         }
     }
 

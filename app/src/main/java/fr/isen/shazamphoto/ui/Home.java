@@ -83,14 +83,14 @@ public class Home extends ActionBarActivity {
                 mViewPager.setCurrentItem(0);
                 Shazam shazam = (Shazam) sectionsPagerAdapter.getItem(0);
                 View listView = findViewById(R.id.listview_result_monument);
-                listView.setLayoutParams( new LinearLayout.LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT, 0, 0));
+                listView.setLayoutParams( new LinearLayout.LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
                 listView.setVisibility(View.VISIBLE);
                 // Close the keyboard
                 InputMethodManager imm = (InputMethodManager)getSystemService(
                         Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
                 GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
-                getMonumentSearch.execute("Tour");
+                getMonumentSearch.execute(query);
                 return true;
             }
         });

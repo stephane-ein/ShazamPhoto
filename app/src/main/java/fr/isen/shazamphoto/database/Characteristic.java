@@ -17,14 +17,13 @@ public class Characteristic implements Serializable{
         this.language = language;
     }
 
-    public Characteristic(JSONObject jsonCharacteristics, TextView textView) {
+    public Characteristic(JSONObject jsonCharacteristics) {
         try {
             name = jsonCharacteristics.getString("name");
             description = jsonCharacteristics.getString("description");
             language = new Language(jsonCharacteristics.getJSONObject("language"));
         }
         catch(Exception e) {
-            textView.setText(e.getMessage());
         }
     }
 

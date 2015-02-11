@@ -1,6 +1,8 @@
 package fr.isen.shazamphoto.database;
 
 
+import android.widget.TextView;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -19,7 +21,6 @@ public class Language implements Serializable{
             this.name = jsonObject.getString("name");
             this.value = jsonObject.getString("value");
         }catch(Exception e){
-
         }
     }
 
