@@ -5,11 +5,11 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="C:\Program Files\Android\Android Studio1\gradle\gradle-2.2.1" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="/mnt/86CCCA97CCCA8143/Documents/GitHub/ShazamPhoto" />
+            <option value="/mnt/86CCCA97CCCA8143/Documents/GitHub/ShazamPhoto/app" />
           </set>
         </option>
       </GradleProjectSettings>
