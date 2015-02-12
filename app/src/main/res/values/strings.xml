@@ -21,5 +21,6 @@
     <string name="text_view_like">I like it</string>
     <string name="delete_text">Delete this monument</string>
     <string name="share_text">Share this monument</string>
+    <string name="title_activity_unidentified_monument">UnidentifiedMonument</string>
 
 </resources>

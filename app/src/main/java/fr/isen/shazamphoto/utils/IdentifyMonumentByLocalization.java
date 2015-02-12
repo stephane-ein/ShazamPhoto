@@ -25,6 +25,7 @@ import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.ui.CustomListAdapter;
 import fr.isen.shazamphoto.ui.DetailMonument;
 import fr.isen.shazamphoto.ui.Home;
+import fr.isen.shazamphoto.ui.UnidentifiedMonument;
 
 public class IdentifyMonumentByLocalization extends AsyncTask<String, Void, JSONObject> {
     private static final String URL = "http://37.187.216.159/shazam/api.php?";
@@ -78,15 +79,25 @@ public class IdentifyMonumentByLocalization extends AsyncTask<String, Void, JSON
             }catch(Exception e){
             }
 
-            Intent intent = new Intent(home, DetailMonument.class);
+            if(!monuments.isEmpty()){
+                Intent intent = new Intent(home, DetailMonument.class);
 
-            monuments.get(0).setPhotoPath(imagePath);
-            intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(0));
-            home.startActivity(intent);
+                monuments.get(0).setPhotoPath(imagePath);
+                intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(0));
+                home.startActivity(intent);
+            }else{
+                Intent intent = new Intent(home, UnidentifiedMonument.class);
+
+                home.startActivity(intent);
+            }
+
 
 
         }else{
-            Toast.makeText(this.home, "No monument found", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(home, UnidentifiedMonument.class);
+
+            home.startActivity(intent);
         }
     }
 }

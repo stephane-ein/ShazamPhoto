@@ -88,7 +88,14 @@ public class Home extends ActionBarActivity {
             public boolean onQueryTextSubmit(String query) {
 
                 //Set the view on the shazam fragment
-                mViewPager.setCurrentItem(0);
+
+                // DO NOT DELETE THE COMMENTS
+                // DO NOT DELETE THE COMMENTS
+                // DO NOT DELETE THE COMMENTS
+                // DO NOT DELETE THE COMMENTS
+                // DO NOT DELETE THE COMMENTS
+                // DO NOT DELETE THE COMMENTS
+               /* mViewPager.setCurrentItem(0);
                 sectionsPagerAdapter.getItem(0);
                 View listView = findViewById(R.id.listview_result_monument);
                 listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
@@ -101,7 +108,11 @@ public class Home extends ActionBarActivity {
 
                 //Make de search
                 GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
-                getMonumentSearch.execute(query);
+                getMonumentSearch.execute(query);*/
+
+                Intent intent = new Intent(home, UnidentifiedMonument.class);
+
+                home.startActivity(intent);
                 return true;
             }
         });
