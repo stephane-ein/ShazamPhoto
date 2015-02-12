@@ -42,15 +42,8 @@ public class DetailMonument extends ActionBarActivity {
 
         setTitle(monument.getName());
 
-
-        try {
-            InputStream stream = new FileInputStream(monument.getPhotoPath());
-            Bitmap bitmap = BitmapFactory.decodeStream(stream);
-            photoView.setImageBitmap(bitmap);
-        }
-        catch (Exception e) {
-            Toast.makeText(this, "exception : +  " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath());
+        photoView.setImageBitmap(bitmap);
 
         LinearLayout linearLayoutLike = (LinearLayout) findViewById(R.id.linearLayoutLike);
         linearLayoutLike.setOnClickListener(new View.OnClickListener() {

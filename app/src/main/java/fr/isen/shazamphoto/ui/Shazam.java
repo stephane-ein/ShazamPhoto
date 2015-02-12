@@ -34,7 +34,7 @@ public class Shazam extends Fragment {
     private Activity activity;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Location location;
-    private String mCurrentPhotoPath;
+    private String photoPath;
 
     public Shazam() {
     }
@@ -94,7 +94,7 @@ public class Shazam extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == activity.RESULT_OK) {
             if (location != null) {
-                IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity, mCurrentPhotoPath);
+                IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity, photoPath);
                 identifyMonumentByLocalization.execute("la=" + Double.valueOf(location.getLatitude()).toString() + "&lo=" + Double.valueOf(location.getLongitude()).toString() + "&o=" + 1);
             }else{
                 Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
@@ -113,8 +113,7 @@ public class Shazam extends Fragment {
                 storageDir      /* directory */
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        photoPath = image.getAbsolutePath();
         return image;
     }
 
