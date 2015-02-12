@@ -1,13 +1,23 @@
 package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
@@ -23,14 +33,24 @@ public class DetailMonument extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_monument);
+        final Activity activity = this;
 
         // retrieve the monument and some element of the monument detail activity
         monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
         final TextView favouriteTexView = (TextView) findViewById(R.id.monument_textview_favourite);
-        final Activity acticity = this;
+        final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
 
         setTitle(monument.getName());
 
+
+        try {
+            InputStream stream = new FileInputStream(monument.getPhotoPath());
+            Bitmap bitmap = BitmapFactory.decodeStream(stream);
+            photoView.setImageBitmap(bitmap);
+        }
+        catch (Exception e) {
+            Toast.makeText(this, "exception : +  " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
 
         LinearLayout linearLayoutLike = (LinearLayout) findViewById(R.id.linearLayoutLike);
         linearLayoutLike.setOnClickListener(new View.OnClickListener() {
@@ -43,8 +63,8 @@ public class DetailMonument extends ActionBarActivity {
         linearLayoutFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addMonumentToDBB();
-                FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(acticity);
+                addMonumentToDB();
+                FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(activity);
                 favouriteMonumentDAO.open();
                 if (favouriteMonumentDAO.select(monument.getId()) != null) {
                     favouriteMonumentDAO.delete(monument);
@@ -57,7 +77,7 @@ public class DetailMonument extends ActionBarActivity {
             }
         });
 
-        FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(acticity);
+        FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(activity);
         favouriteMonumentDAO.open();
         if (favouriteMonumentDAO.select(monument.getId()) != null) {
             favouriteTexView.setText("Remove from favourites");
@@ -66,7 +86,6 @@ public class DetailMonument extends ActionBarActivity {
         }
         favouriteMonumentDAO.close();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,7 +118,7 @@ public class DetailMonument extends ActionBarActivity {
 
     }
 
-    private void addMonumentToDBB() {
+    private void addMonumentToDB() {
         if (monument != null && monument.getId() == -1) {
             MonumentDAO dao = new MonumentDAO(this);
             dao.open();

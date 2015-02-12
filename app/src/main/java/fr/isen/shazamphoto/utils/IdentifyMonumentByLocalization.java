@@ -33,12 +33,14 @@ public class IdentifyMonumentByLocalization extends AsyncTask<String, Void, JSON
     private Home home;
     private  JSONObject jsonResponse;
     private String error;
+    private String imagePath;
 
-    public IdentifyMonumentByLocalization(Activity act) {
+    public IdentifyMonumentByLocalization(Activity act, String _imagePath) {
         client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
                 "android");
         this.home = (Home) act;
+        this.imagePath = _imagePath;
     }
 
     public JSONObject doInBackground(String... imdbId) {
@@ -78,6 +80,7 @@ public class IdentifyMonumentByLocalization extends AsyncTask<String, Void, JSON
 
             Intent intent = new Intent(home, DetailMonument.class);
 
+            monuments.get(0).setPhotoPath(imagePath);
             intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(0));
             home.startActivity(intent);
 

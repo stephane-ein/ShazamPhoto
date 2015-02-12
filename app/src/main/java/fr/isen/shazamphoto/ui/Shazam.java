@@ -17,9 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -29,17 +26,11 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import fr.isen.shazamphoto.R;
-import fr.isen.shazamphoto.database.Localization;
-import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.database.ToIdentifyMonument;
-import fr.isen.shazamphoto.database.ToIdentifyMonumentDAO;
-import fr.isen.shazamphoto.utils.GetMonumentSearch;
 import fr.isen.shazamphoto.utils.IdentifyMonumentByLocalization;
 
 public class Shazam extends Fragment {
 
     private Button button;
-    private ImageView mImageView;
     private Activity activity;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Location location;
@@ -60,9 +51,6 @@ public class Shazam extends Fragment {
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 shazam.location = location;
-                if(location != null && getActivity() != null){
-                    Toast.makeText(getActivity(), "Latitude : "+location.getLatitude() + " longitude : "+location.getLongitude(), Toast.LENGTH_LONG).show();
-                }
             }
 
             @Override
@@ -91,7 +79,6 @@ public class Shazam extends Fragment {
         View view = inflater.inflate(R.layout.fragment_shazam, container, false);
 
         button = (Button) view.findViewById(R.id.but_takePicture);
-        mImageView = (ImageView) view.findViewById(R.id.img_result);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,17 +93,8 @@ public class Shazam extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == activity.RESULT_OK) {
-            Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-            mImageView.setImageBitmap(bitmap);
-           /* ToIdentifyMonument monument = new ToIdentifyMonument(-1, mCurrentPhotoPath, new Localization());
-            ToIdentifyMonumentDAO dao = new ToIdentifyMonumentDAO(activity);
-            dao.open();
-            dao.insert(monument);
-            dao.close();*/
-
-            //Send the request to the serveur
             if (location != null) {
-                IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity);
+                IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity, mCurrentPhotoPath);
                 identifyMonumentByLocalization.execute("la=" + Double.valueOf(location.getLatitude()).toString() + "&lo=" + Double.valueOf(location.getLongitude()).toString() + "&o=" + 1);
             }else{
                 Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
