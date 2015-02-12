@@ -60,6 +60,9 @@ public class Shazam extends Fragment {
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 shazam.location = location;
+                if(location != null){
+                    Toast.makeText(getActivity(), "Latitude : "+location.getLatitude() + " longitude : "+location.getLongitude(), Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -78,7 +81,7 @@ public class Shazam extends Fragment {
             }
         };
 
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
     }
 
 
