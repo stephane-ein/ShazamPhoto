@@ -60,7 +60,7 @@ public class Shazam extends Fragment {
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 shazam.location = location;
-                if(location != null){
+                if(location != null && getActivity() != null){
                     Toast.makeText(getActivity(), "Latitude : "+location.getLatitude() + " longitude : "+location.getLongitude(), Toast.LENGTH_LONG).show();
                 }
             }
