@@ -91,12 +91,9 @@ public class IdentifyMonumentByLocalization extends AsyncTask<String, Void, JSON
                 home.startActivity(intent);
             }
 
-
-
         }else{
 
             Intent intent = new Intent(home, UnidentifiedMonument.class);
-
             home.startActivity(intent);
         }
     }

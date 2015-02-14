@@ -28,10 +28,19 @@
             android:text="Did you know this monument ?"
             android:id="@+id/textView_know_monument" />
 
-        <EditText
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/linear_layout_name_monument"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText_name_monument"/>
+            android:layoutDirection="ltr"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText_name_monument"/>
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linear_layout_buttons"

@@ -44,7 +44,11 @@
         </activity>
         <activity
             android:name=".ui.UnidentifiedMonument"
-            android:label="@string/title_activity_unidentified_monument" >
+            android:label="@string/title_activity_unidentified_monument"
+            android:parentActivityName=".ui.Home" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.Home" />
         </activity>
     </application>
 
