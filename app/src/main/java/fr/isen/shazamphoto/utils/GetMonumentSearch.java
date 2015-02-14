@@ -98,9 +98,6 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
                 }
             }
 
-        } else {
-            if(this.activity != null)
-                Toast.makeText(this.activity, error, Toast.LENGTH_LONG).show();
         }
     }
 }

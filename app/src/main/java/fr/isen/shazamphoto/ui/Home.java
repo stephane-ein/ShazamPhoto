@@ -95,7 +95,7 @@ public class Home extends ActionBarActivity {
                 // DO NOT DELETE THE COMMENTS
                 // DO NOT DELETE THE COMMENTS
                 // DO NOT DELETE THE COMMENTS
-               /* mViewPager.setCurrentItem(0);
+                mViewPager.setCurrentItem(0);
                 sectionsPagerAdapter.getItem(0);
                 View listView = findViewById(R.id.listview_result_monument);
                 listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
@@ -108,11 +108,11 @@ public class Home extends ActionBarActivity {
 
                 //Make de search
                 GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
-                getMonumentSearch.execute(query);*/
+                getMonumentSearch.execute(query);
 
-                Intent intent = new Intent(home, UnidentifiedMonument.class);
+               /* Intent intent = new Intent(home, UnidentifiedMonument.class);
 
-                home.startActivity(intent);
+                home.startActivity(intent);*/
                 return true;
             }
         });

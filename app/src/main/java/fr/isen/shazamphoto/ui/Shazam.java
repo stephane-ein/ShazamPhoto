@@ -69,7 +69,7 @@ public class Shazam extends Fragment {
             }
         };
 
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60, 50, locationListener);
     }
 
 
