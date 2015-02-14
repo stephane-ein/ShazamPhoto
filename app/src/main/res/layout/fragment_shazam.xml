@@ -2,33 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:orientation="vertical" >
+    android:paddingRight="16dp">
 
 
-<ListView
+    <ListView
         android:id="@+id/listview_result_monument"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0"
         android:divider="@android:color/transparent"
         android:listSelector="@drawable/list_row_selector"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:gravity="center"
         android:orientation="vertical"
-        android:gravity="center">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
         <Button
+            android:id="@+id/but_takePicture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Take a picture"
-            android:id="@+id/but_takePicture"/>
+            android:text="Take a picture" />
     </LinearLayout>
 
 

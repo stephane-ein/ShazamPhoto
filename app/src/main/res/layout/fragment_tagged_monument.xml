@@ -2,16 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
     <ListView
         android:id="@+id/list_tagged_monument"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:dividerHeight="10.0sp"
-        android:divider="@android:color/transparent"
-        android:listSelector="@drawable/list_row_selector"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"/>
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"
+        android:listSelector="@drawable/list_row_selector" />
 
 </RelativeLayout>

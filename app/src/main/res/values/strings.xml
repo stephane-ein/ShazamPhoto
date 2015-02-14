@@ -22,5 +22,6 @@
     <string name="delete_text">Delete this monument</string>
     <string name="share_text">Share this monument</string>
     <string name="title_activity_unidentified_monument">UnidentifiedMonument</string>
+    <string name="construction_year">Construction year...</string>
 
 </resources>

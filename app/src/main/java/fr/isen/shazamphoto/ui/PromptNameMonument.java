@@ -1,12 +1,18 @@
 package fr.isen.shazamphoto.ui;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import fr.isen.shazamphoto.R;
 
@@ -18,7 +24,7 @@ public class PromptNameMonument  extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_unidentified_monument, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_prompt_name_monument, container, false);
         Button button = (Button) rootView.findViewById(R.id.button_no);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -28,7 +34,24 @@ public class PromptNameMonument  extends Fragment {
             }
         });
 
+        final EditText editText = (EditText) rootView.findViewById(R.id.editText_prompname_monument);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_GO){
+                    //Close the keyboard
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 
+                    //change the fragment
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.container, new AddMonument())
+                            .commit();
+                }
+                return false;
+            }
+        });
         return rootView;
     }
 }
