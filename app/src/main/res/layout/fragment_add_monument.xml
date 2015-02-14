@@ -35,21 +35,27 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:hint="Monument name..." />
+                android:hint="Monument name..."
+                android:imeOptions="actionGo"
+                android:inputType="text" />
 
             <EditText
                 android:id="@+id/editText_date_monument"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:hint="@string/construction_year" />
+                android:hint="@string/construction_year"
+                android:imeOptions="actionGo"
+                android:inputType="text" />
 
             <EditText
                 android:id="@+id/editText_description_monument"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:hint="Description..." />
+                android:hint="Description..."
+                android:imeOptions="actionGo"
+                android:inputType="text" />
 
             <Button
                 android:id="@+id/button"
@@ -57,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|bottom"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:text="Add" />
+                android:text="ADD" />
         </LinearLayout>
 
 

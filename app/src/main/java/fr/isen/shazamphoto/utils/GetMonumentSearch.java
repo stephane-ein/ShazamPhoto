@@ -3,7 +3,6 @@ package fr.isen.shazamphoto.utils;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -20,24 +19,30 @@ import java.net.URI;
 import java.util.ArrayList;
 
 import fr.isen.shazamphoto.R;
-import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.ui.AddMonument;
 import fr.isen.shazamphoto.ui.CustomListAdapter;
 import fr.isen.shazamphoto.ui.Home;
+import fr.isen.shazamphoto.ui.UnidentifiedMonument;
 
 public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
     private static final String URL = "http://37.187.216.159/shazam/api.php?n=";
     private HttpClient client;
-    private Monument monument;
-    private Home home;
-    private  JSONObject jsonResponse;
+    private ArrayList<Monument> monuments;
+    private Activity activity;
+    private JSONObject jsonResponse;
     private String error;
 
     public GetMonumentSearch(Activity act) {
         client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
                 "android");
-        this.home = (Home) act;
+        this.activity = act;
+        monuments = new ArrayList<>();
+    }
+
+    public ArrayList<Monument> getMonuments() {
+        return monuments;
     }
 
     public JSONObject doInBackground(String... imdbId) {
@@ -63,25 +68,39 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
     }
 
     public void onPostExecute(JSONObject result) {
-        if(jsonResponse != null ) {
-            ArrayList<Monument> monuments = new ArrayList<>();
-            try{
+        if (jsonResponse != null) {
+            try {
                 JSONArray monumentsJSON = result.getJSONArray("Search");
                 int nbMonuments = monumentsJSON.length();
-                for(int i =0; i<nbMonuments; i++){
+                for (int i = 0; i < nbMonuments; i++) {
                     JSONObject monumentJSON = monumentsJSON.getJSONObject(i);
                     monuments.add(new Monument(monumentJSON));
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
             }
 
-            CustomListAdapter adapter = new CustomListAdapter(home, monuments);
-            ListView listview = (ListView) home.findViewById(R.id.listview_result_monument);
-            listview.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+            if(activity instanceof Home){
+                Home home = (Home)activity;
+                CustomListAdapter adapter = new CustomListAdapter(home, monuments);
+                ListView listview = (ListView) home.findViewById(R.id.listview_result_monument);
+                listview.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }else if(activity instanceof UnidentifiedMonument){
+                UnidentifiedMonument unidentifiedMonument = (UnidentifiedMonument)activity;
+                if(!getMonuments().isEmpty()){
+                    Toast.makeText(unidentifiedMonument, "Thanks, you added more informations !", Toast.LENGTH_LONG).show();
+                    unidentifiedMonument.finish();
+                }else{
+                    //change the fragment
+                    unidentifiedMonument.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.container, new AddMonument())
+                            .commit();
+                }
+            }
 
-        }else{
-            Toast.makeText(this.home, error, Toast.LENGTH_LONG).show();
+        } else {
+            if(this.activity != null)
+                Toast.makeText(this.activity, error, Toast.LENGTH_LONG).show();
         }
     }
 }
