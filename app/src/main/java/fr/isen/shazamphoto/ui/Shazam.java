@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -48,7 +49,7 @@ public class Shazam extends Fragment {
         LocationManager lm = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         final Shazam shazam = this;
 
-        LocationListener locationListener = new LocationListener() {
+       /* LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 shazam.location = location;
             }
@@ -69,7 +70,7 @@ public class Shazam extends Fragment {
             }
         };
 
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60, 50, locationListener);
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60, 50, locationListener);*/
     }
 
 
@@ -93,12 +94,26 @@ public class Shazam extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == activity.RESULT_OK) {
-            if (location != null) {
-                IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity, photoPath);
-                identifyMonumentByLocalization.execute("la=" + Double.valueOf(location.getLatitude()).toString() + "&lo=" + Double.valueOf(location.getLongitude()).toString() + "&o=" + 1);
-            }else{
+           // if (location != null) {
+
+                try{
+                    ExifInterface exifInterface = new ExifInterface(photoPath);
+                    float[] localisation = new float[2];
+                    if(exifInterface.getLatLong(localisation)){
+                        IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity, photoPath);
+                        identifyMonumentByLocalization.execute("la=" + Float.valueOf(localisation[0]).toString() + "&lo=" + Float.valueOf(localisation[1]).toString() + "&o=0.001");
+                        getActivity().setTitle("la=" + Float.valueOf(localisation[0]).toString() + "&lo=" + Float.valueOf(localisation[1]).toString() + "&o=0.01");
+
+                    }else{
+                        Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
+                    }
+
+                }catch (Exception e ){
+
+                }
+          /*  }else{
                 Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
-            }
+            }*/
         }
     }
 
