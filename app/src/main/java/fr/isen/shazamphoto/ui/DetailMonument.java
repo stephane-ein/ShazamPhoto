@@ -3,8 +3,6 @@ package fr.isen.shazamphoto.ui;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -13,11 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
@@ -42,7 +35,6 @@ public class DetailMonument extends ActionBarActivity {
 
         setTitle(monument.getName());
 
-        //Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath());
         BitmapFactory.Options options=new BitmapFactory.Options();
         options.inSampleSize = 4;
         Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath(), options);
@@ -124,9 +116,6 @@ public class DetailMonument extends ActionBarActivity {
             }
             monument.setId(id);
             dao.close();
-           /* if (film.getImage() != null) {
-                saveImageToFile(film.getImage(), film.getName() + ".png");
-            }*/
         }
     }
 }

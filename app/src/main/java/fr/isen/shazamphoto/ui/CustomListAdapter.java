@@ -13,26 +13,27 @@ import java.util.List;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.utils.GetMonumentImage;
 
 
 public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Monument> movieItems;
+    private List<Monument> monumentItems;
 
-    public CustomListAdapter(Activity activity, List<Monument> movieItems) {
+    public CustomListAdapter(Activity activity, List<Monument> monuments) {
         this.activity = activity;
-        this.movieItems = movieItems;
+        this.monumentItems = monuments;
     }
 
     @Override
     public int getCount() {
-        return movieItems.size();
+        return monumentItems.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return movieItems.get(location);
+        return monumentItems.get(location);
     }
 
     @Override
@@ -63,12 +64,15 @@ public class CustomListAdapter extends BaseAdapter {
         TextView year = (TextView) convertView.findViewById(R.id.releaseYear);
 
         // getting movie data for the row
-        Monument m = movieItems.get(position);
+        Monument m = monumentItems.get(position);
 
         title.setText(m.getName());
         year.setText(String.valueOf(m.getYear()));
-        int id = activity.getResources().getIdentifier("res:drawable/monument_1.jpg", null, null);
-        image.setImageResource(id);
+
+        if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
+            GetMonumentImage getMonumentImage = new GetMonumentImage(image);
+            getMonumentImage.execute(m.getPhotoPath());
+        }
 
         return convertView;
     }

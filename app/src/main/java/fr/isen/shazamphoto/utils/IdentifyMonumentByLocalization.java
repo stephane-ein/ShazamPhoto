@@ -2,10 +2,7 @@ package fr.isen.shazamphoto.utils;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.AsyncTask;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -20,9 +17,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 
-import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.ui.CustomListAdapter;
 import fr.isen.shazamphoto.ui.DetailMonument;
 import fr.isen.shazamphoto.ui.Home;
 import fr.isen.shazamphoto.ui.UnidentifiedMonument;
@@ -30,10 +25,8 @@ import fr.isen.shazamphoto.ui.UnidentifiedMonument;
 public class IdentifyMonumentByLocalization extends AsyncTask<String, Void, JSONObject> {
     private static final String URL = "http://37.187.216.159/shazam/api.php?";
     private HttpClient client;
-    private Monument monument;
     private Home home;
     private  JSONObject jsonResponse;
-    private String error;
     private String imagePath;
 
     public IdentifyMonumentByLocalization(Activity act, String _imagePath) {
@@ -60,9 +53,8 @@ public class IdentifyMonumentByLocalization extends AsyncTask<String, Void, JSON
                 result.append(line);
             }
             jsonResponse = new JSONObject(result.toString());
-        } catch (Exception e) {
-            error = e.getMessage();
-        }
+        } catch (Exception e) {}
+
         return jsonResponse;
     }
 
@@ -81,13 +73,13 @@ public class IdentifyMonumentByLocalization extends AsyncTask<String, Void, JSON
 
             if(!monuments.isEmpty()){
                 Intent intent = new Intent(home, DetailMonument.class);
-
                 monuments.get(0).setPhotoPath(imagePath);
+                FunctionsDB.addMonumentToDB(monuments.get(0), home);
+                FunctionsDB.addMonumentToTaggedMonument(monuments.get(0), home);
                 intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(0));
                 home.startActivity(intent);
             }else{
                 Intent intent = new Intent(home, UnidentifiedMonument.class);
-
                 home.startActivity(intent);
             }
 

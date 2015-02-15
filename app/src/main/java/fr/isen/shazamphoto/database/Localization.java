@@ -1,7 +1,5 @@
 package fr.isen.shazamphoto.database;
 
-import android.widget.TextView;
-
 import org.json.JSONObject;
 
 import java.io.Serializable;

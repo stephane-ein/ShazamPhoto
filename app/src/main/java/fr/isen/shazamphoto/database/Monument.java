@@ -1,8 +1,5 @@
 package fr.isen.shazamphoto.database;
 
-import android.app.Activity;
-import android.widget.TextView;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 

@@ -6,7 +6,14 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import fr.isen.shazamphoto.database.Monument;
+
 public class DeleteDialog extends DialogFragment {
+
+    private Monument monument;
+
+    public DeleteDialog() {
+    }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
@@ -22,7 +29,7 @@ public class DeleteDialog extends DialogFragment {
                         // User cancelled the dialog
                     }
                 });
-        // Create the AlertDialog object and return it
+
         return builder.create();
     }
 

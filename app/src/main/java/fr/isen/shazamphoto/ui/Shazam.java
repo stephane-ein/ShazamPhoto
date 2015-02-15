@@ -3,10 +3,7 @@ package fr.isen.shazamphoto.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -23,7 +20,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import fr.isen.shazamphoto.R;
@@ -100,14 +96,10 @@ public class Shazam extends Fragment {
                 if (exifInterface.getLatLong(localisation)) {
                     IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity, photoPath);
                     identifyMonumentByLocalization.execute("la=" + Float.valueOf(localisation[0]).toString() + "&lo=" + Float.valueOf(localisation[1]).toString() + "&o=0.001");
-
                 } else {
                     Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
                 }
-
-            } catch (Exception e) {
-
-            }
+            } catch (Exception e) {}
         }
     }
 
