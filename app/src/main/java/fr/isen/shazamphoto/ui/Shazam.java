@@ -94,26 +94,20 @@ public class Shazam extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == activity.RESULT_OK) {
-           // if (location != null) {
+            try {
+                ExifInterface exifInterface = new ExifInterface(photoPath);
+                float[] localisation = new float[2];
+                if (exifInterface.getLatLong(localisation)) {
+                    IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity, photoPath);
+                    identifyMonumentByLocalization.execute("la=" + Float.valueOf(localisation[0]).toString() + "&lo=" + Float.valueOf(localisation[1]).toString() + "&o=0.001");
 
-                try{
-                    ExifInterface exifInterface = new ExifInterface(photoPath);
-                    float[] localisation = new float[2];
-                    if(exifInterface.getLatLong(localisation)){
-                        IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity, photoPath);
-                        identifyMonumentByLocalization.execute("la=" + Float.valueOf(localisation[0]).toString() + "&lo=" + Float.valueOf(localisation[1]).toString() + "&o=0.001");
-                        getActivity().setTitle("la=" + Float.valueOf(localisation[0]).toString() + "&lo=" + Float.valueOf(localisation[1]).toString() + "&o=0.01");
-
-                    }else{
-                        Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
-                    }
-
-                }catch (Exception e ){
-
+                } else {
+                    Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
                 }
-          /*  }else{
-                Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
-            }*/
+
+            } catch (Exception e) {
+
+            }
         }
     }
 

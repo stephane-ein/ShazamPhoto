@@ -42,7 +42,10 @@ public class DetailMonument extends ActionBarActivity {
 
         setTitle(monument.getName());
 
-        Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath());
+        //Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath());
+        BitmapFactory.Options options=new BitmapFactory.Options();
+        options.inSampleSize = 4;
+        Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath(), options);
         photoView.setImageBitmap(bitmap);
 
         LinearLayout linearLayoutLike = (LinearLayout) findViewById(R.id.linearLayoutLike);
