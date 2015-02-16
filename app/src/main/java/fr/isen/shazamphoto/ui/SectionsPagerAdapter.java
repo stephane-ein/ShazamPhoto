@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.Locale;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Monument;
 
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -31,6 +33,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 result = new Shazam();
+                break;
+            case 1:
+                result = new NearestMonumentsFragment();
                 break;
             case 2:
                 result = TaggedMonument.newInstance();
