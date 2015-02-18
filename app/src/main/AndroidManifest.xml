@@ -63,7 +63,6 @@
         <activity
             android:name=".ui.NearestMonuments"
             android:label="@string/title_activity_nearest_monuments" >
-
         </activity>
     </application>
 

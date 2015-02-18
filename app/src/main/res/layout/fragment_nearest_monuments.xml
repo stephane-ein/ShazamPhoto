@@ -3,11 +3,14 @@
     android:layout_height="match_parent"
     tools:context="fr.isen.shazamphoto.ui.NearestMonumentsFragment">
 
-    <Button
-        android:layout_width="wrap_content"
+    <ListView
+        android:id="@+id/listview_nearest_monument"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Start the localisation"
-        android:id="@+id/button_launch_google_map"
-        android:layout_gravity="center" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"
+        android:listSelector="@drawable/list_row_selector" />
 
 </FrameLayout>
