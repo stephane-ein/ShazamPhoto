@@ -35,7 +35,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 result = new Shazam();
                 break;
             case 1:
-                result = new NearestMonumentsFragment();
+                result = NearestMonumentsFragment.newInstance();
                 break;
             case 2:
                 result = TaggedMonument.newInstance();
