@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.TaggedMonumentDAO;
 
@@ -64,16 +65,18 @@ public class NearestMonumentsFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
+/*
         TaggedMonumentDAO taggedMonumentDAO = new TaggedMonumentDAO(getActivity());
         taggedMonumentDAO.open();
         final List<Monument> monumentsList = taggedMonumentDAO.getAllMonuments();
         taggedMonumentDAO.close();
         final ArrayList<Monument> monuments = new ArrayList<>();
         for (Monument monument : monumentsList) {
-            monuments.add(monument);
-        }
-
+            monuments.add(new Monument(-1, "Title", "Description", "Idk", 1, 2, 3, new Localization(1, 52, 3)));
+        }*/
+        ArrayList<Monument> monuments = new ArrayList<>();
+        monuments.add(new Monument(-1, "Title", "Description", "Idk", 1, 2, 3, new Localization(1, 52, 3)));
+        monuments.add(new Monument(-1, "Title", "Description", "Idk", 1, 2, 3, new Localization(1, 52, 3)));
         CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
