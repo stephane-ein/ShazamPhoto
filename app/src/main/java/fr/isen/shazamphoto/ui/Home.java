@@ -11,9 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.events.SearchMonumentByName;
 import fr.isen.shazamphoto.utils.GetMonumentSearch;
 
 public class Home extends ActionBarActivity {
@@ -43,6 +49,7 @@ public class Home extends ActionBarActivity {
         mSlidingTabLayout.setViewPager(mViewPager);
         // END_INCLUDE (setup_slidingtablayout)
 
+        Toast.makeText(this, "Create Activity", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -69,7 +76,8 @@ public class Home extends ActionBarActivity {
 
                     //Close the view results
                     View listView = findViewById(R.id.listview_result_monument);
-                    listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 0));
+                    listView.setLayoutParams(new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, 0, 0));
                     listView.setVisibility(View.INVISIBLE);
                 }
             }
@@ -96,7 +104,9 @@ public class Home extends ActionBarActivity {
                 imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
                 //Make de search
-                GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
+                GetMonumentSearch getMonumentSearch = new GetMonumentSearch(
+                        new SearchMonumentByName((Shazam)getSectionsPagerAdapter().getItem(
+                                Shazam.POSITION)));
                 getMonumentSearch.execute(query);
 
 
@@ -128,19 +138,8 @@ public class Home extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public Menu getMenu() {
-        return menu;
-    }
-
     public SectionsPagerAdapter getSectionsPagerAdapter() {
         return sectionsPagerAdapter;
     }
 
-    public SlidingTabLayout getmSlidingTabLayout() {
-        return mSlidingTabLayout;
-    }
-
-    public ViewPager getmViewPager() {
-        return mViewPager;
-    }
 }

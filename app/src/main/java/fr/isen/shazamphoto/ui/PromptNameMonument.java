@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.events.SearchMonumentUnidentified;
 import fr.isen.shazamphoto.utils.GetMonumentSearch;
 
 public class PromptNameMonument  extends Fragment {
@@ -46,21 +47,8 @@ public class PromptNameMonument  extends Fragment {
 
                     // Ask the server if the monument already exist
                     // If yes, we add more information about the descriptor of the monument
-                    GetMonumentSearch getMonumentSearch = new GetMonumentSearch((UnidentifiedMonument)getActivity());
+                    GetMonumentSearch getMonumentSearch = new GetMonumentSearch(new SearchMonumentUnidentified((UnidentifiedMonument)getActivity()));
                     getMonumentSearch.execute(v.getText().toString());
-                    /*!getMonumentSearch.getMonuments(v.getText().toString(), (UnidentifiedMonument) getActivity()).isEmpty()
-                    if(!getMonumentSearch.getMonuments().isEmpty()){
-                        Toast.makeText(getActivity(), "Thanks, you added more informations !", Toast.LENGTH_LONG).show();
-                        getActivity().finish();
-                    }else{
-                        //change the fragment
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.container, new AddMonument())
-                                .commit();
-                    }*/
-
-
-
                 }
                 return false;
             }

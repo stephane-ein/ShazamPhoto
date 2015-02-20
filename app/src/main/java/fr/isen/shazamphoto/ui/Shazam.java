@@ -1,10 +1,6 @@
 package fr.isen.shazamphoto.ui;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,66 +11,45 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import fr.isen.shazamphoto.R;
-import fr.isen.shazamphoto.database.Localization;
-import fr.isen.shazamphoto.utils.IdentifyMonumentByLocalization;
+import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
+import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
 public class Shazam extends Fragment {
 
+    public static final int POSITION = 0;
+
     private Button button;
-    private Activity activity;
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    private Location location;
     private String photoPath;
+    private ArrayList<Monument> monuments;
+    private View view;
 
     public Shazam() {
+        this.monuments = new ArrayList<>();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = getActivity();
-
-
-        LocationManager lm = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-        final Shazam shazam = this;
-
-       /* LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                shazam.location = location;
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60, 50, locationListener);*/
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_shazam, container, false);
+        view = inflater.inflate(R.layout.fragment_shazam, container, false);
 
         button = (Button) view.findViewById(R.id.but_takePicture);
 
@@ -85,29 +60,25 @@ public class Shazam extends Fragment {
             }
         });
 
+        if (!monuments.isEmpty()) setListResult(monuments);
+        setRetainInstance(true);
         return view;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == activity.RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK) {
             try {
                 ExifInterface exifInterface = new ExifInterface(photoPath);
                 float[] localisation = new float[2];
                 if (exifInterface.getLatLong(localisation)) {
-
-                    IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity, photoPath);
-                    identifyMonumentByLocalization.execute("la=" + Float.valueOf(localisation[0]).toString() + "&lo=" + Float.valueOf(localisation[1]).toString() + "&o=0.001");
-                    Home home = (Home)getActivity();
-
-                    /*NearestMonumentsFragment nearestMonumentsFragment = (NearestMonumentsFragment) home.getSectionsPagerAdapter().getItem(NearestMonumentsFragment.POSITION);
-                    nearestMonumentsFragment.setListNearestMonuments(new Localization(-1, localisation[0], localisation[1]));
-                    Toast.makeText(getActivity(), "Location ?" + nearestMonumentsFragment.toString(), Toast.LENGTH_LONG).show();*/
+                    GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
+                    getMonumentByLocalization.execute(Float.valueOf(localisation[0]).toString(), Float.valueOf(localisation[1]).toString(), "0.01");
                 } else {
                     Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
-                Toast.makeText(getActivity(), "Error  ?" + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -131,7 +102,7 @@ public class Shazam extends Fragment {
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
             try {
@@ -148,4 +119,17 @@ public class Shazam extends Fragment {
         }
     }
 
+    public void setListResult(ArrayList<Monument> monuments) {
+        if (!monuments.isEmpty()) {
+            this.monuments = monuments;
+            View listView = view.findViewById(R.id.listview_result_monument);
+            listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
+            listView.setVisibility(View.VISIBLE);
+            CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
+            ListView listview = (ListView) view.findViewById(R.id.listview_result_monument);
+            listview.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+
+    }
 }

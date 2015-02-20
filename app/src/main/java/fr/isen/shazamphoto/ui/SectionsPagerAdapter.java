@@ -3,7 +3,6 @@ package fr.isen.shazamphoto.ui;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -15,6 +14,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private Home home;
     private final int nbPage = 4;
     private Shazam shazam;
+    private NearestMonumentsFragment nearestMonumentsFragment;
 
     public SectionsPagerAdapter(FragmentManager fm, Home act) {
         super(fm);
@@ -33,7 +33,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 result = new Shazam();
                 break;
             case 1:
-                result = NearestMonumentsFragment.newInstance();
+                if(nearestMonumentsFragment == null){
+                   nearestMonumentsFragment = NearestMonumentsFragment.newInstance();
+                }
+                result = nearestMonumentsFragment;
                 break;
             case 2:
                 result = TaggedMonument.newInstance();

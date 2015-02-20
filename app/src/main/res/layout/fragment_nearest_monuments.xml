@@ -13,4 +13,11 @@
         android:dividerHeight="10.0sp"
         android:listSelector="@drawable/list_row_selector" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search the nearest Monument !"
+        android:id="@+id/button_search_nearest_monuments"
+        android:layout_gravity="center" />
+
 </FrameLayout>

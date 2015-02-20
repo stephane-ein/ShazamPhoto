@@ -51,4 +51,8 @@ public class Localization implements Serializable{
     public void setLongitude(float longitude) {
         this.longitude = longitude;
     }
+
+    public String toString(){
+        return "Lat: "+Float.valueOf(getLatitude()).toString() +" Lon: "+Float.valueOf(getLongitude()).toString();
+    }
 }
