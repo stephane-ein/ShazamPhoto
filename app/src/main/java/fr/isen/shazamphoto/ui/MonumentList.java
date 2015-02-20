@@ -94,9 +94,7 @@ public abstract class MonumentList extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int position, long arg3) {
-
                 Intent intent = new Intent(getActivity(), DetailMonument.class);
-
                 intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(position));
                 startActivity(intent);
             }

@@ -10,4 +10,11 @@
         app:showAsAction="collapseActionView|ifRoom|withText"
         android:title="@string/search_hint"/>
 
+    <item
+        android:id="@+id/action_place"
+        android:icon="@drawable/ic_action_place"
+        android:queryHint="@string/search_hint"
+        app:showAsAction="collapseActionView|ifRoom|withText"
+        android:title="@string/search_hint"/>
+
 </menu>

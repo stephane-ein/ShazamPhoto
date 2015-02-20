@@ -26,7 +26,7 @@ public class GetMonumentImage extends AsyncTask<String, Void, Bitmap> {
     }
 
     public void onPostExecute(Bitmap bitmap){
-        if(this.imageView != null){
+        if(this.imageView != null && bitmap != null){
             this.imageView.setImageBitmap(bitmap);
         }
     }

@@ -13,7 +13,7 @@ public class Localization implements Serializable{
         this(0, 0, 0);
     }
 
-    public Localization(long id, int latitude, int longitude) {
+    public Localization(long id, float latitude, float longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;

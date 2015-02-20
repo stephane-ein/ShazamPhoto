@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.utils.IdentifyMonumentByLocalization;
 
 public class Shazam extends Fragment {
@@ -94,12 +95,20 @@ public class Shazam extends Fragment {
                 ExifInterface exifInterface = new ExifInterface(photoPath);
                 float[] localisation = new float[2];
                 if (exifInterface.getLatLong(localisation)) {
+
                     IdentifyMonumentByLocalization identifyMonumentByLocalization = new IdentifyMonumentByLocalization(activity, photoPath);
                     identifyMonumentByLocalization.execute("la=" + Float.valueOf(localisation[0]).toString() + "&lo=" + Float.valueOf(localisation[1]).toString() + "&o=0.001");
+                    Home home = (Home)getActivity();
+
+                    /*NearestMonumentsFragment nearestMonumentsFragment = (NearestMonumentsFragment) home.getSectionsPagerAdapter().getItem(NearestMonumentsFragment.POSITION);
+                    nearestMonumentsFragment.setListNearestMonuments(new Localization(-1, localisation[0], localisation[1]));
+                    Toast.makeText(getActivity(), "Location ?" + nearestMonumentsFragment.toString(), Toast.LENGTH_LONG).show();*/
                 } else {
                     Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), "Error  ?" + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         }
     }
 

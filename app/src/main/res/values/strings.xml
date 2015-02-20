@@ -24,5 +24,6 @@
     <string name="title_activity_unidentified_monument">UnidentifiedMonument</string>
     <string name="construction_year">Construction year...</string>
     <string name="title_activity_nearest_monuments">Map</string>
+    <string name="title_activity_todelete">Map</string>
 
 </resources>

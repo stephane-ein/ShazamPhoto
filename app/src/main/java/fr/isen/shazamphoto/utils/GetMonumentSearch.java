@@ -2,6 +2,9 @@ package fr.isen.shazamphoto.utils;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -68,6 +71,7 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
     }
 
     public void onPostExecute(JSONObject result) {
+        monuments = new ArrayList<>();
         if (jsonResponse != null) {
             try {
                 JSONArray monumentsJSON = result.getJSONArray("Search");
@@ -79,25 +83,29 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
             } catch (Exception e) {
             }
 
-            if(activity instanceof Home){
-                Home home = (Home)activity;
-                CustomListAdapter adapter = new CustomListAdapter(home, monuments);
-                ListView listview = (ListView) home.findViewById(R.id.listview_result_monument);
-                listview.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-            }else if(activity instanceof UnidentifiedMonument){
-                UnidentifiedMonument unidentifiedMonument = (UnidentifiedMonument)activity;
-                if(!getMonuments().isEmpty()){
-                    Toast.makeText(unidentifiedMonument, "Thanks, you added more informations !", Toast.LENGTH_LONG).show();
-                    unidentifiedMonument.finish();
-                }else{
-                    //change the fragment
-                    unidentifiedMonument.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, new AddMonument())
-                            .commit();
+            if (!monuments.isEmpty()) {
+                if (activity instanceof Home) {
+                    Home home = (Home) activity;
+                    View listView = home.findViewById(R.id.listview_result_monument);
+                    listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
+                    listView.setVisibility(View.VISIBLE);
+                    CustomListAdapter adapter = new CustomListAdapter(home, monuments);
+                    ListView listview = (ListView) home.findViewById(R.id.listview_result_monument);
+                    listview.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                } else if (activity instanceof UnidentifiedMonument) {
+                    UnidentifiedMonument unidentifiedMonument = (UnidentifiedMonument) activity;
+                    if (!getMonuments().isEmpty()) {
+                        Toast.makeText(unidentifiedMonument, "Thanks, you added more informations !", Toast.LENGTH_LONG).show();
+                        unidentifiedMonument.finish();
+                    } else {
+                        //change the fragment
+                        unidentifiedMonument.getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.container, new AddMonument())
+                                .commit();
+                    }
                 }
             }
-
         }
     }
 }

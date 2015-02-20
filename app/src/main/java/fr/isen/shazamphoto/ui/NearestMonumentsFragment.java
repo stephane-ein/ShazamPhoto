@@ -23,6 +23,7 @@ public class NearestMonumentsFragment extends Fragment {
 
     private ActionMode actionMode;
     private ListView listView;
+    public static final int POSITION = 1;
 
     public static NearestMonumentsFragment newInstance() {
         NearestMonumentsFragment fragment = new NearestMonumentsFragment();

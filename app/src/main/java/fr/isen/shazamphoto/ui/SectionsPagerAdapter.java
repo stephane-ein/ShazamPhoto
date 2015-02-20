@@ -1,26 +1,24 @@
 package fr.isen.shazamphoto.ui;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.widget.Toast;
 
 import java.util.Locale;
 
 import fr.isen.shazamphoto.R;
-import fr.isen.shazamphoto.database.Monument;
 
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    private Activity activity;
+    private Home home;
     private final int nbPage = 4;
     private Shazam shazam;
 
-    public SectionsPagerAdapter(FragmentManager fm, Activity act) {
+    public SectionsPagerAdapter(FragmentManager fm, Home act) {
         super(fm);
-        activity = act;
+        home = act;
         shazam = null;
     }
 
@@ -60,13 +58,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         Locale l = Locale.getDefault();
         switch (position) {
             case 0:
-                return activity.getString(R.string.title_section1).toUpperCase(l);
+                return home.getString(R.string.title_section1).toUpperCase(l);
             case 1:
-                return activity.getString(R.string.title_section2).toUpperCase(l);
+                return home.getString(R.string.title_section2).toUpperCase(l);
             case 2:
-                return activity.getString(R.string.title_section3).toUpperCase(l);
+                return home.getString(R.string.title_section3).toUpperCase(l);
             case 3:
-                return activity.getString(R.string.title_section4).toUpperCase(l);
+                return home.getString(R.string.title_section4).toUpperCase(l);
         }
         return null;
     }

@@ -23,6 +23,7 @@ public class Home extends ActionBarActivity {
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
     private SectionsPagerAdapter sectionsPagerAdapter;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class Home extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
+        this.menu = menu;
 
         searchMenuItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchMenuItem.getActionView();
@@ -64,6 +66,11 @@ public class Home extends ActionBarActivity {
                     InputMethodManager imm = (InputMethodManager) getSystemService(
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+
+                    //Close the view results
+                    View listView = findViewById(R.id.listview_result_monument);
+                    listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 0));
+                    listView.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -80,18 +87,8 @@ public class Home extends ActionBarActivity {
             public boolean onQueryTextSubmit(String query) {
 
                 //Set the view on the shazam fragment
-
-                // DO NOT DELETE THE COMMENTS
-                // DO NOT DELETE THE COMMENTS
-                // DO NOT DELETE THE COMMENTS
-                // DO NOT DELETE THE COMMENTS
-                // DO NOT DELETE THE COMMENTS
-                // DO NOT DELETE THE COMMENTS
                 mViewPager.setCurrentItem(0);
                 sectionsPagerAdapter.getItem(0);
-                View listView = findViewById(R.id.listview_result_monument);
-                listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
-                listView.setVisibility(View.VISIBLE);
 
                 // Close the keyboard
                 InputMethodManager imm = (InputMethodManager) getSystemService(
@@ -102,9 +99,7 @@ public class Home extends ActionBarActivity {
                 GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
                 getMonumentSearch.execute(query);
 
-               /* Intent intent = new Intent(home, UnidentifiedMonument.class);
 
-                home.startActivity(intent);*/
                 return true;
             }
         });
@@ -124,9 +119,28 @@ public class Home extends ActionBarActivity {
             searchView.setFocusable(true);
             searchView.setIconified(false);
             searchView.requestFocusFromTouch();
+        }else if(id ==R.id.action_place){
+            //Set the view on the shazam fragment
+            mViewPager.setCurrentItem(NearestMonumentsFragment.POSITION);
+            sectionsPagerAdapter.getItem(NearestMonumentsFragment.POSITION);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public SectionsPagerAdapter getSectionsPagerAdapter() {
+        return sectionsPagerAdapter;
+    }
+
+    public SlidingTabLayout getmSlidingTabLayout() {
+        return mSlidingTabLayout;
+    }
+
+    public ViewPager getmViewPager() {
+        return mViewPager;
+    }
 }
