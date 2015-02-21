@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import fr.isen.shazamphoto.R;
@@ -13,13 +14,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private Home home;
     private final int nbPage = 4;
-    private Shazam shazam;
-    private NearestMonumentsFragment nearestMonumentsFragment;
+    private ArrayList<Fragment> fragments;
 
     public SectionsPagerAdapter(FragmentManager fm, Home act) {
         super(fm);
         home = act;
-        shazam = null;
+        fragments = new ArrayList<>(nbPage);
+        for(int i = 0; i<nbPage; i++) fragments.add(null);
     }
 
     @Override
@@ -30,13 +31,18 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                result = new Shazam();
+                if(fragments.get(Shazam.POSITION) == null){
+                    fragments.add(Shazam.POSITION, Shazam.newInstance());
+                }
+                result = fragments.get(Shazam.POSITION);
+                //result = Shazam.newInstance();
                 break;
             case 1:
-                if(nearestMonumentsFragment == null){
-                   nearestMonumentsFragment = NearestMonumentsFragment.newInstance();
+                if(fragments.get(NearestMonumentsFragment.POSITION) == null){
+                  fragments.add(NearestMonumentsFragment.POSITION,
+                          NearestMonumentsFragment.newInstance());
                 }
-                result = nearestMonumentsFragment;
+                result = fragments.get(NearestMonumentsFragment.POSITION);
                 break;
             case 2:
                 result = TaggedMonument.newInstance();

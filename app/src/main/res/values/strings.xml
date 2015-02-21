@@ -7,9 +7,9 @@
     <string name="search_hint">Search a monument...</string>
     <string name="search_label">Search a monument</string>
     <string name="search_global_description">Search a monument</string>
-    <string name="title_section1">Identify a monument</string>
-    <string name="title_section2">Nearest monument</string>
-    <string name="title_section3">Visited monuments</string>
+    <string name="title_section1">Shazam</string>
+    <string name="title_section2">Map</string>
+    <string name="title_section3">My Tag</string>
     <string name="title_section4">Favorite monument</string>
     <string name="image_text">Monument picture</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -24,6 +24,5 @@
     <string name="title_activity_unidentified_monument">UnidentifiedMonument</string>
     <string name="construction_year">Construction year...</string>
     <string name="title_activity_nearest_monuments">Map</string>
-    <string name="title_activity_todelete">Map</string>
 
 </resources>

@@ -2,6 +2,7 @@ package fr.isen.shazamphoto.ui;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -11,14 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import fr.isen.shazamphoto.R;
-import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.SearchMonumentByName;
 import fr.isen.shazamphoto.utils.GetMonumentSearch;
 
@@ -29,7 +27,6 @@ public class Home extends ActionBarActivity {
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
     private SectionsPagerAdapter sectionsPagerAdapter;
-    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +52,6 @@ public class Home extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
-        this.menu = menu;
 
         searchMenuItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchMenuItem.getActionView();
@@ -79,11 +75,11 @@ public class Home extends ActionBarActivity {
                     listView.setLayoutParams(new LinearLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT, 0, 0));
                     listView.setVisibility(View.INVISIBLE);
+                    Shazam shazam = (Shazam) getSectionsPagerAdapter().getItem(Shazam.POSITION);
+                    shazam.clearMonuments();
                 }
             }
         });
-
-        final Home home = this;
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -109,7 +105,6 @@ public class Home extends ActionBarActivity {
                                 Shazam.POSITION)));
                 getMonumentSearch.execute(query);
 
-
                 return true;
             }
         });
@@ -125,14 +120,17 @@ public class Home extends ActionBarActivity {
         int id = item.getItemId();
 
         // Set the  focus on the search bar
-        if (id == R.id.action_search) {
-            searchView.setFocusable(true);
-            searchView.setIconified(false);
-            searchView.requestFocusFromTouch();
-        }else if(id ==R.id.action_place){
-            //Set the view on the shazam fragment
-            mViewPager.setCurrentItem(NearestMonumentsFragment.POSITION);
-            sectionsPagerAdapter.getItem(NearestMonumentsFragment.POSITION);
+        switch(item.getItemId()){
+            case  R.id.action_search :
+                searchView.setFocusable(true);
+                searchView.setIconified(false);
+                searchView.requestFocusFromTouch();
+                break;
+            case R.id.action_place :
+                //Show the pop menu
+                ActionPlacePopMenu popupMenu = new ActionPlacePopMenu(this, findViewById(R.id.action_place));
+                popupMenu.showPopup();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -142,4 +140,7 @@ public class Home extends ActionBarActivity {
         return sectionsPagerAdapter;
     }
 
+    public ViewPager getmViewPager() {
+        return mViewPager;
+    }
 }

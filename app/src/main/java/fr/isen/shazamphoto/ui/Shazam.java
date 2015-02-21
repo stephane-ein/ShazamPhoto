@@ -29,12 +29,17 @@ import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 public class Shazam extends Fragment {
 
     public static final int POSITION = 0;
+    public static final int REQUEST_TAKE_PHOTO = 1;
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private Button button;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
     private String photoPath;
     private ArrayList<Monument> monuments;
-    private View view;
+    private ListView listView;
+
+    public static Shazam newInstance() {
+        return new Shazam();
+    }
 
     public Shazam() {
         this.monuments = new ArrayList<>();
@@ -45,12 +50,11 @@ public class Shazam extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_shazam, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_shazam, container, false);
+        listView = (ListView) view.findViewById(R.id.listview_result_monument);
         button = (Button) view.findViewById(R.id.but_takePicture);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +65,9 @@ public class Shazam extends Fragment {
         });
 
         if (!monuments.isEmpty()) setListResult(monuments);
+
         setRetainInstance(true);
+
         return view;
     }
 
@@ -98,8 +104,6 @@ public class Shazam extends Fragment {
         return image;
     }
 
-    static final int REQUEST_TAKE_PHOTO = 1;
-
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -122,14 +126,16 @@ public class Shazam extends Fragment {
     public void setListResult(ArrayList<Monument> monuments) {
         if (!monuments.isEmpty()) {
             this.monuments = monuments;
-            View listView = view.findViewById(R.id.listview_result_monument);
+            CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
+            listView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
             listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
             listView.setVisibility(View.VISIBLE);
-            CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
-            ListView listview = (ListView) view.findViewById(R.id.listview_result_monument);
-            listview.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
         }
+    }
 
+    public void clearMonuments() {
+        if (this.monuments != null) this.monuments.clear();
     }
 }
+

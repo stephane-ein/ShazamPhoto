@@ -135,4 +135,8 @@ public class NearestMonumentsFragment extends Fragment {
         button.setVisibility(View.INVISIBLE);
         if(locationListener != null) lm.removeUpdates(locationListener);
     }
+
+    public Button getButton() {
+        return button;
+    }
 }
