@@ -36,9 +36,9 @@ public class Monument implements Serializable {
         try {
             id = -1;
             year = Integer.valueOf(jsonMonument.getString("year")).intValue();
-            photoPath = jsonMonument.getString("photoPath");
-            nbVisitors =  Integer.valueOf(jsonMonument.getInt("nbVisitors")).intValue();
-            nbLike =  Integer.valueOf(jsonMonument.getInt("nbLikes")).intValue();
+            photoPath = jsonMonument.getString("photopath");
+            nbVisitors =  Integer.valueOf(jsonMonument.getInt("nbvisitors")).intValue();
+            nbLike =  Integer.valueOf(jsonMonument.getInt("nblikes")).intValue();
             localization = new Localization(jsonMonument.getJSONObject("localization"));
 
             //Get all the characteristic monument
@@ -72,7 +72,11 @@ public class Monument implements Serializable {
     }
 
     public String getName() {
-        return characteristics.get(LanguageAvailable.DEFAULT_VALUE).getName();
+        if( characteristics.get(LanguageAvailable.DEFAULT_VALUE) == null){
+            return "Null";
+        }else{
+            return characteristics.get(LanguageAvailable.DEFAULT_VALUE).getName();
+        }
     }
 
     public void setName(String name) {
