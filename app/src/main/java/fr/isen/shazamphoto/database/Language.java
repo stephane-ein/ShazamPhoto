@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.database;
 
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -22,6 +23,15 @@ public class Language implements Serializable{
         }
     }
 
+    public JSONObject toJSon(){
+        JSONObject jsonObj = new JSONObject();
+        try{
+            jsonObj.put("name", getName());
+            jsonObj.put("value", getValue());
+        }catch(JSONException e){}
+
+        return jsonObj;
+    }
     public String getValue() {
         return value;
     }

@@ -79,7 +79,7 @@ public class Shazam extends Fragment {
                 float[] localisation = new float[2];
                 if (exifInterface.getLatLong(localisation)) {
                     GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
-                    getMonumentByLocalization.execute(Float.valueOf(localisation[0]).toString(), Float.valueOf(localisation[1]).toString(), "0.01");
+                    getMonumentByLocalization.execute(Float.valueOf(localisation[0]).toString(), Float.valueOf(localisation[1]).toString(), "0.0001");
                 } else {
                     Toast.makeText(getActivity(), "No location found", Toast.LENGTH_LONG).show();
                 }

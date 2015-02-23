@@ -1,11 +1,6 @@
 package fr.isen.shazamphoto.utils;
 
-import android.app.Activity;
 import android.os.AsyncTask;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -26,9 +21,7 @@ import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.SearchMonument;
 import fr.isen.shazamphoto.events.SearchMonumentByName;
 import fr.isen.shazamphoto.events.SearchMonumentUnidentified;
-import fr.isen.shazamphoto.ui.AddMonument;
-import fr.isen.shazamphoto.ui.CustomListAdapter;
-import fr.isen.shazamphoto.ui.Home;
+import fr.isen.shazamphoto.ui.AddMonumentFragment;
 import fr.isen.shazamphoto.ui.Shazam;
 import fr.isen.shazamphoto.ui.UnidentifiedMonument;
 
@@ -87,13 +80,14 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
             } else if (searchMonument instanceof SearchMonumentUnidentified) {
                 SearchMonumentUnidentified event = (SearchMonumentUnidentified) searchMonument;
                 UnidentifiedMonument unidentifiedMonument = event.getUnidentifiedMonument();
-                if (monuments.isEmpty()) {
+                if (!monuments.isEmpty()) {
                     Toast.makeText(unidentifiedMonument, "Thanks, you added more informations !", Toast.LENGTH_LONG).show();
+                    Toast.makeText(unidentifiedMonument, "Size: "+monuments.size() , Toast.LENGTH_LONG).show();
                     unidentifiedMonument.finish();
                 } else {
                     //change the fragment to add the new monument discovered
                     unidentifiedMonument.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, new AddMonument())
+                            .replace(R.id.container, new AddMonumentFragment())
                             .commit();
                 }
             }

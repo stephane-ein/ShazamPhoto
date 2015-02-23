@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fr.isen.shazamphoto.ui.AddMonument">
+    tools:context="fr.isen.shazamphoto.ui.AddMonumentFragment">
 
 
     <ScrollView

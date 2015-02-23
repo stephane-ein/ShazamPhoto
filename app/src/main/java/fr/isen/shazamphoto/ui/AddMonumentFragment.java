@@ -14,17 +14,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Localization;
+import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.utils.AddMonument;
 
 
-public class AddMonument extends Fragment {
+public class AddMonumentFragment extends Fragment {
 
 
-    public static AddMonument newInstance() {
-        AddMonument fragment = new AddMonument();
+    public static AddMonumentFragment newInstance() {
+        AddMonumentFragment fragment = new AddMonumentFragment();
         return fragment;
     }
 
-    public AddMonument() {
+    public AddMonumentFragment() {
         // Required empty public constructor
     }
 
@@ -63,6 +66,10 @@ public class AddMonument extends Fragment {
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
                                 Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+
+                        //Send the POST request to the serveur
+                        AddMonument addMonument = new AddMonument((UnidentifiedMonument)getActivity());
+                        addMonument.execute(new Monument(-1, "ISEN", "", "Description", 1959, 12, 1, new Localization(-1, 3, 50)));
                     }
                     return false;
                 }
@@ -72,3 +79,4 @@ public class AddMonument extends Fragment {
 
 
 }
+

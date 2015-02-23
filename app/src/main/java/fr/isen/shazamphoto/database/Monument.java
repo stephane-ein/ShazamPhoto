@@ -1,10 +1,13 @@
 package fr.isen.shazamphoto.database;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Monument implements Serializable {
     private long id;
@@ -32,20 +35,21 @@ public class Monument implements Serializable {
         this.nbLike = nbLike;
         this.localization = localization;
     }
+
     public Monument(JSONObject jsonMonument) {
         try {
             id = -1;
             year = Integer.valueOf(jsonMonument.getString("year")).intValue();
             photoPath = jsonMonument.getString("photopath");
-            nbVisitors =  Integer.valueOf(jsonMonument.getInt("nbvisitors")).intValue();
-            nbLike =  Integer.valueOf(jsonMonument.getInt("nblikes")).intValue();
+            nbVisitors = Integer.valueOf(jsonMonument.getInt("nbvisitors")).intValue();
+            nbLike = Integer.valueOf(jsonMonument.getInt("nblikes")).intValue();
             localization = new Localization(jsonMonument.getJSONObject("localization"));
 
             //Get all the characteristic monument
             this.characteristics = new HashMap<>();
             JSONArray characteristicsJSON = jsonMonument.getJSONArray("characteristics");
             int nbCharacteristic = characteristicsJSON.length();
-            for(int i = 0 ; i<nbCharacteristic; i++){
+            for (int i = 0; i < nbCharacteristic; i++) {
                 JSONObject characteristicJSON = characteristicsJSON.getJSONObject(i);
                 Characteristic characteristic = new Characteristic(characteristicJSON);
                 this.characteristics.put(characteristic.getLanguage().getValue(), characteristic);
@@ -56,10 +60,36 @@ public class Monument implements Serializable {
 
     }
 
+    public JSONObject toJSON() {
+        JSONObject jsonObj = new JSONObject();
+        try {
+            // Here we convert Java Object to JSO
+            jsonObj.put("photopath",getPhotoPath());
+            jsonObj.put("year", Integer.valueOf(getYear()).toString());
+            jsonObj.put("nbvisitors", Integer.valueOf(getNbVisitors()).toString());
+            jsonObj.put("nblike", Integer.valueOf(getNbLike()).toString());
+
+            JSONArray jsonArray = new JSONArray();
+            Iterator<HashMap.Entry<String, Characteristic>> it = characteristics.entrySet().iterator();
+            while(it.hasNext()){
+                HashMap.Entry<String, Characteristic> entry = it.next();
+                jsonArray.put(entry.getValue().toJson());
+            }
+            jsonObj.put("characteristics", jsonArray);
+
+            jsonObj.put("localization", localization.toJson());
+
+        } catch (JSONException ex) {
+        }
+
+        return jsonObj;
+    }
+
     public HashMap<String, Characteristic> getCharacteristics() {
         return characteristics;
     }
-    public Characteristic getCharacteristicByLanguage(String languageValue){
+
+    public Characteristic getCharacteristicByLanguage(String languageValue) {
         return this.characteristics.get(languageValue);
     }
 
@@ -72,9 +102,9 @@ public class Monument implements Serializable {
     }
 
     public String getName() {
-        if( characteristics.get(LanguageAvailable.DEFAULT_VALUE) == null){
+        if (characteristics.get(LanguageAvailable.DEFAULT_VALUE) == null) {
             return "Null";
-        }else{
+        } else {
             return characteristics.get(LanguageAvailable.DEFAULT_VALUE).getName();
         }
     }
@@ -131,3 +161,4 @@ public class Monument implements Serializable {
         this.localization = localization;
     }
 }
+

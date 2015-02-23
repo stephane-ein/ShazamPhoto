@@ -1,10 +1,11 @@
 package fr.isen.shazamphoto.database;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class Characteristic implements Serializable{
+public class Characteristic implements Serializable {
     private String name;
     private String description;
     private Language language;
@@ -20,9 +21,20 @@ public class Characteristic implements Serializable{
             name = jsonCharacteristics.getString("name");
             description = jsonCharacteristics.getString("description");
             language = new Language(jsonCharacteristics.getJSONObject("language"));
+        } catch (Exception e) {
         }
-        catch(Exception e) {
+    }
+
+    public JSONObject toJson() {
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("name",getName());
+            jsonObj.put("description", getDescription());
+            jsonObj.put("language", language.toJSon());
+
+        } catch (JSONException ex) {
         }
+        return jsonObj;
     }
 
     public String getName() {

@@ -1,5 +1,6 @@
 package fr.isen.shazamphoto.database;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -26,6 +27,17 @@ public class Localization implements Serializable{
             this.longitude =  Float.valueOf(jsonObject.getString("longitude")).floatValue();
         }catch(Exception e){
         }
+    }
+
+    public JSONObject toJson(){
+        JSONObject jsonObj = new JSONObject();
+        try{
+            jsonObj.put("latitude", Float.valueOf(latitude).toString());
+            jsonObj.put("longitude", Float.valueOf(longitude).toString());
+        }
+        catch (JSONException e){}
+
+       return jsonObj;
     }
 
     public long getId() {
