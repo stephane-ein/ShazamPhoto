@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -52,6 +53,17 @@ public class AddMonumentFragment extends Fragment {
         final EditText editTextDescription = (EditText) view.findViewById(R.id.editText_description_monument);
         addListenerCloseKeyboard(editTextDescription);
 
+
+        //Set the listener for the ADD button
+        Button button = (Button) view.findViewById(R.id.button_add);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Send the POST request to the serveur
+                AddMonument addMonument = new AddMonument((UnidentifiedMonument)getActivity());
+                addMonument.execute(new Monument(-1, "ISEN", "", "Description", 1959, 12, 1, new Localization(-1, 3, 50)));
+            }
+        });
         return view;
     }
 
@@ -67,9 +79,6 @@ public class AddMonumentFragment extends Fragment {
                                 Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 
-                        //Send the POST request to the serveur
-                        AddMonument addMonument = new AddMonument((UnidentifiedMonument)getActivity());
-                        addMonument.execute(new Monument(-1, "ISEN", "", "Description", 1959, 12, 1, new Localization(-1, 3, 50)));
                     }
                     return false;
                 }

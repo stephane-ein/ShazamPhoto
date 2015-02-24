@@ -17,14 +17,19 @@ public class Monument implements Serializable {
     private int nbVisitors;
     private int nbLike;
     private Localization localization;
+    private Address address;
 
     public static final String NAME_SERIALIZABLE = "fr.isen.shazamphoto.database.monument_serializable";
 
     public Monument() {
-        this(0, "", "", "", 0, 0, 0, null);
+        this(0, "", "", "", 0, 0, 0, null, new Address());
     }
 
-    public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization) {
+    public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization){
+        this(id, name, photoPath, description, year, nbVisitors, nbLike, localization, new Address());
+    }
+
+    public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization, Address address) {
         this.id = id;
         this.characteristics = new HashMap<>();
         Characteristic characteristic = new Characteristic(name, description, new Language(LanguageAvailable.DEFAULT_NAME, LanguageAvailable.DEFAULT_VALUE));
@@ -34,6 +39,7 @@ public class Monument implements Serializable {
         this.nbVisitors = nbVisitors;
         this.nbLike = nbLike;
         this.localization = localization;
+        this.address = address;
     }
 
     public Monument(JSONObject jsonMonument) {
@@ -67,7 +73,7 @@ public class Monument implements Serializable {
             jsonObj.put("photopath",getPhotoPath());
             jsonObj.put("year", Integer.valueOf(getYear()).toString());
             jsonObj.put("nbvisitors", Integer.valueOf(getNbVisitors()).toString());
-            jsonObj.put("nblike", Integer.valueOf(getNbLike()).toString());
+            jsonObj.put("nblikes", Integer.valueOf(getNbLike()).toString());
 
             JSONArray jsonArray = new JSONArray();
             Iterator<HashMap.Entry<String, Characteristic>> it = characteristics.entrySet().iterator();
@@ -78,7 +84,7 @@ public class Monument implements Serializable {
             jsonObj.put("characteristics", jsonArray);
 
             jsonObj.put("localization", localization.toJson());
-
+            jsonObj.put("address", address.toJson());
         } catch (JSONException ex) {
         }
 

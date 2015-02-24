@@ -82,7 +82,6 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
                 UnidentifiedMonument unidentifiedMonument = event.getUnidentifiedMonument();
                 if (!monuments.isEmpty()) {
                     Toast.makeText(unidentifiedMonument, "Thanks, you added more informations !", Toast.LENGTH_LONG).show();
-                    Toast.makeText(unidentifiedMonument, "Size: "+monuments.size() , Toast.LENGTH_LONG).show();
                     unidentifiedMonument.finish();
                 } else {
                     //change the fragment to add the new monument discovered
