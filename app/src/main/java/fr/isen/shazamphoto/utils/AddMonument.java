@@ -46,8 +46,8 @@ public class AddMonument extends AsyncTask<Monument, Void, String>{
             //nameValuePairs.add(new BasicNameValuePair("monument", monument.toJSON().toString()));
             //UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 
-            StringEntity entity = new StringEntity("monument=" + monument.toJSON().toString());
-            entity.setContentType("application/json;charset=UTF-8");
+            StringEntity entity = new StringEntity("monument=" + monument.toJSON().toString(), "UTF8");
+            entity.setContentType("application/x-www-form-urlencoded");
             httppost.setEntity(entity);
             // Execute HTTP Post Request
             response = httpclient.execute(httppost);
