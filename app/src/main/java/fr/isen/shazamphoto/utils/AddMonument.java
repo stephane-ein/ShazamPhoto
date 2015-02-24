@@ -12,6 +12,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
@@ -29,7 +30,7 @@ import fr.isen.shazamphoto.ui.UnidentifiedMonument;
 public class AddMonument extends AsyncTask<Monument, Void, String>{
 
     private HttpClient httpclient = new DefaultHttpClient();
-    private HttpPost httppost = new HttpPost("http://37.187.216.159/shazam/post.php");
+    private HttpPost httppost = new HttpPost("http://37.187.216.159/shazam/api.php");
     private UnidentifiedMonument home;
     private HttpResponse response;
 
@@ -41,20 +42,20 @@ public class AddMonument extends AsyncTask<Monument, Void, String>{
         Monument monument = monuments[0];
         try {
 
-            // Add your data
             //List<NameValuePair> nameValuePairs = new ArrayList<>(1);
             //nameValuePairs.add(new BasicNameValuePair("monument", monument.toJSON().toString()));
-            //UrlEncodedFormEntity entity =  new UrlEncodedFormEntity(nameValuePairs);
-            StringEntity entity = new StringEntity(monument.toJSON().toString(), HTTP.UTF_8);
-            entity.setContentType("application/json");
-            httppost.setEntity(entity);
+            //UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 
+            StringEntity entity = new StringEntity("monument=" + monument.toJSON().toString());
+            entity.setContentType("application/json;charset=UTF-8");
+            httppost.setEntity(entity);
             // Execute HTTP Post Request
             response = httpclient.execute(httppost);
+
         } catch (ClientProtocolException e) {
-            Toast.makeText(home, e.getMessage(), Toast.LENGTH_LONG).show();
+           // Toast.makeText(home, e.getMessage(), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
-            Toast.makeText(home, e.getMessage(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(home, e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         return monument.getName().toString();
