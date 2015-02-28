@@ -3,11 +3,16 @@ package fr.isen.shazamphoto.ui;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,13 +29,15 @@ public class DetailMonument extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_monument);
         final Activity activity = this;
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(0, 0, 0, 0)));
 
         // retrieve the monument and some element of the monument detail activity
         monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
-        final TextView favouriteTexView = (TextView) findViewById(R.id.monument_textview_favourite);
+
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
 
         setTitle(monument.getName());
@@ -40,15 +47,15 @@ public class DetailMonument extends ActionBarActivity {
         Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath(), options);
         photoView.setImageBitmap(bitmap);
 
-        LinearLayout linearLayoutLike = (LinearLayout) findViewById(R.id.linearLayoutLike);
-        linearLayoutLike.setOnClickListener(new View.OnClickListener() {
+        Button button = (Button) findViewById(R.id.button_like);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             }
         });
 
-        LinearLayout linearLayoutFavorite = (LinearLayout) findViewById(R.id.linearLayoutFavorite);
-        linearLayoutFavorite.setOnClickListener(new View.OnClickListener() {
+        final Button favouriteButton = (Button) findViewById(R.id.button_add_favorite);
+        favouriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addMonumentToDB();
@@ -56,10 +63,10 @@ public class DetailMonument extends ActionBarActivity {
                 favouriteMonumentDAO.open();
                 if (favouriteMonumentDAO.select(monument.getId()) != null) {
                     favouriteMonumentDAO.delete(monument);
-                    favouriteTexView.setText("Add to favourites");
+                    favouriteButton.setText("ADD TO FAVORITE");
                 } else {
                     favouriteMonumentDAO.insert(monument);
-                    favouriteTexView.setText("Remove from favourites");
+                    favouriteButton.setText("REMOVE FROM FAVOURITE");
                 }
                 favouriteMonumentDAO.close();
             }
@@ -68,9 +75,9 @@ public class DetailMonument extends ActionBarActivity {
         FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(activity);
         favouriteMonumentDAO.open();
         if (favouriteMonumentDAO.select(monument.getId()) != null) {
-            favouriteTexView.setText("Remove from favourites");
+            favouriteButton.setText("REMOVE FROM FAVORITE");
         } else {
-            favouriteTexView.setText("Add to favourites");
+            favouriteButton.setText("ADD TO FAVORITE");
         }
         favouriteMonumentDAO.close();
     }
