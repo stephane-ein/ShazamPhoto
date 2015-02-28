@@ -3,7 +3,9 @@ package fr.isen.shazamphoto.database;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class City {
+import java.io.Serializable;
+
+public class City implements Serializable{
     private String name;
     private Country country;
 

@@ -45,8 +45,6 @@ public class Home extends ActionBarActivity {
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
         // END_INCLUDE (setup_slidingtablayout)
-
-        Toast.makeText(this, "Create Activity", Toast.LENGTH_LONG).show();
     }
 
     @Override
