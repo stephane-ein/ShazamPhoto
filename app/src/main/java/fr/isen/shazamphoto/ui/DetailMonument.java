@@ -3,7 +3,11 @@ package fr.isen.shazamphoto.ui;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -35,17 +39,24 @@ public class DetailMonument extends ActionBarActivity {
         final Activity activity = this;
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(0, 0, 0, 0)));
 
+        //Retrieve the TextView, the buttons and the imageView
+        TextView nbLike = (TextView) findViewById(R.id.textView_nbLike);
+        TextView nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
+        final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
+
         // retrieve the monument and some element of the monument detail activity
         monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
 
-        final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
 
         setTitle(monument.getName());
 
         BitmapFactory.Options options=new BitmapFactory.Options();
         options.inSampleSize = 4;
         Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath(), options);
-        photoView.setImageBitmap(bitmap);
+        int width = options.outWidth;
+        int height = options.outHeight;
+        photoView.setImageBitmap(bitmap);//(Bitmap.createScaledBitmap(bmOverlay, width, height, false));
+
 
         Button button = (Button) findViewById(R.id.button_like);
         button.setOnClickListener(new View.OnClickListener() {
