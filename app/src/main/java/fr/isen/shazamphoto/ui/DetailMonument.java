@@ -3,22 +3,17 @@ package fr.isen.shazamphoto.ui;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import fr.isen.shazamphoto.R;
@@ -43,20 +38,27 @@ public class DetailMonument extends ActionBarActivity {
         TextView nbLike = (TextView) findViewById(R.id.textView_nbLike);
         TextView nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
+        GridView gridView=(GridView)findViewById(R.id.gridView_nearestMonuments);
+
+        // Create the Custom Adapter Object
+        GridViewAdapter gridViewAdapter = new GridViewAdapter(this);
+        // Set the Adapter to GridView
+        gridView.setAdapter(gridViewAdapter);
 
         // retrieve the monument and some element of the monument detail activity
         monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
 
+        setTitle("");
 
-        setTitle(monument.getName());
-
-        BitmapFactory.Options options=new BitmapFactory.Options();
+        //Set the picture
+        BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 4;
         Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath(), options);
-        int width = options.outWidth;
-        int height = options.outHeight;
-        photoView.setImageBitmap(bitmap);//(Bitmap.createScaledBitmap(bmOverlay, width, height, false));
+        photoView.setImageBitmap(bitmap);
 
+        //Set the informations
+        nbLike.setText(monument.getName());
+        nbVisitor.setText("More than " + monument.getNbLike() + " likes and " + monument.getNbVisitors() + " visitors");
 
         Button button = (Button) findViewById(R.id.button_like);
         button.setOnClickListener(new View.OnClickListener() {
@@ -110,9 +112,6 @@ public class DetailMonument extends ActionBarActivity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                finish();
-                return true;
-            case R.id.item_share:
                 finish();
                 return true;
             case R.id.item_delete:

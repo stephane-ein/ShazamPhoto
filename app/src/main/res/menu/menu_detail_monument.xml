@@ -10,12 +10,4 @@
         android:title="@string/delete_text"
         android:titleCondensed="Delete">
     </item>
-    <item
-        android:id="@+id/item_share"
-        android:actionProviderClass="android.widget.ShareActionProvider"
-        android:icon="@drawable/ic_action_share"
-        app:showAsAction="ifRoom|withText"
-        android:title="@string/share_text"
-        android:titleCondensed="Share">
-    </item>
 </menu>
