@@ -16,15 +16,20 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.MonumentDAO;
+import fr.isen.shazamphoto.events.RequestNearestFromMonument;
+import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
 
 public class DetailMonument extends ActionBarActivity {
 
     private Monument monument;
+    public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +42,13 @@ public class DetailMonument extends ActionBarActivity {
         //Retrieve the TextView, the buttons and the imageView
         TextView nbLike = (TextView) findViewById(R.id.textView_nbLike);
         TextView nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
+        TextView localization = (TextView) findViewById(R.id.textview_localization);
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
-        GridView gridView=(GridView)findViewById(R.id.gridView_nearestMonuments);
-
-        // Create the Custom Adapter Object
-        GridViewAdapter gridViewAdapter = new GridViewAdapter(this);
-        // Set the Adapter to GridView
-        gridView.setAdapter(gridViewAdapter);
 
         // retrieve the monument and some element of the monument detail activity
         monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
+
+        localization.setText(monument.getLocalization().toString());
 
         setTitle("");
 
@@ -56,7 +58,7 @@ public class DetailMonument extends ActionBarActivity {
         Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath(), options);
         photoView.setImageBitmap(bitmap);
 
-        //Set the informations
+        //Set the monument information
         nbLike.setText(monument.getName());
         nbVisitor.setText("More than " + monument.getNbLike() + " likes and " + monument.getNbVisitors() + " visitors");
 
@@ -67,6 +69,7 @@ public class DetailMonument extends ActionBarActivity {
             }
         });
 
+        // Set the button favourite
         final Button favouriteButton = (Button) findViewById(R.id.button_add_favorite);
         favouriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +87,6 @@ public class DetailMonument extends ActionBarActivity {
                 favouriteMonumentDAO.close();
             }
         });
-
         FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(activity);
         favouriteMonumentDAO.open();
         if (favouriteMonumentDAO.select(monument.getId()) != null) {
@@ -93,6 +95,13 @@ public class DetailMonument extends ActionBarActivity {
             favouriteButton.setText("ADD TO FAVORITE");
         }
         favouriteMonumentDAO.close();
+
+        // Get the nearest monuments
+        RequestNearestFromMonument requestNearestFromMonument = new RequestNearestFromMonument(this);
+        GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(requestNearestFromMonument);
+        getMonumentByLocalization.execute(Float.valueOf(monument.getLocalization().getLatitude()).toString(),
+                Float.valueOf(monument.getLocalization().getLongitude()).toString(), "0.09");
+
     }
 
     @Override
@@ -133,6 +142,27 @@ public class DetailMonument extends ActionBarActivity {
             }
             monument.setId(id);
             dao.close();
+        }
+    }
+
+    public void setListNearestMonuments(ArrayList<Monument> monuments){
+        if(!monuments.isEmpty()){
+
+            ArrayList<Monument> monumentsFiltered = new ArrayList<>();
+            int size = (monuments.size() > 4) ? NBMAX_MONUMENT_NEAREST_TO_DISPLAY : monuments.size();
+            for(int i = 0; i<size; i++){
+                Monument m = monuments.get(i);
+                if(m.getName() != monument.getName()){
+                    monumentsFiltered.add(m);
+                }
+            }
+
+            if(!monumentsFiltered.isEmpty()){
+                // Set the grid view of the nearests monuments
+                GridView gridView =(GridView)findViewById(R.id.gridView_nearestMonuments);
+                GridViewAdapter gridViewAdapter = new GridViewAdapter(this, monumentsFiltered);
+                gridView.setAdapter(gridViewAdapter);
+            }
         }
     }
 }

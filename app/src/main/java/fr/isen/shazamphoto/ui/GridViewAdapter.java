@@ -9,19 +9,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Monument;
 
 public class GridViewAdapter extends ArrayAdapter {
 
-    Context context;
+    private Context context;
+    private ArrayList<Monument> monuments;
 
-    public GridViewAdapter(Context context) {
+    public GridViewAdapter(Context context, ArrayList<Monument> monuments) {
         super(context, 0);
         this.context = context;
+        this.monuments = monuments;
     }
 
     public int getCount() {
-        return 3;
+        return monuments.size();
     }
 
     @Override
@@ -34,14 +39,12 @@ public class GridViewAdapter extends ArrayAdapter {
 
             TextView textViewTitle = (TextView) row.findViewById(R.id.textView_gridView);
             ImageView imageViewIte = (ImageView) row.findViewById(R.id.imageView_gridView);
-
-            if (position % 2 == 0) {
-                textViewTitle.setText("Monument 1");
+            if(position < monuments.size()){
+                Monument monument = monuments.get(position);
+                textViewTitle.setText(monument.getName());
                 imageViewIte.setImageResource(R.drawable.monument_1);
-            } else {
-                textViewTitle.setText("Monument 2");
-                imageViewIte.setImageResource(R.drawable.no_picture);
             }
+
         }
         return row;
     }

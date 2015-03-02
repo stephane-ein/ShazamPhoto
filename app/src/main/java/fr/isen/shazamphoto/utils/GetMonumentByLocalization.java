@@ -44,9 +44,10 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
     }
 
     public void setArgument(String latitude, String longitude, String delta) {
-        urlWithArguments = URL + "la=" + latitude + "&lo=" + longitude + "&o" + delta;
+        urlWithArguments = URL + "la=" + latitude + "&lo=" + longitude + "&o=" + delta;
     }
 
+    // Indicate the latitude, longitude and the delta in the arguments
     public JSONObject doInBackground(String... args) {
         jsonResponse = null;
 
@@ -85,35 +86,8 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
             } catch (Exception e) {
             }
 
-            if (requestLocalization instanceof RequestIdentifyByLocalization) {
-                RequestIdentifyByLocalization event = (RequestIdentifyByLocalization) requestLocalization;
-                Home home = event.getHome();
-                String imagePath = event.getImagePath();
-                if (!monuments.isEmpty()) {
-                    Intent intent = new Intent(home, DetailMonument.class);
-                    monuments.get(0).setPhotoPath(imagePath);
-                    FunctionsDB.addMonumentToDB(monuments.get(0), home);
-                    FunctionsDB.addMonumentToTaggedMonument(monuments.get(0), home);
-                    intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(0));
-                    home.startActivity(intent);
-
-                    // Set the list for the nearest monuments  @MAYBE TO CHANGE, NEED LARGER CIRCLE
-                    NearestMonumentsFragment nearestMonumentsFragment = (NearestMonumentsFragment)
-                            home.getSectionsPagerAdapter().getItem(NearestMonumentsFragment.POSITION);
-                    nearestMonumentsFragment.setLocalization(localization);
-
-                } else {
-
-                    //Unidentified Monument
-                    Intent intent = new Intent(home, UnidentifiedMonument.class);
-                    home.startActivity(intent);
-                }
-            }else if(requestLocalization instanceof RequestNearestMonuments){
-                RequestNearestMonuments event = (RequestNearestMonuments) requestLocalization;
-                NearestMonumentsFragment nearestMonumentsFragment = event.getNearestMonumentsFragment();
-                nearestMonumentsFragment.setListNearestMonuments(monuments);
-            }
-
+            requestLocalization.doPostAction(monuments, localization);
         }
+
     }
 }
