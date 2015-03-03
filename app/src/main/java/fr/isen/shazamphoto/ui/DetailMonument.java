@@ -1,12 +1,15 @@
 package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -28,8 +32,14 @@ import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
 public class DetailMonument extends ActionBarActivity {
 
+    public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE = 4;
+    public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_PORTRAIT = 3;
+    public static final int GRIDVIEW_SPACING = 8;
+    public static final int GRIDVIEW_PADDING = 16;
+
     private Monument monument;
-    public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY = 4;
+    private GridView gridView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +54,12 @@ public class DetailMonument extends ActionBarActivity {
         TextView nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
         TextView localization = (TextView) findViewById(R.id.textview_localization);
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
+        gridView = (GridView)findViewById(R.id.gridView_nearestMonuments);
 
         // retrieve the monument and some element of the monument detail activity
         monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
+
+        setColumnWidthView(getResources().getConfiguration().orientation);
 
         localization.setText(monument.getLocalization().toString());
 
@@ -105,6 +118,12 @@ public class DetailMonument extends ActionBarActivity {
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setColumnWidthView(newConfig.orientation);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail_monument, menu);
@@ -149,20 +168,37 @@ public class DetailMonument extends ActionBarActivity {
         if(!monuments.isEmpty()){
 
             ArrayList<Monument> monumentsFiltered = new ArrayList<>();
-            int size = (monuments.size() > 4) ? NBMAX_MONUMENT_NEAREST_TO_DISPLAY : monuments.size();
+            int size = (monuments.size() > 4) ? NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE : monuments.size();
             for(int i = 0; i<size; i++){
                 Monument m = monuments.get(i);
-                if(m.getName() != monument.getName()){
+                if(!m.getName().equals(monument.getName())){
                     monumentsFiltered.add(m);
                 }
             }
 
             if(!monumentsFiltered.isEmpty()){
                 // Set the grid view of the nearests monuments
-                GridView gridView =(GridView)findViewById(R.id.gridView_nearestMonuments);
                 GridViewAdapter gridViewAdapter = new GridViewAdapter(this, monumentsFiltered);
                 gridView.setAdapter(gridViewAdapter);
             }
         }
+    }
+
+    public void setColumnWidthView(int orientation){
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int columnWidth = 0;
+
+        // Checks the orientation of the screen
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            columnWidth = (int) ((width - 2*GRIDVIEW_PADDING -2*GRIDVIEW_SPACING)/(NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE+1)) ;
+
+        } else if (orientation == Configuration.ORIENTATION_PORTRAIT){
+            columnWidth = (int) ((width - 2*GRIDVIEW_PADDING -2*GRIDVIEW_SPACING)/(NBMAX_MONUMENT_NEAREST_TO_DISPLAY_PORTRAIT+1)) ;
+        }
+
+        gridView.setColumnWidth(columnWidth);
     }
 }

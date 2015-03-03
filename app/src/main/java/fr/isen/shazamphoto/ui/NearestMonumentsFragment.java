@@ -82,9 +82,8 @@ public class NearestMonumentsFragment extends Fragment {
                 if (localization == null) {
                     locationListener = new LocationListener() {
                         public void onLocationChanged(Location location) {
-                            Toast.makeText(getActivity(), "With listener", Toast.LENGTH_LONG).show();
                             GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(new RequestNearestMonuments(fragment));
-                            getMonumentByLocalization.execute(Double.valueOf(location.getLatitude()).toString(), Double.valueOf(location.getLongitude()).toString(), "0.001");
+                            getMonumentByLocalization.execute(Double.valueOf(location.getLatitude()).toString(), Double.valueOf(location.getLongitude()).toString(), "0.09");
 
                         }
 
@@ -102,9 +101,8 @@ public class NearestMonumentsFragment extends Fragment {
                     };
                     lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60, 500, locationListener);
                 } else {
-                    Toast.makeText(getActivity(), "Without listener", Toast.LENGTH_LONG).show();
                     GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(new RequestNearestMonuments(fragment));
-                    getMonumentByLocalization.execute(Double.valueOf(localization.getLatitude()).toString(), Double.valueOf(localization.getLongitude()).toString(), "0.001");
+                    getMonumentByLocalization.execute(Double.valueOf(localization.getLatitude()).toString(), Double.valueOf(localization.getLongitude()).toString(), "0.09");
                 }
             }
         });

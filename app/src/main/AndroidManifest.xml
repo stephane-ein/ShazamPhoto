@@ -46,7 +46,8 @@
             android:name=".ui.DetailMonument"
             android:label="@string/detail_monument"
             android:parentActivityName=".ui.Home"
-            android:theme="@style/DetailMonuTheme">
+            android:theme="@style/DetailMonuTheme"
+            android:configChanges="orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.Home" />
