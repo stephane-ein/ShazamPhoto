@@ -20,4 +20,8 @@ public class RequestNearestFromMonument extends RequestLocalization {
     public void doPostAction(ArrayList<Monument> monuments, Localization localization) {
         detailMonument.setListNearestMonuments(monuments);
     }
+
+    public DetailMonument getDetailMonument() {
+        return detailMonument;
+    }
 }

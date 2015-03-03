@@ -2,6 +2,7 @@ package fr.isen.shazamphoto.utils;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -20,6 +21,7 @@ import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
 import fr.isen.shazamphoto.events.RequestLocalization;
+import fr.isen.shazamphoto.events.RequestNearestFromMonument;
 import fr.isen.shazamphoto.events.RequestNearestMonuments;
 import fr.isen.shazamphoto.ui.DetailMonument;
 import fr.isen.shazamphoto.ui.Home;
@@ -86,6 +88,10 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
             } catch (Exception e) {
             }
 
+            if(requestLocalization instanceof RequestNearestFromMonument){
+                RequestNearestFromMonument requestNearestFromMonument = (RequestNearestFromMonument) requestLocalization;
+                Toast.makeText(requestNearestFromMonument.getDetailMonument(),"Thread executed", Toast.LENGTH_LONG).show();
+            }
             requestLocalization.doPostAction(monuments, localization);
         }
 

@@ -88,6 +88,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     "FOREIGN KEY(" + TO_IDENTIFY_MONUMENTS_LOCALISATION_KEY + ") REFERENCES " + LOCALIZATION_TABLE_NAME + "(" + LOCALIZATION_KEY + "));";
     public static final String TO_IDENTIFY_MONUMENTS_TABLE_DROP = "DROP TABLE IF EXISTS " + TO_IDENTIFY_MONUMENTS_TABLE_NAME + ";";
 
+    //		****************table NEAREST_MONUMENTS*******************
+    public static final String NEAREST_MONUMENTS_KEY = "id";
+    public static final String NEAREST_MONUMENTS_MONUMENT_KEY = "monumentId";
+    public static final String NEAREST_MONUMENTS_NEAREST_MONUMENT_KEY = "nearestMonumentId";
+    public static final String NEAREST_MONUMENTS_ALL_COLUMNS[] = {NEAREST_MONUMENTS_KEY, NEAREST_MONUMENTS_MONUMENT_KEY, NEAREST_MONUMENTS_NEAREST_MONUMENT_KEY};
+    public static final String NEAREST_MONUMENTS_TABLE_NAME = "nearestMonuments";
+    public static final String NEAREST_MONUMENTS_TABLE_CREATE =
+            "CREATE TABLE " + NEAREST_MONUMENTS_TABLE_NAME + " (" +
+                    NEAREST_MONUMENTS_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    NEAREST_MONUMENTS_MONUMENT_KEY + " INTEGER, " +
+                    NEAREST_MONUMENTS_NEAREST_MONUMENT_KEY + " INTEGER, " +
+                    "FOREIGN KEY(" + NEAREST_MONUMENTS_MONUMENT_KEY + ") REFERENCES " + MONUMENTS_TABLE_NAME + "(" + MONUMENTS_KEY + "));";
+    public static final String NEAREST_MONUMENTS_TABLE_DROP = "DROP TABLE IF EXISTS " + NEAREST_MONUMENTS_TABLE_NAME + ";";
+
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
@@ -100,6 +114,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(VISITED_MONUMENTS_TABLE_CREATE);
         db.execSQL(TO_IDENTIFY_MONUMENTS_TABLE_CREATE);
         db.execSQL(LOCALIZATION_TABLE_CREATE);
+        db.execSQL(NEAREST_MONUMENTS_TABLE_CREATE);
     }
 
     //mise à jour des tables : suppression des tables en executant les scripts correspondant
@@ -111,6 +126,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(VISITED_MONUMENTS_TABLE_DROP);
         db.execSQL(TO_IDENTIFY_MONUMENTS_TABLE_DROP);
         db.execSQL(LOCALIZATION_TABLE_DROP);
+        db.execSQL(NEAREST_MONUMENTS_TABLE_DROP);
         onCreate(db);
     }
 }

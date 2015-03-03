@@ -26,7 +26,9 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.MonumentDAO;
+import fr.isen.shazamphoto.database.NearestMonumentsDAO;
 import fr.isen.shazamphoto.events.RequestNearestFromMonument;
+import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
 
@@ -87,7 +89,7 @@ public class DetailMonument extends ActionBarActivity {
         favouriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addMonumentToDB();
+                FunctionsDB.addMonumentToDB(monument, getApplicationContext());
                 FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(activity);
                 favouriteMonumentDAO.open();
                 if (favouriteMonumentDAO.select(monument.getId()) != null) {
@@ -110,10 +112,18 @@ public class DetailMonument extends ActionBarActivity {
         favouriteMonumentDAO.close();
 
         // Get the nearest monuments
-        RequestNearestFromMonument requestNearestFromMonument = new RequestNearestFromMonument(this);
-        GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(requestNearestFromMonument);
-        getMonumentByLocalization.execute(Float.valueOf(monument.getLocalization().getLatitude()).toString(),
-                Float.valueOf(monument.getLocalization().getLongitude()).toString(), "0.09");
+        NearestMonumentsDAO nearestMonumentsDAO = new NearestMonumentsDAO(this);
+        nearestMonumentsDAO.open();
+        ArrayList<Monument> monuments = nearestMonumentsDAO.getNearestMonuments(this.monument.getId());
+        if(!monuments.isEmpty()){
+            setGridViewArrayList(monuments);
+        }else{
+            RequestNearestFromMonument requestNearestFromMonument = new RequestNearestFromMonument(this);
+            GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(requestNearestFromMonument);
+            getMonumentByLocalization.execute(Float.valueOf(monument.getLocalization().getLatitude()).toString(),
+                    Float.valueOf(monument.getLocalization().getLongitude()).toString(), "0.09");
+        }
+
 
     }
 
@@ -151,7 +161,7 @@ public class DetailMonument extends ActionBarActivity {
 
     }
 
-    private void addMonumentToDB() {
+  /*  private void addMonumentToDB() {
         if (monument != null && monument.getId() == -1) {
             MonumentDAO dao = new MonumentDAO(this);
             dao.open();
@@ -162,24 +172,28 @@ public class DetailMonument extends ActionBarActivity {
             monument.setId(id);
             dao.close();
         }
-    }
+    }*/
 
     public void setListNearestMonuments(ArrayList<Monument> monuments){
         if(!monuments.isEmpty()){
 
             ArrayList<Monument> monumentsFiltered = new ArrayList<>();
             int size = (monuments.size() > 4) ? NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE : monuments.size();
+            NearestMonumentsDAO nearestMonumentsDAO = new NearestMonumentsDAO(this);
+            nearestMonumentsDAO.open();
+
             for(int i = 0; i<size; i++){
                 Monument m = monuments.get(i);
                 if(!m.getName().equals(monument.getName())){
                     monumentsFiltered.add(m);
+                    FunctionsDB.addMonumentToDB(m, this);
+                    nearestMonumentsDAO.insert(this.monument.getId(), m.getId());
                 }
             }
 
+            nearestMonumentsDAO.close();
             if(!monumentsFiltered.isEmpty()){
-                // Set the grid view of the nearests monuments
-                GridViewAdapter gridViewAdapter = new GridViewAdapter(this, monumentsFiltered);
-                gridView.setAdapter(gridViewAdapter);
+                setGridViewArrayList(monumentsFiltered);
             }
         }
     }
@@ -200,5 +214,11 @@ public class DetailMonument extends ActionBarActivity {
         }
 
         gridView.setColumnWidth(columnWidth);
+    }
+
+    public void setGridViewArrayList(ArrayList<Monument> m){
+        // Set the grid view of the nearests monuments
+        GridViewAdapter gridViewAdapter = new GridViewAdapter(this, m);
+        gridView.setAdapter(gridViewAdapter);
     }
 }

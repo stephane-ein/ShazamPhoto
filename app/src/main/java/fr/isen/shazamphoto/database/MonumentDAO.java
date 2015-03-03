@@ -51,6 +51,7 @@ public class MonumentDAO extends DAOBase {
         return monument;
     }
 
+
     public List<Monument> getAllMonuments() {
         List<Monument> monuments = new ArrayList<Monument>();
 
