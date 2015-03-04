@@ -17,6 +17,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
 
-public class DetailMonument extends ActionBarActivity {
+public class DetailMonument extends ActionBarActivity implements ScrollViewListener{
 
     public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE = 4;
     public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_PORTRAIT = 3;
@@ -41,7 +42,7 @@ public class DetailMonument extends ActionBarActivity {
 
     private Monument monument;
     private GridView gridView;
-
+    private TextView nbVisitor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +54,11 @@ public class DetailMonument extends ActionBarActivity {
 
         //Retrieve the TextView, the buttons and the imageView
         TextView nbLike = (TextView) findViewById(R.id.textView_nbLike);
-        TextView nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
+        nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
         TextView localization = (TextView) findViewById(R.id.textview_localization);
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
         gridView = (GridView)findViewById(R.id.gridView_nearestMonuments);
+        ADMScrollView scrollView = (ADMScrollView) findViewById(R.id.adm_scrollview);
 
         // retrieve the monument and some element of the monument detail activity
         monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
@@ -97,7 +99,7 @@ public class DetailMonument extends ActionBarActivity {
                     favouriteButton.setText("ADD TO FAVORITE");
                 } else {
                     favouriteMonumentDAO.insert(monument);
-                    favouriteButton.setText("REMOVE FROM FAVOURITE");
+                    favouriteButton.setText("REMOVE FROM FAV.");
                 }
                 favouriteMonumentDAO.close();
             }
@@ -105,7 +107,7 @@ public class DetailMonument extends ActionBarActivity {
         FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(activity);
         favouriteMonumentDAO.open();
         if (favouriteMonumentDAO.select(monument.getId()) != null) {
-            favouriteButton.setText("REMOVE FROM FAVORITE");
+            favouriteButton.setText("REMOVE FROM FAV.");
         } else {
             favouriteButton.setText("ADD TO FAVORITE");
         }
@@ -125,6 +127,7 @@ public class DetailMonument extends ActionBarActivity {
         }
 
 
+        scrollView.setScrollViewListener(this);
     }
 
     @Override
@@ -142,10 +145,6 @@ public class DetailMonument extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
@@ -160,19 +159,6 @@ public class DetailMonument extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
 
     }
-
-  /*  private void addMonumentToDB() {
-        if (monument != null && monument.getId() == -1) {
-            MonumentDAO dao = new MonumentDAO(this);
-            dao.open();
-            long id = dao.getMonumentId(monument);
-            if (id == -1) {
-                id = dao.insert(monument);
-            }
-            monument.setId(id);
-            dao.close();
-        }
-    }*/
 
     public void setListNearestMonuments(ArrayList<Monument> monuments){
         if(!monuments.isEmpty()){
@@ -220,5 +206,26 @@ public class DetailMonument extends ActionBarActivity {
         // Set the grid view of the nearests monuments
         GridViewAdapter gridViewAdapter = new GridViewAdapter(this, m);
         gridView.setAdapter(gridViewAdapter);
+    }
+
+    @Override
+    public void onScrollChanged(ADMScrollView scrollView, int x, int y, int oldx, int oldy) {
+
+        // Handle the fadding
+        View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
+
+        double downScrolled = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
+        double startShowMenu = (view.getBottom() *0.3);
+        double fullShowMenu = (view.getBottom() *0.6);
+        double lengthArea = fullShowMenu - startShowMenu;
+
+        if ( startShowMenu >= downScrolled && downScrolled <= fullShowMenu  ){
+            double deltaScrolled = startShowMenu - downScrolled;
+            int newAlpha = (int)((deltaScrolled*255.0)/lengthArea);
+            int alpha = newAlpha > 255 ? 255 : newAlpha;
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 0, 0, 0)));
+        }else if( downScrolled > startShowMenu){
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(0, 0, 0, 0)));
+        }
     }
 }

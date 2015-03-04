@@ -1,6 +1,6 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<fr.isen.shazamphoto.ui.ADMScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scroll"
+    android:id="@+id/adm_scrollview"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
@@ -73,25 +73,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rectangle"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="sans-serif-thin"
+                    android:layout_weight="1"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:text="ADD A LIKE"
-                    android:textColor="@color/material_blue_grey_800" />
+                    android:textColor="@color/material_blue_grey_800"
+                    android:textSize="@dimen/abc_text_size_body_2_material" />
 
                 <Button
                     android:id="@+id/button_add_favorite"
                     style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="300dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:background="@drawable/rectangle"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="sans-serif-thin"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:text="ADD TO FAVORITE" />
+                    android:text="ADD TO FAVORITE"
+                    android:textSize="@dimen/abc_text_size_body_2_material" />
             </LinearLayout>
         </LinearLayout>
 
@@ -105,9 +108,19 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:id="@+id/adm_textview_description_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/abc_text_size_body_2_material"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="Description"
+                    android:textSize="@dimen/abc_text_size_medium_material"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textview_descirption"
@@ -140,10 +153,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/abc_text_size_body_2_material"
                     android:layout_marginTop="@dimen/abc_text_size_body_2_material"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="sans-serif-thin"
                     android:gravity="center"
-                    android:text="Nearests monuments"
-                    android:textSize="@dimen/abc_text_size_medium_material" />
+                    android:text="Nearest monuments"
+                    android:textSize="@dimen/abc_text_size_medium_material"
+                    android:textStyle="bold" />
 
                 <GridView
                     android:id="@+id/gridView_nearestMonuments"
@@ -170,4 +184,4 @@
             android:text="" />
     </LinearLayout>
 
-</ScrollView>
+</fr.isen.shazamphoto.ui.ADMScrollView>
