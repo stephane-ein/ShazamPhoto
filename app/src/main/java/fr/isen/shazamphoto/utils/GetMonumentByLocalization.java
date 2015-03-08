@@ -2,6 +2,7 @@ package fr.isen.shazamphoto.utils;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -36,6 +37,8 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
     private String urlWithArguments;
     private RequestLocalization requestLocalization;
     private Localization localization;
+    public TextView textView;
+    public Home home;
 
     public GetMonumentByLocalization(RequestLocalization requestLocalization) {
         client = new DefaultHttpClient();

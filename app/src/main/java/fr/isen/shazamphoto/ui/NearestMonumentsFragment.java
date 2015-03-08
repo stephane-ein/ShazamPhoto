@@ -27,6 +27,8 @@ import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 public class NearestMonumentsFragment extends Fragment {
 
     public static final int POSITION = 1;
+    public static final String NMF_NEATREST_MONUMENT_LIST =
+            "fr.sein.shazamphoto.ui.nearestmonumentsfragment";
 
     private ListView listView;
     private LocationManager lm;
@@ -80,11 +82,18 @@ public class NearestMonumentsFragment extends Fragment {
 
                 // Search a localization if we don't have one
                 if (localization == null) {
-                    locationListener = new LocationListener() {
-                        public void onLocationChanged(Location location) {
-                            GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(new RequestNearestMonuments(fragment));
-                            getMonumentByLocalization.execute(Double.valueOf(location.getLatitude()).toString(), Double.valueOf(location.getLongitude()).toString(), "0.09");
 
+                    locationListener = new LocationListener() {
+
+                        public void onLocationChanged(Location location) {
+
+                            GetMonumentByLocalization getMonumentByLocalization =
+                                    new GetMonumentByLocalization(new
+                                            RequestNearestMonuments(fragment));
+
+                            getMonumentByLocalization.execute(
+                                    Double.valueOf(location.getLatitude()).toString(),
+                                    Double.valueOf(location.getLongitude()).toString(), "0.09");
                         }
 
                         @Override
@@ -99,10 +108,14 @@ public class NearestMonumentsFragment extends Fragment {
                         public void onProviderDisabled(String provider) {
                         }
                     };
-                    lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60, 500, locationListener);
+                    lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60, 500,
+                            locationListener);
                 } else {
-                    GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(new RequestNearestMonuments(fragment));
-                    getMonumentByLocalization.execute(Double.valueOf(localization.getLatitude()).toString(), Double.valueOf(localization.getLongitude()).toString(), "0.09");
+                    GetMonumentByLocalization getMonumentByLocalization =
+                            new GetMonumentByLocalization(new RequestNearestMonuments(fragment));
+                    getMonumentByLocalization.execute(
+                            Double.valueOf(localization.getLatitude()).toString(),
+                            Double.valueOf(localization.getLongitude()).toString(), "0.09");
                 }
             }
         });
@@ -133,6 +146,8 @@ public class NearestMonumentsFragment extends Fragment {
         button.setVisibility(View.INVISIBLE);
         if(locationListener != null) lm.removeUpdates(locationListener);
     }
+
+    public ArrayList<Monument> getMonuments(){ return monuments; }
 
     public Button getButton() {
         return button;

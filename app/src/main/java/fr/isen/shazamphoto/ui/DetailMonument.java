@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Display;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
@@ -43,6 +47,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     private Monument monument;
     private GridView gridView;
     private TextView nbVisitor;
+    private TextView noNearestMonument;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +58,12 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(0, 0, 0, 0)));
 
         //Retrieve the TextView, the buttons and the imageView
+        gridView = (GridView)findViewById(R.id.gridView_nearestMonuments);
         TextView nbLike = (TextView) findViewById(R.id.textView_nbLike);
         nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
         TextView localization = (TextView) findViewById(R.id.textview_localization);
+        noNearestMonument = (TextView)findViewById(R.id.adm_textview_nonearestmonument);
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
-        gridView = (GridView)findViewById(R.id.gridView_nearestMonuments);
         ADMScrollView scrollView = (ADMScrollView) findViewById(R.id.adm_scrollview);
 
         // retrieve the monument and some element of the monument detail activity
@@ -65,7 +71,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
         setColumnWidthView(getResources().getConfiguration().orientation);
 
-        localization.setText(monument.getLocalization().toString());
+        //localization.setText(monument.getLocalization().toString());
 
         setTitle("");
 
@@ -126,7 +132,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                     Float.valueOf(monument.getLocalization().getLongitude()).toString(), "0.09");
         }
 
-
         scrollView.setScrollViewListener(this);
     }
 
@@ -161,16 +166,20 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     }
 
     public void setListNearestMonuments(ArrayList<Monument> monuments){
-        if(!monuments.isEmpty()){
+
+        if(!monuments.isEmpty()) {
+
+            noNearestMonument.setVisibility(View.INVISIBLE);
 
             ArrayList<Monument> monumentsFiltered = new ArrayList<>();
             int size = (monuments.size() > 4) ? NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE : monuments.size();
             NearestMonumentsDAO nearestMonumentsDAO = new NearestMonumentsDAO(this);
             nearestMonumentsDAO.open();
 
-            for(int i = 0; i<size; i++){
+            // Add the nearest monument in the database in order to work off line
+            for (int i = 0; i < size; i++) {
                 Monument m = monuments.get(i);
-                if(!m.getName().equals(monument.getName())){
+                if (!m.getName().equals(monument.getName())) {
                     monumentsFiltered.add(m);
                     FunctionsDB.addMonumentToDB(m, this);
                     nearestMonumentsDAO.insert(this.monument.getId(), m.getId());
@@ -178,8 +187,13 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             }
 
             nearestMonumentsDAO.close();
-            if(!monumentsFiltered.isEmpty()){
+
+            // After the list of monuments is filered, we check if
+            // there is some monument around the user
+            if (!monumentsFiltered.isEmpty()) {
                 setGridViewArrayList(monumentsFiltered);
+            } else {
+                noNearestMonument.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -193,10 +207,10 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
         // Checks the orientation of the screen
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            columnWidth = (int) ((width - 2*GRIDVIEW_PADDING -2*GRIDVIEW_SPACING)/(NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE+1)) ;
+            columnWidth = ((width - 2*GRIDVIEW_PADDING -2*GRIDVIEW_SPACING)/(NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE+1)) ;
 
         } else if (orientation == Configuration.ORIENTATION_PORTRAIT){
-            columnWidth = (int) ((width - 2*GRIDVIEW_PADDING -2*GRIDVIEW_SPACING)/(NBMAX_MONUMENT_NEAREST_TO_DISPLAY_PORTRAIT+1)) ;
+            columnWidth = ((width - 2*GRIDVIEW_PADDING -2*GRIDVIEW_SPACING)/(NBMAX_MONUMENT_NEAREST_TO_DISPLAY_PORTRAIT+1)) ;
         }
 
         gridView.setColumnWidth(columnWidth);
@@ -210,7 +224,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     @Override
     public void onScrollChanged(ADMScrollView scrollView, int x, int y, int oldx, int oldy) {
-
         // Handle the fadding
         View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
 

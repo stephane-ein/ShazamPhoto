@@ -79,7 +79,6 @@ public class Home extends ActionBarActivity {
             }
         });
 
-        final Home home = this;
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {

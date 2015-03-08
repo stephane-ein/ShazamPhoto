@@ -41,7 +41,7 @@ public class RequestIdentifyByLocalization extends RequestLocalization{
             intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(0));
             home.startActivity(intent);
 
-            // Set the list for the nearest monuments  @MAYBE TO CHANGE, NEED LARGER CIRCLE
+            // Set the position, in order to not use the NETWORK_PROVIDER
             NearestMonumentsFragment nearestMonumentsFragment = (NearestMonumentsFragment)
                     home.getSectionsPagerAdapter().getItem(NearestMonumentsFragment.POSITION);
             nearestMonumentsFragment.setLocalization(localization);

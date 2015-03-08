@@ -9,17 +9,27 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Monument;
 
 public class NearestMonuments extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private ArrayList<Monument> monuments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearest_monuments);
         setUpMapIfNeeded();
+
+        ArrayList<Monument> monumentsIntent = (ArrayList) getIntent().getSerializableExtra(
+                NearestMonumentsFragment.NMF_NEATREST_MONUMENT_LIST);
+        setListMonuments(monumentsIntent);
     }
 
     @Override
@@ -59,7 +69,7 @@ public class NearestMonuments extends FragmentActivity {
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
-                setUpMap();
+                //setUpMap();
             }
         }
     }
@@ -71,6 +81,15 @@ public class NearestMonuments extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(120.32, 3.048681)).title("Marker"));
+        for(Monument monument : monuments){
+            mMap.addMarker(new MarkerOptions().position(new LatLng
+                    (monument.getLocalization().getLatitude(),
+                            monument.getLocalization().getLongitude())).title("Marker"));
+        }
+    }
+
+    public void setListMonuments(ArrayList<Monument> monuments){
+       // if(monuments != null && !monuments.isEmpty()) this.monuments = monuments; setUpMap();
+
     }
 }

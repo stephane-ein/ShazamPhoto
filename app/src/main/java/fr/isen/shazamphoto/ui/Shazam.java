@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -88,7 +89,7 @@ public class Shazam extends Fragment {
 
                 if (exifInterface.getLatLong(localisation)) {
                     GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
-                    getMonumentByLocalization.execute(Float.valueOf(localisation[0]).toString(), Float.valueOf(localisation[1]).toString(), "0.01");
+                    getMonumentByLocalization.execute(Float.valueOf(localisation[0]).toString(), Float.valueOf(localisation[1]).toString(), "0.09");
                 } else {
                     locationListener = new LocationListener() {
                         public void onLocationChanged(Location location) {

@@ -1,7 +1,5 @@
 package fr.isen.shazamphoto.events;
 
-import android.widget.Toast;
-
 import java.util.ArrayList;
 
 import fr.isen.shazamphoto.database.Localization;
