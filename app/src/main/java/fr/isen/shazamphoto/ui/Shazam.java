@@ -1,9 +1,6 @@
 package fr.isen.shazamphoto.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -17,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -29,7 +25,6 @@ import java.util.Date;
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
-import fr.isen.shazamphoto.events.RequestNearestMonuments;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
 public class Shazam extends Fragment {
@@ -42,11 +37,13 @@ public class Shazam extends Fragment {
     private String photoPath;
     private ArrayList<Monument> monuments;
     private ListView listView;
-    private LocationManager lm;
-    private LocationListener locationListener;
+    private LocateManager locateManager;
 
-    public static Shazam newInstance() {
-        return new Shazam();
+
+    public static Shazam newInstance(LocationManager locationManager) {
+        Shazam shazam =  new Shazam();
+        shazam.setLocateManager(new LocateManager(locationManager));
+        return shazam;
     }
 
     public Shazam() {
@@ -85,32 +82,16 @@ public class Shazam extends Fragment {
             try {
                 ExifInterface exifInterface = new ExifInterface(photoPath);
                 float[] localisation = new float[2];
-                lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
                 if (exifInterface.getLatLong(localisation)) {
-                    GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
-                    getMonumentByLocalization.execute(Float.valueOf(localisation[0]).toString(), Float.valueOf(localisation[1]).toString(), "0.09");
+                    GetMonumentByLocalization getMonumentByLocalization =
+                            new GetMonumentByLocalization(new RequestIdentifyByLocalization(
+                                    (Home) getActivity(), photoPath));
+                    getMonumentByLocalization.execute(Float.valueOf(localisation[0]).toString(),
+                            Float.valueOf(localisation[1]).toString(), "0.09");
                 } else {
-                    locationListener = new LocationListener() {
-                        public void onLocationChanged(Location location) {
-                            GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
-                            getMonumentByLocalization.execute(Double.valueOf(location.getLatitude()).toString(), Double.valueOf(location.getLongitude()).toString(), "0.09");
-
-                        }
-
-                        @Override
-                        public void onStatusChanged(String provider, int status, Bundle extras) {
-                        }
-
-                        @Override
-                        public void onProviderEnabled(String provider) {
-                        }
-
-                        @Override
-                        public void onProviderDisabled(String provider) {
-                        }
-                    };
-                    lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60, 500, locationListener);
+                    locateManager.startListening(
+                            new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
                 }
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -154,7 +135,9 @@ public class Shazam extends Fragment {
 
     public void setListResult(ArrayList<Monument> monuments) {
         if (!monuments.isEmpty()) {
-            if(locationListener != null) lm.removeUpdates(locationListener);
+
+            locateManager.stopListening();
+
             this.monuments = monuments;
             CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
             listView.setAdapter(adapter);
@@ -168,5 +151,8 @@ public class Shazam extends Fragment {
         if (this.monuments != null) this.monuments.clear();
     }
 
+    public void setLocateManager(LocateManager locateManager) {
+        this.locateManager = locateManager;
+    }
 }
 

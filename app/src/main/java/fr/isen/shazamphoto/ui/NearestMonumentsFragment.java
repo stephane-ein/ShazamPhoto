@@ -1,20 +1,15 @@
 package fr.isen.shazamphoto.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -31,20 +26,18 @@ public class NearestMonumentsFragment extends Fragment {
             "fr.sein.shazamphoto.ui.nearestmonumentsfragment";
 
     private ListView listView;
-    private LocationManager lm;
     private Button button;
     private ArrayList<Monument> monuments;
-    private LocationListener locationListener;
     private Localization localization;
+    private LocateManager locateManager;
 
-
-    public static NearestMonumentsFragment newInstance() {
+    public static NearestMonumentsFragment newInstance(LocationManager locationManager) {
         NearestMonumentsFragment fragment = new NearestMonumentsFragment();
+        fragment.setLocateManager(new LocateManager(locationManager));
         return fragment;
     }
 
     public NearestMonumentsFragment() {
-        // Required empty public constructor
         listView = null;
         monuments = new ArrayList<>();
         localization = null;
@@ -71,7 +64,6 @@ public class NearestMonumentsFragment extends Fragment {
         });
 
         final NearestMonumentsFragment fragment = this;
-        lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         button = (Button) view.findViewById(R.id.button_search_nearest_monuments);
 
 
@@ -82,34 +74,7 @@ public class NearestMonumentsFragment extends Fragment {
 
                 // Search a localization if we don't have one
                 if (localization == null) {
-
-                    locationListener = new LocationListener() {
-
-                        public void onLocationChanged(Location location) {
-
-                            GetMonumentByLocalization getMonumentByLocalization =
-                                    new GetMonumentByLocalization(new
-                                            RequestNearestMonuments(fragment));
-
-                            getMonumentByLocalization.execute(
-                                    Double.valueOf(location.getLatitude()).toString(),
-                                    Double.valueOf(location.getLongitude()).toString(), "0.09");
-                        }
-
-                        @Override
-                        public void onStatusChanged(String provider, int status, Bundle extras) {
-                        }
-
-                        @Override
-                        public void onProviderEnabled(String provider) {
-                        }
-
-                        @Override
-                        public void onProviderDisabled(String provider) {
-                        }
-                    };
-                    lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60, 500,
-                            locationListener);
+                    locateManager.startListening(new RequestNearestMonuments(fragment));
                 } else {
                     GetMonumentByLocalization getMonumentByLocalization =
                             new GetMonumentByLocalization(new RequestNearestMonuments(fragment));
@@ -144,12 +109,16 @@ public class NearestMonumentsFragment extends Fragment {
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         button.setVisibility(View.INVISIBLE);
-        if(locationListener != null) lm.removeUpdates(locationListener);
+        locateManager.stopListening();
     }
 
     public ArrayList<Monument> getMonuments(){ return monuments; }
 
     public Button getButton() {
         return button;
+    }
+
+    public void setLocateManager(LocateManager locateManager) {
+        this.locateManager = locateManager;
     }
 }

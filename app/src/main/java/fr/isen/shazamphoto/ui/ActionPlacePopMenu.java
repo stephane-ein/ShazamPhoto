@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
-import android.widget.Toast;
-
 
 import fr.isen.shazamphoto.R;
 

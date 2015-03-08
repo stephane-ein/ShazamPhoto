@@ -1,5 +1,7 @@
 package fr.isen.shazamphoto.ui;
 
+import android.content.Context;
+import android.location.LocationManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -32,15 +34,16 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 if(fragments.get(Shazam.POSITION) == null){
-                    fragments.add(Shazam.POSITION, Shazam.newInstance());
+                    fragments.add(Shazam.POSITION, Shazam.newInstance(
+                            (LocationManager) home.getSystemService(Context.LOCATION_SERVICE)));
                 }
                 result = fragments.get(Shazam.POSITION);
-                //result = Shazam.newInstance();
                 break;
             case 1:
                 if(fragments.get(NearestMonumentsFragment.POSITION) == null){
                   fragments.add(NearestMonumentsFragment.POSITION,
-                          NearestMonumentsFragment.newInstance());
+                          NearestMonumentsFragment.newInstance((LocationManager)
+                                  home.getSystemService(Context.LOCATION_SERVICE)));
                 }
                 result = fragments.get(NearestMonumentsFragment.POSITION);
                 break;
