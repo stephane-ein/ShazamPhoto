@@ -95,6 +95,7 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
                 RequestNearestFromMonument requestNearestFromMonument = (RequestNearestFromMonument) requestLocalization;
                 Toast.makeText(requestNearestFromMonument.getDetailMonument(),"Thread executed", Toast.LENGTH_LONG).show();
             }
+
             requestLocalization.doPostAction(monuments, localization);
         }
 

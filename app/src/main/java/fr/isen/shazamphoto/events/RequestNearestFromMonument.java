@@ -22,4 +22,5 @@ public class RequestNearestFromMonument extends RequestLocalization {
     public DetailMonument getDetailMonument() {
         return detailMonument;
     }
+
 }

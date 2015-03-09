@@ -58,7 +58,8 @@ public class NearestMonumentsFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), NearestMonuments.class);
+                Intent intent = new Intent(getActivity(), DetailMonument.class);
+                intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(position));
                 startActivity(intent);
             }
         });
@@ -82,6 +83,7 @@ public class NearestMonumentsFragment extends Fragment {
                             Double.valueOf(localization.getLatitude()).toString(),
                             Double.valueOf(localization.getLongitude()).toString(), "0.09");
                 }
+
             }
         });
 

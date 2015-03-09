@@ -2,6 +2,7 @@ package fr.isen.shazamphoto.ui;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -123,7 +124,9 @@ public class Home extends ActionBarActivity {
                 break;
             case R.id.action_place :
                 //Show the pop menu
-                ActionPlacePopMenu popupMenu = new ActionPlacePopMenu(this, findViewById(R.id.action_place));
+                ActionPlacePopMenu popupMenu = new ActionPlacePopMenu(this,
+                        findViewById(R.id.action_place),
+                        (LocationManager) getSystemService(Context.LOCATION_SERVICE));
                 popupMenu.showPopup();
                 break;
         }

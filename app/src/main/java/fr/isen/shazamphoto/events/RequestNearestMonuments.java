@@ -20,5 +20,6 @@ public class RequestNearestMonuments extends RequestLocalization {
     @Override
     public void doPostAction(ArrayList<Monument> monuments, Localization localization) {
         nearestMonumentsFragment.setListNearestMonuments(monuments);
+
     }
 }

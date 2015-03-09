@@ -27,18 +27,18 @@ import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.ui.Home;
 import fr.isen.shazamphoto.ui.UnidentifiedMonument;
 
-public class AddMonument extends AsyncTask<Monument, Void, String>{
+public class AddMonument extends AsyncTask<Monument, Void, String> {
 
     private HttpClient httpclient = new DefaultHttpClient();
     private HttpPost httppost = new HttpPost("http://37.187.216.159/shazam/api.php");
     private UnidentifiedMonument home;
     private HttpResponse response;
 
-    public AddMonument(UnidentifiedMonument home){
+    public AddMonument(UnidentifiedMonument home) {
         this.home = home;
     }
 
-    public String doInBackground(Monument... monuments){
+    public String doInBackground(Monument... monuments) {
         Monument monument = monuments[0];
         try {
 
@@ -49,11 +49,12 @@ public class AddMonument extends AsyncTask<Monument, Void, String>{
             StringEntity entity = new StringEntity("monument=" + monument.toJSON().toString(), "UTF8");
             entity.setContentType("application/x-www-form-urlencoded");
             httppost.setEntity(entity);
+
             // Execute HTTP Post Request
             response = httpclient.execute(httppost);
 
         } catch (ClientProtocolException e) {
-           // Toast.makeText(home, e.getMessage(), Toast.LENGTH_LONG).show();
+            // Toast.makeText(home, e.getMessage(), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             //Toast.makeText(home, e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -61,9 +62,8 @@ public class AddMonument extends AsyncTask<Monument, Void, String>{
         return monument.getName().toString();
     }
 
-    public void onPostExecute(String result2)
-    {
-        try{
+    public void onPostExecute(String result2) {
+        try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(
                     response.getEntity().getContent()));
             StringBuffer result = new StringBuffer();
@@ -73,7 +73,8 @@ public class AddMonument extends AsyncTask<Monument, Void, String>{
             }
             JSONObject jsonResponse = new JSONObject(result.toString());
             Toast.makeText(home, jsonResponse.toString(), Toast.LENGTH_LONG).show();
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
 
     }
 }

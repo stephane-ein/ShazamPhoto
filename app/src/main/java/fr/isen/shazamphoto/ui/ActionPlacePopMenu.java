@@ -2,23 +2,29 @@ package fr.isen.shazamphoto.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.events.RequestNearestMonumentsAndMap;
+import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
 
 public class ActionPlacePopMenu extends PopupMenu implements PopupMenu.OnMenuItemClickListener{
 
     private View menuItemView;
     private Home home;
+    private LocateManager locateManager;
 
-    public ActionPlacePopMenu(Context context, View anchor) {
+    public ActionPlacePopMenu(Context context, View anchor, LocationManager locationManager) {
         super(context, anchor);
         this.menuItemView = anchor;
         this.home = context instanceof Home ? (Home) context : null;
         setOnMenuItemClickListener(this);
+        this.locateManager = new LocateManager(locationManager);
+        this.locateManager.home = home;
     }
 
     public void showPopup() {
@@ -36,11 +42,7 @@ public class ActionPlacePopMenu extends PopupMenu implements PopupMenu.OnMenuIte
                 home.getmViewPager().setCurrentItem(NearestMonumentsFragment.POSITION);
                 NearestMonumentsFragment nearestMonumentsFragment = (NearestMonumentsFragment)
                         home.getSectionsPagerAdapter().getItem(NearestMonumentsFragment.POSITION);
-                nearestMonumentsFragment.getButton().performClick();
-                Intent intent = new Intent(home, NearestMonuments.class);
-                intent.putExtra(NearestMonumentsFragment.NMF_NEATREST_MONUMENT_LIST,
-                        nearestMonumentsFragment.getMonuments());
-                home.startActivity(intent);
+                this.locateManager.startListening(new RequestNearestMonumentsAndMap(home, nearestMonumentsFragment));
                 return true;
 
             // Drawn the shortest path between n monuments

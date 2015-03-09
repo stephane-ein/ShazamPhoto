@@ -25,9 +25,9 @@ public class NearestMonuments extends FragmentActivity {
         setContentView(R.layout.activity_nearest_monuments);
         setUpMapIfNeeded();
 
-        ArrayList<Monument> monumentsIntent = (ArrayList) getIntent().getSerializableExtra(
+     /*   ArrayList<Monument> monumentsIntent =  (ArrayList<Monument>) getIntent().getSerializableExtra(
                 NearestMonumentsFragment.NMF_NEATREST_MONUMENT_LIST);
-        setListMonuments(monumentsIntent);
+        setListMonuments(monumentsIntent);*/
     }
 
     @Override
@@ -67,7 +67,7 @@ public class NearestMonuments extends FragmentActivity {
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
-                //setUpMap();
+                setUpMap();
             }
         }
     }
@@ -79,15 +79,14 @@ public class NearestMonuments extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        for(Monument monument : monuments){
+        /*for(Monument monument : monuments){
             mMap.addMarker(new MarkerOptions().position(new LatLng
                     (monument.getLocalization().getLatitude(),
                             monument.getLocalization().getLongitude())).title("Marker"));
-        }
+        }*/
     }
 
     public void setListMonuments(ArrayList<Monument> monuments){
        // if(monuments != null && !monuments.isEmpty()) this.monuments = monuments; setUpMap();
-
     }
 }
