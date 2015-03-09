@@ -25,7 +25,9 @@ import java.util.Date;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
+import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.ImgProcessing;
 
@@ -41,11 +43,14 @@ public class Shazam extends Fragment {
     private ArrayList<Monument> monuments;
     private ListView listView;
     private LocateManager locateManager;
+    private ModelNavigation modelNavigation;
 
-
-    public static Shazam newInstance(LocationManager locationManager) {
+    public static Shazam newInstance(LocationManager locationManager, ModelNavigation modelNavigation) {
         Shazam shazam =  new Shazam();
+        Bundle args = new Bundle();
+        args.putSerializable(ModelNavigation.KEY, modelNavigation);
         shazam.setLocateManager(new LocateManager(locationManager));
+        shazam.setArguments(args);
         return shazam;
     }
 
@@ -61,9 +66,13 @@ public class Shazam extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_shazam, container, false);
+
         listView = (ListView) view.findViewById(R.id.listview_result_monument);
         button = (Button) view.findViewById(R.id.but_takePicture);
+
+        this.modelNavigation = (ModelNavigation) getArguments().getSerializable(ModelNavigation.KEY);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,8 +105,8 @@ public class Shazam extends Fragment {
                     locateManager.startListening(
                             new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
                 }*/
-                ImgProcessing process = new ImgProcessing(this.getActivity());
-                process.recognise();
+               /* ImgProcessing process = new ImgProcessing(this.getActivity());
+                process.recognise();*/
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -153,9 +162,8 @@ public class Shazam extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> arg0, View arg1,
                                         int position, long arg3) {
-                    Intent intent = new Intent(getActivity(), DetailMonument.class);
-                    intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(position));
-                    startActivity(intent);
+                    modelNavigation.changeAppView(new EventDisplayDetailMonument(getActivity(),
+                            monuments.get(position)));
                 }
             });
         }
