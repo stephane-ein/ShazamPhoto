@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -133,7 +134,7 @@ public class Shazam extends Fragment {
         }
     }
 
-    public void setListResult(ArrayList<Monument> monuments) {
+    public void setListResult(final ArrayList<Monument> monuments) {
         if (!monuments.isEmpty()) {
 
             locateManager.stopListening();
@@ -144,6 +145,15 @@ public class Shazam extends Fragment {
             adapter.notifyDataSetChanged();
             listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
             listView.setVisibility(View.VISIBLE);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1,
+                                        int position, long arg3) {
+                    Intent intent = new Intent(getActivity(), DetailMonument.class);
+                    intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(position));
+                    startActivity(intent);
+                }
+            });
         }
     }
 

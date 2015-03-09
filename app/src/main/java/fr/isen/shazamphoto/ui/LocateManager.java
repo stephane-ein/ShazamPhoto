@@ -39,5 +39,5 @@ public class LocateManager {
         lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60, 500, locationListener);
     }
 
-    public void stopListening(){ lm.removeUpdates(locationListener); }
+    public void stopListening(){  if(locationListener != null) lm.removeUpdates(locationListener); }
 }

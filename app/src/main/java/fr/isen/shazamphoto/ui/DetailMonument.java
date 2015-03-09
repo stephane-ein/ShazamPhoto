@@ -69,10 +69,13 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         setTitle("");
 
         //Set the picture
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
-        Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath(), options);
-        photoView.setImageBitmap(bitmap);
+        if(monument.getPhotoPath() != null && !monument.getPhotoPath().isEmpty()){
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+            Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath(), options);
+            photoView.setImageBitmap(bitmap);
+        }
+
 
         //Set the monument information
         nbLike.setText(monument.getName());
