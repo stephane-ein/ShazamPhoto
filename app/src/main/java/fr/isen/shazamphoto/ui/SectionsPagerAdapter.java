@@ -35,7 +35,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 if(fragments.get(Shazam.POSITION) == null){
                     fragments.add(Shazam.POSITION, Shazam.newInstance(
-                            (LocationManager) home.getSystemService(Context.LOCATION_SERVICE)));
+                            (LocationManager) home.getSystemService(Context.LOCATION_SERVICE),
+                            home.getModelNavigation()));
                 }
                 result = fragments.get(Shazam.POSITION);
                 break;
@@ -48,10 +49,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 result = fragments.get(NearestMonumentsFragment.POSITION);
                 break;
             case 2:
-                result = TaggedMonument.newInstance();
+                result = TaggedMonument.newInstance(home.getModelNavigation());
                 break;
             case 3:
-                result = FavouriteMonument.newInstance();
+                result = FavouriteMonument.newInstance(home.getModelNavigation());
                 break;
             default:
                 result = new About();

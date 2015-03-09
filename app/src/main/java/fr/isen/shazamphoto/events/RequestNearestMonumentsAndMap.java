@@ -1,6 +1,5 @@
 package fr.isen.shazamphoto.events;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
 
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.ui.Home;
-import fr.isen.shazamphoto.ui.ListMonumentBundle;
 import fr.isen.shazamphoto.ui.NearestMonuments;
 import fr.isen.shazamphoto.ui.NearestMonumentsFragment;
 

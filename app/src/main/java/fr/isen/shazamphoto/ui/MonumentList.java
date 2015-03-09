@@ -1,7 +1,6 @@
 package fr.isen.shazamphoto.ui;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,13 +16,19 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.TaggedMonumentDAO;
+import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
+import fr.isen.shazamphoto.model.ModelNavigation;
 
 public abstract class MonumentList extends Fragment {
     private View view;
     private String typeOfList;
+    private ModelNavigation modelNavigation;
+
+    public MonumentList(){
+
+    }
 
     public MonumentList(String typeOfList) {
-        // Required empty public constructor
         this.typeOfList = typeOfList;
     }
 
@@ -36,10 +41,16 @@ public abstract class MonumentList extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_favourite_monument, container, false);
+
+        this.modelNavigation = (ModelNavigation)
+                getArguments().getSerializable(ModelNavigation.KEY);
+
         setView();
         setRetainInstance(true);
+
         return view;
     }
 
@@ -94,9 +105,8 @@ public abstract class MonumentList extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int position, long arg3) {
-                Intent intent = new Intent(getActivity(), DetailMonument.class);
-                intent.putExtra(Monument.NAME_SERIALIZABLE, monuments.get(position));
-                startActivity(intent);
+                modelNavigation.changeAppView(new EventDisplayDetailMonument(getActivity(),
+                        monuments.get(position)));
             }
         });
     }

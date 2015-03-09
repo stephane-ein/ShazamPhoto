@@ -1,7 +1,6 @@
 package fr.isen.shazamphoto.utils;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,28 +15,24 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 
-import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.events.SearchMonument;
-import fr.isen.shazamphoto.events.SearchMonumentByName;
-import fr.isen.shazamphoto.events.SearchMonumentUnidentified;
-import fr.isen.shazamphoto.ui.AddMonumentFragment;
-import fr.isen.shazamphoto.ui.Shazam;
-import fr.isen.shazamphoto.ui.UnidentifiedMonument;
+import fr.isen.shazamphoto.ui.SearchableItem;
 
 public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
     private static final String URL = "http://37.187.216.159/shazam/api.php?n=";
     private HttpClient client;
     private ArrayList<Monument> monuments;
     private JSONObject jsonResponse;
-    private SearchMonument searchMonument;
+   // private SearchMonument searchMonument;
+    private SearchableItem searchableItem;
 
-    public GetMonumentSearch(SearchMonument event) {
+    public GetMonumentSearch(/*SearchMonument event*/SearchableItem searchableItem) {
         client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
                 "android");
         monuments = new ArrayList<>();
-        this.searchMonument = event;
+       // this.searchMonument = event;
+        this.searchableItem = searchableItem;
     }
 
     public JSONObject doInBackground(String... imdbId) {
@@ -73,11 +68,9 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
             } catch (Exception e) {
             }
 
-            if (searchMonument instanceof SearchMonumentByName) {
-                SearchMonumentByName event = (SearchMonumentByName) searchMonument;
-                Shazam shazam = event.getShazam();
-                shazam.setListResult(monuments);
-            } else if (searchMonument instanceof SearchMonumentUnidentified) {
+            this.searchableItem.onPostSearch(monuments);
+/*
+           if (searchMonument instanceof SearchMonumentUnidentified) {
                 SearchMonumentUnidentified event = (SearchMonumentUnidentified) searchMonument;
                 UnidentifiedMonument unidentifiedMonument = event.getUnidentifiedMonument();
                 if (!monuments.isEmpty()) {
@@ -89,7 +82,7 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
                             .replace(R.id.container, new AddMonumentFragment())
                             .commit();
                 }
-            }
+            }*/
 
         }
     }

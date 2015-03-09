@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fr.isen.shazamphoto.ui;
+package fr.isen.shazamphoto.ui.SlidingTab;
 
 import android.content.Context;
 import android.graphics.Typeface;

@@ -13,23 +13,41 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import fr.isen.shazamphoto.R;
-import fr.isen.shazamphoto.events.SearchMonumentByName;
+import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.events.EventSearchMonumentByName;
+import fr.isen.shazamphoto.model.ModelNavigation;
+import fr.isen.shazamphoto.ui.SlidingTab.SlidingTabLayout;
 import fr.isen.shazamphoto.utils.GetMonumentSearch;
+import fr.isen.shazamphoto.views.ViewDetailMonument;
+import fr.isen.shazamphoto.views.ViewMonumentsResult;
 
-public class Home extends ActionBarActivity {
+public class Home extends ActionBarActivity implements SearchableItem{
 
     private SearchView searchView;
     private MenuItem searchMenuItem;
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
     private SectionsPagerAdapter sectionsPagerAdapter;
+    private GetMonumentSearch getMonumentSearch;
+    private ModelNavigation modelNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        this.getMonumentSearch = new GetMonumentSearch(this);
+
+        // Set the Model of the navigation with his views
+        this.modelNavigation = new ModelNavigation();
+        this.modelNavigation.addView(new ViewMonumentsResult());
+        this.modelNavigation.addView(new ViewDetailMonument());
+
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
         // BEGIN_INCLUDE (setup_viewpager)
         // Get the ViewPager and set it's PagerAdapter so that it can display items
@@ -43,6 +61,7 @@ public class Home extends ActionBarActivity {
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
         // END_INCLUDE (setup_slidingtablayout)
+
     }
 
     @Override
@@ -96,9 +115,6 @@ public class Home extends ActionBarActivity {
                 imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
                 //Make de search
-                GetMonumentSearch getMonumentSearch = new GetMonumentSearch(
-                        new SearchMonumentByName((Shazam)getSectionsPagerAdapter().getItem(
-                                Shazam.POSITION)));
                 getMonumentSearch.execute(query);
 
                 return true;
@@ -140,5 +156,16 @@ public class Home extends ActionBarActivity {
 
     public ViewPager getmViewPager() {
         return mViewPager;
+    }
+
+    @Override
+    public void onPostSearch(ArrayList<Monument> monuments) {
+        Toast.makeText(this, "onPostSearch ! : "+ Integer.valueOf(monuments.size()), Toast.LENGTH_LONG).show();
+        Shazam shazam = (Shazam) getSectionsPagerAdapter().getItem(Shazam.POSITION);
+        modelNavigation.changeAppView(new EventSearchMonumentByName(monuments, shazam));
+    }
+
+    public ModelNavigation getModelNavigation() {
+        return modelNavigation;
     }
 }
