@@ -135,7 +135,7 @@ public class Shazam extends Fragment {
     }
 
     public void setListResult(final ArrayList<Monument> monuments) {
-        if (!monuments.isEmpty()) {
+        if (!monuments.isEmpty() && listView != null && locateManager != null) {
 
             locateManager.stopListening();
 
