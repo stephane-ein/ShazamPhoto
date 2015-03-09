@@ -27,12 +27,14 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
+import fr.isen.shazamphoto.utils.ImgProcessing;
 
 public class Shazam extends Fragment {
 
     public static final int POSITION = 0;
     public static final int REQUEST_TAKE_PHOTO = 1;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
+
 
     private Button button;
     private String photoPath;
@@ -84,7 +86,7 @@ public class Shazam extends Fragment {
                 ExifInterface exifInterface = new ExifInterface(photoPath);
                 float[] localisation = new float[2];
 
-                if (exifInterface.getLatLong(localisation)) {
+                /*if (exifInterface.getLatLong(localisation)) {
                     GetMonumentByLocalization getMonumentByLocalization =
                             new GetMonumentByLocalization(new RequestIdentifyByLocalization(
                                     (Home) getActivity(), photoPath));
@@ -93,7 +95,9 @@ public class Shazam extends Fragment {
                 } else {
                     locateManager.startListening(
                             new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
-                }
+                }*/
+                ImgProcessing process = new ImgProcessing(this.getActivity());
+                process.recognise();
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
