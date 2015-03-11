@@ -15,7 +15,7 @@ public class UnidentifiedMonument extends ActionBarActivity {
         setContentView(R.layout.activity_unidentified_monument);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PromptNameMonument())
+                    .add(R.id.container, new AddMonumentFragment())
                     .commit();
         }
     }

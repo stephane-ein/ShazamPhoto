@@ -43,6 +43,7 @@ import java.util.List;
 
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.ui.DetailMonument;
+import fr.isen.shazamphoto.ui.UnidentifiedMonument;
 
 /**
  * Created by carlo_000 on 09/03/2015.
@@ -278,19 +279,28 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
     public Monument monument;
     @Override
     public void onPostExecute(JSONObject result) {
+        //monument doesn't exist
+        Intent intent = new Intent(this.getActivityContext(), UnidentifiedMonument.class);
+        getActivityContext().startActivity(intent);/*
         try {
-            Monument monument = new Monument(result);
-            //this.monument = monument;
-            System.out.println(monument.getDescription());
-            /*Intent intent = new Intent(getActivityContext(), DetailMonument.class);
-            FunctionsDB.addMonumentToDB(monument, getActivityContext());
-            FunctionsDB.addMonumentToTaggedMonument(monument, getActivityContext());
-            intent.putExtra(Monument.NAME_SERIALIZABLE, monument);
-            getActivityContext().startActivity(intent);*/
+
+            if(result.equals("{}")) {
+
+            }
+            else {
+                Monument monument = new Monument(result);
+                //this.monument = monument;
+                System.out.println(monument.getDescription());
+                /*Intent intent = new Intent(getActivityContext(), DetailMonument.class);
+                FunctionsDB.addMonumentToDB(monument, getActivityContext());
+                FunctionsDB.addMonumentToTaggedMonument(monument, getActivityContext());
+                intent.putExtra(Monument.NAME_SERIALIZABLE, monument);
+                getActivityContext().startActivity(intent);
+            }
 
         } catch (Exception e) {
 
-        }
+        }*/
     }
 
 
