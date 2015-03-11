@@ -12,6 +12,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -47,7 +49,7 @@ public class Shazam extends Fragment {
     private ModelNavigation modelNavigation;
 
     public static Shazam newInstance(LocationManager locationManager, ModelNavigation modelNavigation) {
-        Shazam shazam =  new Shazam();
+        Shazam shazam = new Shazam();
         Bundle args = new Bundle();
         args.putSerializable(ModelNavigation.KEY, modelNavigation);
         shazam.setLocateManager(new LocateManager(locationManager));
@@ -62,6 +64,8 @@ public class Shazam extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Override
@@ -75,9 +79,13 @@ public class Shazam extends Fragment {
 
         this.modelNavigation = (ModelNavigation) getArguments().getSerializable(ModelNavigation.KEY);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        final Animation animRotate = AnimationUtils.loadAnimation(this.getActivity(), R.anim.anim_button_home);
+
+        button.setOnClickListener(new Button.OnClickListener() {
+
             @Override
-            public void onClick(View v) {
+            public void onClick(View arg0) {
+                arg0.startAnimation(animRotate);
                 dispatchTakePictureIntent();
             }
         });
@@ -96,7 +104,7 @@ public class Shazam extends Fragment {
                 ExifInterface exifInterface = new ExifInterface(photoPath);
                 float[] localisation = new float[2];
 
-                /*if (exifInterface.getLatLong(localisation)) {
+                if (exifInterface.getLatLong(localisation)) {
                     GetMonumentByLocalization getMonumentByLocalization =
                             new GetMonumentByLocalization(new RequestIdentifyByLocalization(
                                     (Home) getActivity(), photoPath));
@@ -105,9 +113,11 @@ public class Shazam extends Fragment {
                 } else {
                     locateManager.startListening(
                             new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
-                }*/
+            }
                 ImgProcessing process = new ImgProcessing(this.getActivity());
                 process.recognise();
+
+
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "Error: " + e.getClass().getName(), Toast.LENGTH_LONG).show();
             }
