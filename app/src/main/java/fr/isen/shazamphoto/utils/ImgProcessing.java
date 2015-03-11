@@ -149,7 +149,14 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
                 jsonArr.add(obj);
             }
 
-            String json = gson.toJson(jsonArr);
+            JSONObject list = new JSONObject();
+            try {
+                list.put("keypoints", jsonArr);
+            }
+            catch(Exception e) {}
+
+
+            String json = gson.toJson(list);
 
             return json;
         }
