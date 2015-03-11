@@ -197,11 +197,9 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
-
                     String picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
                     File imgFile = new File(picturesDir + "/test1.jpg");
-                    if (imgFile.exists()) {
-
+                    if (imgFile != null && imgFile.exists()) {
 
                         Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
@@ -228,6 +226,10 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
                         process.execute();
 
                     }
+                    else {
+                        Toast.makeText(activityContext, "Error : image null or doesn't exist", Toast.LENGTH_LONG).show();
+                    }
+
 
                 }
                 break;

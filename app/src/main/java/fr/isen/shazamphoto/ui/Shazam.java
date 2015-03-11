@@ -105,10 +105,10 @@ public class Shazam extends Fragment {
                     locateManager.startListening(
                             new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
                 }*/
-               /* ImgProcessing process = new ImgProcessing(this.getActivity());
-                process.recognise();*/
+                ImgProcessing process = new ImgProcessing(this.getActivity());
+                process.recognise();
             } catch (Exception e) {
-                Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Error: " + e.getClass().getName(), Toast.LENGTH_LONG).show();
             }
         }
     }
