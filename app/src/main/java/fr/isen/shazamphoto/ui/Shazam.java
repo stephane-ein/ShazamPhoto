@@ -79,13 +79,12 @@ public class Shazam extends Fragment {
 
         this.modelNavigation = (ModelNavigation) getArguments().getSerializable(ModelNavigation.KEY);
 
-        final Animation animRotate = AnimationUtils.loadAnimation(this.getActivity(), R.anim.anim_button_home);
+        //final Animation animRotate = AnimationUtils.loadAnimation(this.getActivity(), R.anim.anim_button_home);
 
         button.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-                arg0.startAnimation(animRotate);
                 dispatchTakePictureIntent();
             }
         });
@@ -104,7 +103,7 @@ public class Shazam extends Fragment {
                 ExifInterface exifInterface = new ExifInterface(photoPath);
                 float[] localisation = new float[2];
 
-                if (exifInterface.getLatLong(localisation)) {
+               /* if (exifInterface.getLatLong(localisation)) {
                     GetMonumentByLocalization getMonumentByLocalization =
                             new GetMonumentByLocalization(new RequestIdentifyByLocalization(
                                     (Home) getActivity(), photoPath));
@@ -113,7 +112,7 @@ public class Shazam extends Fragment {
                 } else {
                     locateManager.startListening(
                             new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
-            }
+            }*/
                 ImgProcessing process = new ImgProcessing(this.getActivity());
                 process.recognise();
 

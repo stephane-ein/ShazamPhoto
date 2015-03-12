@@ -22,6 +22,8 @@ import fr.isen.shazamphoto.utils.AddMonument;
 
 public class AddMonumentFragment extends Fragment {
 
+    private Monument monument;
+    private TextView textView;
 
     public static AddMonumentFragment newInstance() {
         AddMonumentFragment fragment = new AddMonumentFragment();
@@ -30,10 +32,12 @@ public class AddMonumentFragment extends Fragment {
 
     public AddMonumentFragment() {
         // Required empty public constructor
+        monument = new Monument();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        monument = (Monument) getArguments().getSerializable(Monument.NAME_SERIALIZABLE);
         super.onCreate(savedInstanceState);
     }
 
@@ -52,16 +56,26 @@ public class AddMonumentFragment extends Fragment {
         addListenerCloseKeyboard(editTextDate);
         final EditText editTextDescription = (EditText) view.findViewById(R.id.editText_description_monument);
         addListenerCloseKeyboard(editTextDescription);
-
+        textView = (TextView) view.findViewById(R.id.adm_logJSON);
 
         //Set the listener for the ADD button
         Button button = (Button) view.findViewById(R.id.button_add);
+        final AddMonumentFragment ref = this;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Send the POST request to the serveur
                 AddMonument addMonument = new AddMonument((UnidentifiedMonument)getActivity());
-                addMonument.execute(new Monument(-1, "ISEN", "", "Description", 1959, 12, 1, new Localization(-1, 3, 50)));
+                ref.monument.setName("ISEN");;
+                ref.monument.setDescription("Description");
+                ref.monument.setYear(1959);
+                ref.monument.setNbLike(12);
+                ref.monument.setNbVisitors(1);
+                ref.monument.setLocalization(new Localization(-1, 3, 50));
+                ref.monument.setPhotoPath("");
+                //addMonument.execute(new Monument(-1, "ISEN", "", "Description", 1959, 12, 1, new Localization(-1, 3, 50)));
+                addMonument.execute(monument);
+                ref.textView.setText(monument.toJSON().toString());
             }
         });
         return view;

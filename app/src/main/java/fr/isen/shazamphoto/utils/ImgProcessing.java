@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
 import android.widget.Toast;
@@ -57,7 +58,8 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
     private HttpResponse response;
     private String keyPointToSend = null;
     private String descriptorToSend = null;
-
+    private Mat descriptors;
+    private KeyPoint[] keyPointArray;
 
     private Context activityContext = null;
 
@@ -217,20 +219,21 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
 
                         Mat img1 = new Mat();
                         Mat resized = new Mat();
-                        Mat descriptors1 = new Mat();
-                        MatOfKeyPoint keypoints1 = new MatOfKeyPoint();
+                        descriptors = new Mat();
+                        MatOfKeyPoint keypoints = new MatOfKeyPoint();
 
                         Utils.bitmapToMat(myBitmap, img1);
 
                         Imgproc.resize(img1, resized, size);
                         Imgproc.cvtColor(img1, img1, Imgproc.COLOR_BGR2GRAY, 7);
 
-                        detector.detect(img1, keypoints1);
+                        detector.detect(img1, keypoints);
 
-                        descriptor.compute(img1, keypoints1, descriptors1);
-                        setKeyPointToSend(keypointsToJson(keypoints1));
-                        setDescriptorToSend(matToJson(descriptors1));
-                        System.out.println(keypointsToJson(keypoints1));
+                        descriptor.compute(img1, keypoints, descriptors);
+                        setKeyPointToSend(keypointsToJson(keypoints));
+                        setDescriptorToSend(matToJson(descriptors));
+                        System.out.println(keypointsToJson(keypoints));
+                        setKeyPointArray(keypoints.toArray());
                         process.execute();
 
                     }
@@ -287,7 +290,13 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
     @Override
     public void onPostExecute(JSONObject result) {
         //monument doesn't exist
+        Monument monument1 = new Monument();
+        monument1.setDescriptors(this.descriptors);
+        monument1.setKeyPoints(this.keyPointArray);
         Intent intent = new Intent(this.getActivityContext(), UnidentifiedMonument.class);
+        Bundle args = new Bundle();
+        args.putSerializable(Monument.NAME_SERIALIZABLE, monument1);
+        intent.putExtras(args);
         getActivityContext().startActivity(intent);/*
         try {
 
@@ -341,5 +350,8 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
     }
     public void setDescriptorToSend(String descriptorToSend) {
         this.descriptorToSend = descriptorToSend;
+    }
+    public void setKeyPointArray(KeyPoint[] keyPointArray) {
+        this.keyPointArray = keyPointArray;
     }
 }

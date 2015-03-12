@@ -1,8 +1,12 @@
 package fr.isen.shazamphoto.database;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.opencv.core.Mat;
+import org.opencv.features2d.KeyPoint;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -17,6 +21,8 @@ public class Monument implements Serializable {
     private int nbLike;
     private Localization localization;
     private Address address;
+    private KeyPoint[] keyPoints;
+    private Mat descriptors;
 
     public static final String NAME_SERIALIZABLE = "fr.isen.shazamphoto.database.monument_serializable";
 
@@ -24,11 +30,15 @@ public class Monument implements Serializable {
         this(0, "", "", "", 0, 0, 0, null, new Address());
     }
 
-    public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization){
+    public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization) {
         this(id, name, photoPath, description, year, nbVisitors, nbLike, localization, new Address());
     }
 
     public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization, Address address) {
+        this(id, name, photoPath, description, year, nbVisitors, nbLike, localization, address, null, null);
+    }
+
+    public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization, Address address, KeyPoint[] keyPoints, Mat descriptors) {
         this.id = id;
         this.characteristics = new HashMap<>();
         Characteristic characteristic = new Characteristic(name, description, new Language(LanguageAvailable.DEFAULT_NAME, LanguageAvailable.DEFAULT_VALUE));
@@ -39,6 +49,8 @@ public class Monument implements Serializable {
         this.nbLike = nbLike;
         this.localization = localization;
         this.address = address;
+        this.keyPoints = keyPoints;
+        this.descriptors = descriptors;
     }
 
     public Monument(JSONObject jsonMonument) {
@@ -68,15 +80,15 @@ public class Monument implements Serializable {
     public JSONObject toJSON() {
         JSONObject jsonObj = new JSONObject();
         try {
-            // Here we convert Java Object to JSO
-            jsonObj.put("photopath",getPhotoPath());
+            // Here we convert Java Object to JSON
+            jsonObj.put("photopath", getPhotoPath());
             jsonObj.put("year", Integer.valueOf(getYear()).toString());
             jsonObj.put("nbvisitors", Integer.valueOf(getNbVisitors()).toString());
             jsonObj.put("nblikes", Integer.valueOf(getNbLike()).toString());
 
             JSONArray jsonArray = new JSONArray();
             Iterator<HashMap.Entry<String, Characteristic>> it = characteristics.entrySet().iterator();
-            while(it.hasNext()){
+            while (it.hasNext()) {
                 HashMap.Entry<String, Characteristic> entry = it.next();
                 jsonArray.put(entry.getValue().toJson());
             }
@@ -84,6 +96,30 @@ public class Monument implements Serializable {
 
             jsonObj.put("localization", localization.toJson());
             jsonObj.put("address", address.toJson());
+
+            // Parse the JSON keypoints
+            JSONArray jsonArr = new JSONArray();
+            for (int i = 0; i < keyPoints.length; i++) {
+                KeyPoint kp = keyPoints[i];
+
+                JSONObject obj = new JSONObject();
+
+                obj.put("class_id", kp.class_id);
+                obj.put("x", kp.pt.x);
+                obj.put("y", kp.pt.y);
+                obj.put("size", kp.size);
+                obj.put("angle", kp.angle);
+                obj.put("octave", kp.octave);
+                obj.put("response", kp.response);
+
+                jsonArr.put(obj);
+            }
+
+            JSONObject list = new JSONObject();
+            list.put("keypoints", jsonArr);
+            jsonObj.put("listskeypoints", list);
+
+
         } catch (JSONException ex) {
         }
 
@@ -164,6 +200,34 @@ public class Monument implements Serializable {
 
     public void setLocalization(Localization localization) {
         this.localization = localization;
+    }
+
+    public void setCharacteristics(HashMap<String, Characteristic> characteristics) {
+        this.characteristics = characteristics;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public KeyPoint[] getKeyPoints() {
+        return keyPoints;
+    }
+
+    public void setKeyPoints(KeyPoint[] keyPoints) {
+        this.keyPoints = keyPoints;
+    }
+
+    public Mat getDescriptors() {
+        return descriptors;
+    }
+
+    public void setDescriptors(Mat descriptors) {
+        this.descriptors = descriptors;
     }
 }
 

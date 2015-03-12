@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Monument;
 
 public class UnidentifiedMonument extends ActionBarActivity {
 
@@ -13,9 +14,13 @@ public class UnidentifiedMonument extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unidentified_monument);
+        AddMonumentFragment addMonumentFragment = new AddMonumentFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(Monument.NAME_SERIALIZABLE, getIntent().getExtras().getSerializable(Monument.NAME_SERIALIZABLE));
+        addMonumentFragment.setArguments(args);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new AddMonumentFragment())
+                    .add(R.id.container, addMonumentFragment)
                     .commit();
         }
     }
