@@ -54,7 +54,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         gridView = (GridView)findViewById(R.id.gridView_nearestMonuments);
         TextView nbLike = (TextView) findViewById(R.id.textView_nbLike);
         nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
-        TextView localization = (TextView) findViewById(R.id.textview_localization);
         noNearestMonument = (TextView)findViewById(R.id.adm_textview_nonearestmonument);
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
         ADMScrollView scrollView = (ADMScrollView) findViewById(R.id.adm_scrollview);

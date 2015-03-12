@@ -147,7 +147,9 @@ public class Monument implements Serializable {
                 objDesciprtor.put("data", dataString);
             }
 
-            jsonObj.put("descriptors", objDesciprtor);
+            JSONArray jsonArrayDescriptor = new JSONArray();
+            jsonArrayDescriptor.put(objDesciprtor);
+            jsonObj.put("descriptors", jsonArrayDescriptor);
 
         } catch (JSONException ex) {
         }
