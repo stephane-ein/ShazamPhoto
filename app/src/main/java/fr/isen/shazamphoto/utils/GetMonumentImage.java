@@ -10,10 +10,10 @@ public class GetMonumentImage extends AsyncTask<String, Void, Bitmap> {
 
     private ImageView imageView;
 
-    public GetMonumentImage(ImageView imageView){
-        if(imageView != null){
+    public GetMonumentImage(ImageView imageView) {
+        if (imageView != null) {
             this.imageView = imageView;
-        }else{
+        } else {
             this.imageView = null;
         }
     }
@@ -25,8 +25,8 @@ public class GetMonumentImage extends AsyncTask<String, Void, Bitmap> {
         return bitmap;
     }
 
-    public void onPostExecute(Bitmap bitmap){
-        if(this.imageView != null && bitmap != null){
+    public void onPostExecute(Bitmap bitmap) {
+        if (this.imageView != null && bitmap != null) {
             this.imageView.setImageBitmap(bitmap);
         }
     }

@@ -16,10 +16,12 @@ import java.util.ArrayList;
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.events.EventOnPostLocalisationMonument;
 import fr.isen.shazamphoto.events.RequestNearestMonuments;
+import fr.isen.shazamphoto.ui.ItemUtils.LocalizationItem;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
-public class NearestMonumentsFragment extends Fragment {
+public class NearestMonumentsFragment extends Fragment implements LocalizationItem{
 
     public static final int POSITION = 1;
     public static final String NMF_NEATREST_MONUMENT_LIST =
@@ -73,7 +75,7 @@ public class NearestMonumentsFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                // Search a localization if we don't have one
+                // Search a localization if we don't have it
                 if (localization == null) {
                     locateManager.startListening(new RequestNearestMonuments(fragment));
                 } else {
@@ -122,5 +124,10 @@ public class NearestMonumentsFragment extends Fragment {
 
     public void setLocateManager(LocateManager locateManager) {
         this.locateManager = locateManager;
+    }
+
+    @Override
+    public void onPostSearch(EventOnPostLocalisationMonument event) {
+
     }
 }

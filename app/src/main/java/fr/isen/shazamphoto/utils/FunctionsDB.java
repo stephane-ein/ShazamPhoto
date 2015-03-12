@@ -21,7 +21,7 @@ public class FunctionsDB {
         }
     }
 
-    public static void addMonumentToTaggedMonument(Monument monument, Context context){
+    public static void addMonumentToTaggedMonument(Monument monument, Context context) {
         TaggedMonumentDAO taggedMonumentDAO = new TaggedMonumentDAO(context);
         taggedMonumentDAO.open();
         if (taggedMonumentDAO.select(monument.getId()) == null) {

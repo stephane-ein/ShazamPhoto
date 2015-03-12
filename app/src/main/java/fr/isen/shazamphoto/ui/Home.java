@@ -21,12 +21,13 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventSearchMonumentByName;
 import fr.isen.shazamphoto.model.ModelNavigation;
+import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 import fr.isen.shazamphoto.ui.SlidingTab.SlidingTabLayout;
 import fr.isen.shazamphoto.utils.GetMonumentSearch;
 import fr.isen.shazamphoto.views.ViewDetailMonument;
 import fr.isen.shazamphoto.views.ViewMonumentsResult;
 
-public class Home extends ActionBarActivity implements SearchableItem{
+public class Home extends ActionBarActivity implements SearchableItem {
 
     private SearchView searchView;
     private MenuItem searchMenuItem;

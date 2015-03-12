@@ -7,13 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Base64;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -29,7 +23,6 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfKeyPoint;
-import org.opencv.core.Point;
 import org.opencv.core.Size;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.FeatureDetector;
@@ -42,14 +35,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.isen.shazamphoto.database.Descriptors;
+import fr.isen.shazamphoto.database.KeyPoints;
 import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.ui.DetailMonument;
 import fr.isen.shazamphoto.ui.UnidentifiedMonument;
 
-/**
- * Created by carlo_000 on 09/03/2015.
- */
-public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
+public class ImageProcessing extends AsyncTask<String, Void, JSONObject> {
 
     public static final Size size = new Size(640, 480);
 
@@ -64,7 +55,7 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
     private Context activityContext = null;
 
 
-    public ImgProcessing(Context activityContext) {
+    public ImageProcessing(Context activityContext) {
         setActivityContext(activityContext);
     }
 
@@ -76,131 +67,133 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
         this.activityContext = activityContext;
     }
 
-    public static Mat matFromJson(String json) {
-        JsonParser parser = new JsonParser();
-        JsonObject JsonObject = parser.parse(json).getAsJsonObject();
+    /*
+        public static Mat matFromJson(String json) {
+            JsonParser parser = new JsonParser();
+            JsonObject JsonObject = parser.parse(json).getAsJsonObject();
 
-        int rows = JsonObject.get("rows").getAsInt();
-        int cols = JsonObject.get("cols").getAsInt();
-        int type = JsonObject.get("type").getAsInt();
+            int rows = JsonObject.get("rows").getAsInt();
+            int cols = JsonObject.get("cols").getAsInt();
+            int type = JsonObject.get("type").getAsInt();
 
-        String dataString = JsonObject.get("data").getAsString();
-        byte[] data = Base64.decode(dataString.getBytes(), Base64.DEFAULT);
+            String dataString = JsonObject.get("data").getAsString();
+            byte[] data = Base64.decode(dataString.getBytes(), Base64.DEFAULT);
 
-        Mat mat = new Mat(rows, cols, type);
-        mat.put(0, 0, data);
+            Mat mat = new Mat(rows, cols, type);
+            mat.put(0, 0, data);
 
-        return mat;
-    }
-
-    public static MatOfKeyPoint keypointsFromJson(String json) {
-        MatOfKeyPoint result = new MatOfKeyPoint();
-
-        JsonParser parser = new JsonParser();
-        JsonArray jsonArr = parser.parse(json).getAsJsonArray();
-
-        int size = jsonArr.size();
-
-        KeyPoint[] kpArray = new KeyPoint[size];
-
-        for (int i = 0; i < size; i++) {
-            KeyPoint kp = new KeyPoint();
-
-            JsonObject obj = (JsonObject) jsonArr.get(i);
-
-            Point point = new Point(
-                    obj.get("x").getAsDouble(),
-                    obj.get("y").getAsDouble()
-            );
-
-            kp.pt = point;
-            kp.class_id = obj.get("class_id").getAsInt();
-            kp.size = obj.get("size").getAsFloat();
-            kp.angle = obj.get("angle").getAsFloat();
-            kp.octave = obj.get("octave").getAsInt();
-            kp.response = obj.get("response").getAsFloat();
-
-            kpArray[i] = kp;
+            return mat;
         }
 
-        result.fromArray(kpArray);
+        public static MatOfKeyPoint keypointsFromJson(String json) {
+            MatOfKeyPoint result = new MatOfKeyPoint();
 
-        return result;
-    }
+            JsonParser parser = new JsonParser();
+            JsonArray jsonArr = parser.parse(json).getAsJsonArray();
 
-    public static String keypointsToJson(MatOfKeyPoint mat) {
-        if (mat != null && !mat.empty()) {
-            Gson gson = new Gson();
+            int size = jsonArr.size();
 
-            JsonArray jsonArr = new JsonArray();
+            KeyPoint[] kpArray = new KeyPoint[size];
 
-            KeyPoint[] array = mat.toArray();
-            for (int i = 0; i < array.length; i++) {
-                KeyPoint kp = array[i];
+            for (int i = 0; i < size; i++) {
+                KeyPoint kp = new KeyPoint();
 
-                JsonObject obj = new JsonObject();
+                JsonObject obj = (JsonObject) jsonArr.get(i);
 
-                obj.addProperty("class_id", kp.class_id);
-                obj.addProperty("x", kp.pt.x);
-                obj.addProperty("y", kp.pt.y);
-                obj.addProperty("size", kp.size);
-                obj.addProperty("angle", kp.angle);
-                obj.addProperty("octave", kp.octave);
-                obj.addProperty("response", kp.response);
+                Point point = new Point(
+                        obj.get("x").getAsDouble(),
+                        obj.get("y").getAsDouble()
+                );
 
-                jsonArr.add(obj);
+                kp.pt = point;
+                kp.class_id = obj.get("class_id").getAsInt();
+                kp.size = obj.get("size").getAsFloat();
+                kp.angle = obj.get("angle").getAsFloat();
+                kp.octave = obj.get("octave").getAsInt();
+                kp.response = obj.get("response").getAsFloat();
+
+                kpArray[i] = kp;
             }
 
-            JSONObject list = new JSONObject();
-            try {
-                list.put("keypoints", jsonArr);
+            result.fromArray(kpArray);
+
+            return result;
+        }
+
+        public static String keypointsToJson(MatOfKeyPoint mat) {
+            if (mat != null && !mat.empty()) {
+                Gson gson = new Gson();
+
+                JsonArray jsonArr = new JsonArray();
+
+                KeyPoint[] array = mat.toArray();
+                for (int i = 0; i < array.length; i++) {
+                    KeyPoint kp = array[i];
+
+                    JsonObject obj = new JsonObject();
+
+                    obj.addProperty("class_id", kp.class_id);
+                    obj.addProperty("x", kp.pt.x);
+                    obj.addProperty("y", kp.pt.y);
+                    obj.addProperty("size", kp.size);
+                    obj.addProperty("angle", kp.angle);
+                    obj.addProperty("octave", kp.octave);
+                    obj.addProperty("response", kp.response);
+
+                    jsonArr.add(obj);
+                }
+
+                JSONObject list = new JSONObject();
+                try {
+                    list.put("keypoints", jsonArr);
+                }
+                catch(Exception e) {}
+
+
+                String json = gson.toJson(list);
+
+                return json;
             }
-            catch(Exception e) {}
-
-
-            String json = gson.toJson(list);
-
-            return json;
+            return "{}";
         }
-        return "{}";
-    }
 
-    public String matToJson(Mat mat) {
-        JsonObject obj = new JsonObject();
+        public String matToJson(Mat mat) {
+            JsonObject obj = new JsonObject();
 
-        if (mat.isContinuous()) {
-            int cols = mat.cols();
-            int rows = mat.rows();
-            int elemSize = (int) mat.elemSize();
+            if (mat.isContinuous()) {
+                int cols = mat.cols();
+                int rows = mat.rows();
+                int elemSize = (int) mat.elemSize();
 
-            byte[] data = new byte[cols * rows * elemSize];
+                byte[] data = new byte[cols * rows * elemSize];
 
-            mat.get(0, 0, data);
+                mat.get(0, 0, data);
 
-            obj.addProperty("rows", mat.rows());
-            obj.addProperty("cols", mat.cols());
-            obj.addProperty("type", mat.type());
+                obj.addProperty("rows", mat.rows());
+                obj.addProperty("cols", mat.cols());
+                obj.addProperty("type", mat.type());
 
-            // We cannot set binary data to a json object, so:
-            // Encoding data byte array to Base64.
-            String dataString = new String(Base64.encode(data, Base64.DEFAULT));
+                // We cannot set binary data to a json object, so:
+                // Encoding data byte array to Base64.
+                String dataString = new String(Base64.encode(data, Base64.DEFAULT));
 
-            obj.addProperty("data", dataString);
+                obj.addProperty("data", dataString);
 
-            Gson gson = new Gson();
-            String json = gson.toJson(obj);
+                Gson gson = new Gson();
+                String json = gson.toJson(obj);
 
-            return json;
-        } else {
+                return json;
+            } else {
 
+            }
+            return "{}";
         }
-        return "{}";
-    }
-
+    */
     public void recognise() {
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, getActivityContext(), mOpenCVCallBack);
     }
-    public final ImgProcessing process = this;
+
+    public final ImageProcessing process = this;
     public BaseLoaderCallback mOpenCVCallBack = new BaseLoaderCallback(getActivityContext()) {
 
         @Override
@@ -231,14 +224,14 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
 
                         descriptor.compute(img1, keypoints, descriptors);
                         descriptors = descriptors.clone();
-                        setKeyPointToSend(keypointsToJson(keypoints));
+
+                        /*setKeyPointToSend(keypointsToJson(keypoints));
                         setDescriptorToSend(matToJson(descriptors));
-                        System.out.println(keypointsToJson(keypoints));
-                        setKeyPointArray(keypoints.toArray());
+                        setKeyPointArray(keypoints.toArray());*/
+
                         process.execute();
 
-                    }
-                    else {
+                    } else {
                         Toast.makeText(activityContext, "Error : image null or doesn't exist", Toast.LENGTH_LONG).show();
                     }
 
@@ -261,15 +254,16 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
 
     @Override
     protected JSONObject doInBackground(String... params) {
-        JSONObject jsonResponse=null;
+        JSONObject jsonResponse = null;
         try {
             List<NameValuePair> nameValuePairs = new ArrayList<>(2);
-            nameValuePairs.add(new BasicNameValuePair("keypoints", getKeyPointToSend()));
-            nameValuePairs.add(new BasicNameValuePair("descriptor", getDescriptorToSend()));
+            nameValuePairs.add(new BasicNameValuePair("listskeypoints", KeyPoints.toJson(this.keyPointArray).toString()));
+            nameValuePairs.add(new BasicNameValuePair("descriptors", Descriptors.toJson(this.descriptors).toString()));
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 
             entity.setContentType("application/x-www-form-urlencoded");
             httppost.setEntity(entity);
+
             // Execute HTTP Post Request
             response = httpclient.execute(httppost);
             BufferedReader rd = new BufferedReader(new InputStreamReader(
@@ -279,7 +273,7 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
             while ((line = rd.readLine()) != null) {
                 result.append(line);
             }
-            System.out.println(result.toString());
+            System.out.println("Result Identify : " + result.toString());
             jsonResponse = new JSONObject(result.toString());
         } catch (Exception e) {
 
@@ -287,71 +281,84 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
         return jsonResponse;
     }
 
-    public Monument monument;
     @Override
     public void onPostExecute(JSONObject result) {
         //monument doesn't exist
-        Monument monument1 = new Monument();
+      /*  Monument monument1 = new Monument();
         monument1.setDescriptors(this.descriptors);
         monument1.setKeyPoints(this.keyPointArray);
         Intent intent = new Intent(this.getActivityContext(), UnidentifiedMonument.class);
         Bundle args = new Bundle();
         args.putSerializable(Monument.NAME_SERIALIZABLE, monument1);
         intent.putExtras(args);
-        getActivityContext().startActivity(intent);/*
+        getActivityContext().startActivity(intent);*/
+
         try {
 
-            if(result.equals("{}")) {
-
+            if(result != null){
+                if (result.toString().equals("{}")) {
+                    Toast.makeText(this.activityContext, " Monument not identify", Toast.LENGTH_LONG).show();
+                    Monument monument = new Monument();
+                    monument.setDescriptors(this.descriptors);
+                    monument.setKeyPoints(this.keyPointArray);
+                    Intent intent = new Intent(this.getActivityContext(), UnidentifiedMonument.class);
+                    Bundle args = new Bundle();
+                    args.putSerializable(Monument.NAME_SERIALIZABLE, monument);
+                    intent.putExtras(args);
+                    getActivityContext().startActivity(intent);
+                } else{
+                    Toast.makeText(this.activityContext, "Monument identified", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this.activityContext, "Result : "+result.toString(), Toast.LENGTH_LONG).show();
+                }
+            }else{
+                Toast.makeText(this.activityContext, "Answser server NULL", Toast.LENGTH_LONG).show();
             }
-            else {
-                Monument monument = new Monument(result);
-                //this.monument = monument;
-                System.out.println(monument.getDescription());
-                /*Intent intent = new Intent(getActivityContext(), DetailMonument.class);
-                FunctionsDB.addMonumentToDB(monument, getActivityContext());
-                FunctionsDB.addMonumentToTaggedMonument(monument, getActivityContext());
-                intent.putExtra(Monument.NAME_SERIALIZABLE, monument);
-                getActivityContext().startActivity(intent);
-            }
-
         } catch (Exception e) {
-
-        }*/
+            Toast.makeText(this.activityContext, "Error : "+e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
-
 
 
     public HttpPost getHttppost() {
         return httppost;
     }
+
     public void setHttppost(HttpPost httppost) {
         this.httppost = httppost;
     }
+
     public HttpResponse getResponse() {
         return response;
     }
+
     public void setResponse(HttpResponse response) {
         this.response = response;
     }
+
     public HttpClient getHttpclient() {
         return httpclient;
     }
+
     public void setHttpclient(HttpClient httpclient) {
         this.httpclient = httpclient;
     }
+
     public String getKeyPointToSend() {
         return keyPointToSend;
     }
+
     public void setKeyPointToSend(String keyPointToSend) {
         this.keyPointToSend = keyPointToSend;
     }
+
     public String getDescriptorToSend() {
         return descriptorToSend;
     }
+
     public void setDescriptorToSend(String descriptorToSend) {
         this.descriptorToSend = descriptorToSend;
     }
+
     public void setKeyPointArray(KeyPoint[] keyPointArray) {
         this.keyPointArray = keyPointArray;
     }

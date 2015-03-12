@@ -103,7 +103,7 @@ public class Monument implements Serializable {
             jsonObj.put("address", address.toJson());
 
             // Parse the JSON keypoints
-            JSONArray jsonArr = new JSONArray();
+            /*JSONArray jsonArr = new JSONArray();
             for (int i = 0; i < keyPoints.length; i++) {
                 KeyPoint kp = keyPoints[i];
 
@@ -122,10 +122,11 @@ public class Monument implements Serializable {
 
             JSONObject list = new JSONObject();
             list.put("keypoints", jsonArr);
-            jsonObj.put("listskeypoints", list);
+            jsonObj.put("listskeypoints", list);*/
+            jsonObj.put(KeyPoints.KEY, KeyPoints.toJson(keyPoints));
 
             //Parse the JSON descriptor
-            JSONObject objDesciprtor = new JSONObject();
+            /*JSONObject objDesciprtor = new JSONObject();
 
             if (descriptors.isContinuous()) {
                 int cols = descriptors.cols();
@@ -149,7 +150,8 @@ public class Monument implements Serializable {
 
             JSONArray jsonArrayDescriptor = new JSONArray();
             jsonArrayDescriptor.put(objDesciprtor);
-            jsonObj.put("descriptors", jsonArrayDescriptor);
+            jsonObj.put("descriptors", jsonArrayDescriptor);*/
+            jsonObj.put(Descriptors.KEY, Descriptors.toJson(descriptors));
 
         } catch (JSONException ex) {
         }

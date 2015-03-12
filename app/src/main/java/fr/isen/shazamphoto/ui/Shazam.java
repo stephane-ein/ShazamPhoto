@@ -8,12 +8,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -29,10 +26,8 @@ import java.util.Date;
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
-import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
 import fr.isen.shazamphoto.model.ModelNavigation;
-import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
-import fr.isen.shazamphoto.utils.ImgProcessing;
+import fr.isen.shazamphoto.utils.ImageProcessing;
 
 public class Shazam extends Fragment {
 
@@ -113,7 +108,7 @@ public class Shazam extends Fragment {
                     locateManager.startListening(
                             new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
             }*/
-                ImgProcessing process = new ImgProcessing(this.getActivity());
+                ImageProcessing process = new ImageProcessing(this.getActivity());
                 process.recognise();
 
 

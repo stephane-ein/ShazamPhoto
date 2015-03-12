@@ -37,7 +37,6 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
     private String urlWithArguments;
     private RequestLocalization requestLocalization;
     private Localization localization;
-    public TextView textView;
     public Home home;
 
     public GetMonumentByLocalization(RequestLocalization requestLocalization) {
@@ -56,7 +55,7 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
     public JSONObject doInBackground(String... args) {
         jsonResponse = null;
 
-        if(args.length == 3){
+        if (args.length == 3) {
             setArgument(args[0], args[1], args[2]);
             localization = new Localization(-1, Float.valueOf(args[0]), Float.valueOf(args[1]));
             try {
@@ -72,7 +71,8 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
                     result.append(line);
                 }
                 jsonResponse = new JSONObject(result.toString());
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
 
         return jsonResponse;
@@ -91,9 +91,9 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
             } catch (Exception e) {
             }
 
-            if(requestLocalization instanceof RequestNearestFromMonument){
+            if (requestLocalization instanceof RequestNearestFromMonument) {
                 RequestNearestFromMonument requestNearestFromMonument = (RequestNearestFromMonument) requestLocalization;
-                Toast.makeText(requestNearestFromMonument.getDetailMonument(),"Thread executed", Toast.LENGTH_LONG).show();
+                Toast.makeText(requestNearestFromMonument.getDetailMonument(), "Thread executed GetMonumentBylocation", Toast.LENGTH_LONG).show();
             }
 
             requestLocalization.doPostAction(monuments, localization);

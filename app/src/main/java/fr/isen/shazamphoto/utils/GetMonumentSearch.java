@@ -16,14 +16,14 @@ import java.net.URI;
 import java.util.ArrayList;
 
 import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.ui.SearchableItem;
+import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 
 public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
     private static final String URL = "http://37.187.216.159/shazam/api.php?n=";
     private HttpClient client;
     private ArrayList<Monument> monuments;
     private JSONObject jsonResponse;
-   // private SearchMonument searchMonument;
+    // private SearchMonument searchMonument;
     private SearchableItem searchableItem;
 
     public GetMonumentSearch(/*SearchMonument event*/SearchableItem searchableItem) {
@@ -31,7 +31,7 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
         client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
                 "android");
         monuments = new ArrayList<>();
-       // this.searchMonument = event;
+        // this.searchMonument = event;
         this.searchableItem = searchableItem;
     }
 
@@ -51,7 +51,8 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
                 result.append(line);
             }
             jsonResponse = new JSONObject(result.toString());
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         return jsonResponse;
     }
 
@@ -69,21 +70,6 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
             }
 
             this.searchableItem.onPostSearch(monuments);
-/*
-           if (searchMonument instanceof SearchMonumentUnidentified) {
-                SearchMonumentUnidentified event = (SearchMonumentUnidentified) searchMonument;
-                UnidentifiedMonument unidentifiedMonument = event.getUnidentifiedMonument();
-                if (!monuments.isEmpty()) {
-                    Toast.makeText(unidentifiedMonument, "Thanks, you added more informations !", Toast.LENGTH_LONG).show();
-                    unidentifiedMonument.finish();
-                } else {
-                    //change the fragment to add the new monument discovered
-                    unidentifiedMonument.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, new AddMonumentFragment())
-                            .commit();
-                }
-            }*/
-
         }
     }
 }
