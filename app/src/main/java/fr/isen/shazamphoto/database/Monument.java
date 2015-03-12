@@ -1,5 +1,10 @@
 package fr.isen.shazamphoto.database;
 
+import android.app.Activity;
+import android.util.Base64;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -119,6 +124,30 @@ public class Monument implements Serializable {
             list.put("keypoints", jsonArr);
             jsonObj.put("listskeypoints", list);
 
+            //Parse the JSON descriptor
+            JSONObject objDesciprtor = new JSONObject();
+
+            if (descriptors.isContinuous()) {
+                int cols = descriptors.cols();
+                int rows = descriptors.rows();
+                int elemSize = (int) descriptors.elemSize();
+
+                byte[] data = new byte[cols * rows * elemSize];
+
+                descriptors.get(0, 0, data);
+
+                objDesciprtor.put("rows", descriptors.rows());
+                objDesciprtor.put("cols", descriptors.cols());
+                objDesciprtor.put("type", descriptors.type());
+
+                // We cannot set binary data to a json object, so:
+                // Encoding data byte array to Base64.
+                String dataString = new String(Base64.encode(data, Base64.DEFAULT));
+
+                objDesciprtor.put("data", dataString);
+            }
+
+            jsonObj.put("descriptors", objDesciprtor);
 
         } catch (JSONException ex) {
         }

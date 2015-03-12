@@ -165,7 +165,7 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
         return "{}";
     }
 
-    public static String matToJson(Mat mat) {
+    public String matToJson(Mat mat) {
         JsonObject obj = new JsonObject();
 
         if (mat.isContinuous()) {
@@ -230,6 +230,7 @@ public class ImgProcessing extends AsyncTask<String, Void, JSONObject> {
                         detector.detect(img1, keypoints);
 
                         descriptor.compute(img1, keypoints, descriptors);
+                        descriptors = descriptors.clone();
                         setKeyPointToSend(keypointsToJson(keypoints));
                         setDescriptorToSend(matToJson(descriptors));
                         System.out.println(keypointsToJson(keypoints));

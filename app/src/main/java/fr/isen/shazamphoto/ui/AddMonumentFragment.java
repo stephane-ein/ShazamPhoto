@@ -66,7 +66,7 @@ public class AddMonumentFragment extends Fragment {
             public void onClick(View view) {
                 //Send the POST request to the serveur
                 AddMonument addMonument = new AddMonument((UnidentifiedMonument)getActivity());
-                ref.monument.setName("ISEN");;
+                ref.monument.setName("ISEN");
                 ref.monument.setDescription("Description");
                 ref.monument.setYear(1959);
                 ref.monument.setNbLike(12);
