@@ -38,6 +38,9 @@ public class Home extends ActionBarActivity implements SearchableItem {
     private GetMonumentSearch getMonumentSearch;
     private ModelNavigation modelNavigation;
 
+    //handle the keyboard
+    private InputMethodManager imm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,13 +110,8 @@ public class Home extends ActionBarActivity implements SearchableItem {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-
-                //Set the view on the shazam fragment
-                mViewPager.setCurrentItem(0);
-                sectionsPagerAdapter.getItem(0);
-
-                // Close the keyboard
-                InputMethodManager imm = (InputMethodManager) getSystemService(
+                 // Close the keyboard
+                imm = (InputMethodManager) getSystemService(
                         Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
@@ -140,6 +138,11 @@ public class Home extends ActionBarActivity implements SearchableItem {
                 searchView.setFocusable(true);
                 searchView.setIconified(false);
                 searchView.requestFocusFromTouch();
+
+                //Set the view on the shazam fragment
+                mViewPager.setCurrentItem(Shazam.POSITION);
+                sectionsPagerAdapter.getItem(Shazam.POSITION);
+
                 break;
             case R.id.action_place:
                 //Show the pop menu
@@ -163,12 +166,15 @@ public class Home extends ActionBarActivity implements SearchableItem {
 
     @Override
     public void onPostSearch(ArrayList<Monument> monuments) {
-        Toast.makeText(this, "onPostSearch ! : " + Integer.valueOf(monuments.size()), Toast.LENGTH_LONG).show();
         Shazam shazam = (Shazam) getSectionsPagerAdapter().getItem(Shazam.POSITION);
         modelNavigation.changeAppView(new EventSearchMonumentByName(monuments, shazam));
     }
 
     public ModelNavigation getModelNavigation() {
         return modelNavigation;
+    }
+
+    public SearchView getSearchView() {
+        return searchView;
     }
 }

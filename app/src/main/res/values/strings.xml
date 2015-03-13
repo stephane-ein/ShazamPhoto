@@ -27,5 +27,6 @@
     <string name="description_nofound">La tour Eiffel est une tour de fer puddlé de 324 mètres de hauteur (avec antennes)o 1 située à Paris, à l’extrémité nord-ouest du parc du Champ-de-Mars en bordure de la Seine dans le 7e arrondissement.</string>
     <string name="no_nearest_monument">No monument around, sorry.</string>
     <string name="title_activity_delete">Map</string>
+    <string name="googlemap_hint">Use google map</string>
 
 </resources>
