@@ -14,10 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import fr.isen.shazamphoto.R;
-import fr.isen.shazamphoto.events.SearchMonumentUnidentified;
-import fr.isen.shazamphoto.utils.GetMonumentSearch;
 
-public class PromptNameMonument  extends Fragment {
+public class PromptNameMonument extends Fragment {
 
     public PromptNameMonument() {
     }
@@ -39,7 +37,7 @@ public class PromptNameMonument  extends Fragment {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_GO){
+                if (actionId == EditorInfo.IME_ACTION_GO) {
                     //Close the keyboard
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
                             Context.INPUT_METHOD_SERVICE);
@@ -48,8 +46,8 @@ public class PromptNameMonument  extends Fragment {
                     // Ask the server if the monument already exist
                     // If yes, we add more information about the descriptor of the monument
 
-                   // GetMonumentSearch getMonumentSearch = new GetMonumentSearch(new SearchMonumentUnidentified((UnidentifiedMonument)getActivity()));
-                   // getMonumentSearch.execute(v.getText().toString());
+                    // GetMonumentSearch getMonumentSearch = new GetMonumentSearch(new SearchMonumentUnidentified((UnidentifiedMonument)getActivity()));
+                    // getMonumentSearch.execute(v.getText().toString());
                 }
                 return false;
             }

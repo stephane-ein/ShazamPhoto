@@ -47,7 +47,7 @@ public class AddMonumentFragment extends Fragment {
 
         getActivity().setTitle("New monument found");
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_add_monument, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_monument, container, false);
 
         // Add the listener to close the keyboard
         final EditText editTextName = (EditText) view.findViewById(R.id.editText_name_monument);
@@ -65,13 +65,13 @@ public class AddMonumentFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //Send the POST request to the serveur
-                AddMonument addMonument = new AddMonument((UnidentifiedMonument)getActivity());
+                AddMonument addMonument = new AddMonument((UnidentifiedMonument) getActivity());
                 ref.monument.setName("ISEN");
                 ref.monument.setDescription("Description");
                 ref.monument.setYear(1959);
                 ref.monument.setNbLike(12);
                 ref.monument.setNbVisitors(1);
-                ref.monument.setLocalization(new Localization(-1, 3, 50));
+                ref.monument.setLocalization(new Localization(-1, 3.0, 50.0));
                 ref.monument.setPhotoPath("");
                 //addMonument.execute(new Monument(-1, "ISEN", "", "Description", 1959, 12, 1, new Localization(-1, 3, 50)));
                 addMonument.execute(monument);
@@ -81,13 +81,13 @@ public class AddMonumentFragment extends Fragment {
         return view;
     }
 
-    public void addListenerCloseKeyboard(final EditText editText){
+    public void addListenerCloseKeyboard(final EditText editText) {
 
-        if(editText != null){
+        if (editText != null) {
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if(actionId == EditorInfo.IME_ACTION_GO){
+                    if (actionId == EditorInfo.IME_ACTION_GO) {
                         //Close the keyboard
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
                                 Context.INPUT_METHOD_SERVICE);

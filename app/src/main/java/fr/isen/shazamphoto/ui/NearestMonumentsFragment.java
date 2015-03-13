@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.events.EventOnPostLocalisationMonument;
+import fr.isen.shazamphoto.events.EventLocalizationFound;
 import fr.isen.shazamphoto.events.RequestNearestMonuments;
-import fr.isen.shazamphoto.ui.ItemUtils.LocalizationItem;
+import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
-public class NearestMonumentsFragment extends Fragment implements LocalizationItem{
+public class NearestMonumentsFragment extends Fragment implements SearchLocalizationItem {
 
     public static final int POSITION = 1;
     public static final String NMF_NEATREST_MONUMENT_LIST =
@@ -35,7 +35,7 @@ public class NearestMonumentsFragment extends Fragment implements LocalizationIt
 
     public static NearestMonumentsFragment newInstance(LocationManager locationManager) {
         NearestMonumentsFragment fragment = new NearestMonumentsFragment();
-        fragment.setLocateManager(new LocateManager(locationManager));
+        fragment.setLocateManager(new LocateManager(locationManager, fragment));
         return fragment;
     }
 
@@ -116,7 +116,9 @@ public class NearestMonumentsFragment extends Fragment implements LocalizationIt
         locateManager.stopListening();
     }
 
-    public ArrayList<Monument> getMonuments(){ return monuments; }
+    public ArrayList<Monument> getMonuments() {
+        return monuments;
+    }
 
     public Button getButton() {
         return button;
@@ -127,7 +129,7 @@ public class NearestMonumentsFragment extends Fragment implements LocalizationIt
     }
 
     @Override
-    public void onPostSearch(EventOnPostLocalisationMonument event) {
+    public void foundLocalization(EventLocalizationFound eventLocalizationFound) {
 
     }
 }

@@ -1,5 +1,6 @@
 package fr.isen.shazamphoto.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.media.ExifInterface;
@@ -24,12 +25,17 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
+import fr.isen.shazamphoto.events.EventLocalizationFound;
+import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
 import fr.isen.shazamphoto.model.ModelNavigation;
+import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.utils.ImageProcessing;
+import fr.isen.shazamphoto.utils.ShazamProcessing;
 
-public class Shazam extends Fragment {
+public class Shazam extends Fragment implements SearchLocalizationItem {
 
     public static final int POSITION = 0;
     public static final int REQUEST_TAKE_PHOTO = 1;
@@ -42,16 +48,21 @@ public class Shazam extends Fragment {
     private ListView listView;
     private LocateManager locateManager;
     private ModelNavigation modelNavigation;
+    private ShazamProcessing shazamProcessing;
 
-    public static Shazam newInstance(LocationManager locationManager, ModelNavigation modelNavigation) {
+    public static Shazam newInstance(LocationManager locationManager,
+                                     ModelNavigation modelNavigation, Activity activity) {
         Shazam shazam = new Shazam();
         Bundle args = new Bundle();
         args.putSerializable(ModelNavigation.KEY, modelNavigation);
-        shazam.setLocateManager(new LocateManager(locationManager));
+        shazam.setLocateManager(new LocateManager(locationManager, shazam));
         shazam.setArguments(args);
+        shazam.setModelNavigation(modelNavigation);
+        shazam.setShazamProcessing(new ShazamProcessing(modelNavigation, activity));
         return shazam;
     }
 
+    //Require empty constructor
     public Shazam() {
         this.monuments = new ArrayList<>();
     }
@@ -59,8 +70,6 @@ public class Shazam extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -71,8 +80,9 @@ public class Shazam extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.listview_result_monument);
         button = (Button) view.findViewById(R.id.but_takePicture);
-
+/*
         this.modelNavigation = (ModelNavigation) getArguments().getSerializable(ModelNavigation.KEY);
+        this.shazamProcessing = new ShazamProcessing(modelNavigation, getActivity());*/
 
         //final Animation animRotate = AnimationUtils.loadAnimation(this.getActivity(), R.anim.anim_button_home);
 
@@ -98,18 +108,25 @@ public class Shazam extends Fragment {
                 ExifInterface exifInterface = new ExifInterface(photoPath);
                 float[] localisation = new float[2];
 
-               /* if (exifInterface.getLatLong(localisation)) {
-                    GetMonumentByLocalization getMonumentByLocalization =
+                // Set the localization of the monument to the request to identify the monumennt
+                if (exifInterface.getLatLong(localisation)) {
+                    /*GetMonumentByLocalization getMonumentByLocalization =
                             new GetMonumentByLocalization(new RequestIdentifyByLocalization(
                                     (Home) getActivity(), photoPath));
                     getMonumentByLocalization.execute(Float.valueOf(localisation[0]).toString(),
-                            Float.valueOf(localisation[1]).toString(), "0.09");
+                            Float.valueOf(localisation[1]).toString(),
+                            ConfigurationShazam.DELTA_LOCALIZATION);*/
+                    this.shazamProcessing.setLocalization(new Localization(-1,
+                            Double.valueOf(localisation[0]), Double.valueOf(localisation[1])));
                 } else {
                     locateManager.startListening(
                             new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
-            }*/
-                ImageProcessing process = new ImageProcessing(this.getActivity());
-                process.recognise();
+                }
+
+                // Generate the descriptors and the keypoints of the picture
+                ImageProcessing imageProcessing =
+                        new ImageProcessing(this.getActivity(), shazamProcessing, photoPath);
+                imageProcessing.recognise();
 
 
             } catch (Exception e) {
@@ -180,6 +197,30 @@ public class Shazam extends Fragment {
 
     public void setLocateManager(LocateManager locateManager) {
         this.locateManager = locateManager;
+    }
+
+    public ModelNavigation getModelNavigation() {
+        return modelNavigation;
+    }
+
+    public void setModelNavigation(ModelNavigation modelNavigation) {
+        this.modelNavigation = modelNavigation;
+    }
+
+    public ShazamProcessing getShazamProcessing() {
+        return shazamProcessing;
+    }
+
+    public void setShazamProcessing(ShazamProcessing shazamProcessing) {
+        this.shazamProcessing = shazamProcessing;
+    }
+
+    @Override
+    public void foundLocalization(EventLocalizationFound eventLocalizationFound) {
+        // Retrieve the localization and stop the listener on the network
+        Localization localization = eventLocalizationFound.getLocalization();
+        this.shazamProcessing.setLocalization(localization);
+        this.locateManager.stopListening();
     }
 }
 

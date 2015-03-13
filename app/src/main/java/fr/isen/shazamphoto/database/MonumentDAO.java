@@ -45,7 +45,7 @@ public class MonumentDAO extends DAOBase {
             String args2[] = {String.valueOf(c.getLong(7))};
             c = mDb.query(DatabaseHandler.LOCALIZATION_TABLE_NAME, DatabaseHandler.LOCALIZATION_ALL_COLUMNS, DatabaseHandler.LOCALIZATION_KEY + " = ?", args2, "", "", "");
             if(c.moveToFirst()) {
-                monument.setLocalization(new Localization(c.getLong(0), c.getInt(1), c.getInt(2)));
+                monument.setLocalization(new Localization(c.getLong(0), c.getDouble(1), c.getDouble(2)));
             }
         }
         return monument;
@@ -62,7 +62,7 @@ public class MonumentDAO extends DAOBase {
             String args2[] = {String.valueOf(c.getLong(7))};
             c = mDb.query(DatabaseHandler.LOCALIZATION_TABLE_NAME, DatabaseHandler.LOCALIZATION_ALL_COLUMNS, DatabaseHandler.LOCALIZATION_KEY + " = ?", args2, "", "", "");
             if(c.moveToFirst()) {
-                monument.setLocalization(new Localization(c.getLong(0), c.getInt(1), c.getInt(2)));
+                monument.setLocalization(new Localization(c.getLong(0), c.getDouble(1), c.getDouble(2)));
             }
             monuments.add(monument);
         }

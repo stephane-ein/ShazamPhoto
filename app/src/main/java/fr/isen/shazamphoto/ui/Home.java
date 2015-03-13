@@ -26,6 +26,7 @@ import fr.isen.shazamphoto.ui.SlidingTab.SlidingTabLayout;
 import fr.isen.shazamphoto.utils.GetMonumentSearch;
 import fr.isen.shazamphoto.views.ViewDetailMonument;
 import fr.isen.shazamphoto.views.ViewMonumentsResult;
+import fr.isen.shazamphoto.views.ViewUndentifiedMonument;
 
 public class Home extends ActionBarActivity implements SearchableItem {
 
@@ -48,6 +49,7 @@ public class Home extends ActionBarActivity implements SearchableItem {
         this.modelNavigation = new ModelNavigation();
         this.modelNavigation.addView(new ViewMonumentsResult());
         this.modelNavigation.addView(new ViewDetailMonument());
+        this.modelNavigation.addView(new ViewUndentifiedMonument());
 
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
         // BEGIN_INCLUDE (setup_viewpager)
@@ -133,13 +135,13 @@ public class Home extends ActionBarActivity implements SearchableItem {
         int id = item.getItemId();
 
         // Set the  focus on the search bar
-        switch(item.getItemId()){
-            case  R.id.action_search :
+        switch (item.getItemId()) {
+            case R.id.action_search:
                 searchView.setFocusable(true);
                 searchView.setIconified(false);
                 searchView.requestFocusFromTouch();
                 break;
-            case R.id.action_place :
+            case R.id.action_place:
                 //Show the pop menu
                 ActionPlacePopMenu popupMenu = new ActionPlacePopMenu(this,
                         findViewById(R.id.action_place),
@@ -161,7 +163,7 @@ public class Home extends ActionBarActivity implements SearchableItem {
 
     @Override
     public void onPostSearch(ArrayList<Monument> monuments) {
-        Toast.makeText(this, "onPostSearch ! : "+ Integer.valueOf(monuments.size()), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "onPostSearch ! : " + Integer.valueOf(monuments.size()), Toast.LENGTH_LONG).show();
         Shazam shazam = (Shazam) getSectionsPagerAdapter().getItem(Shazam.POSITION);
         modelNavigation.changeAppView(new EventSearchMonumentByName(monuments, shazam));
     }

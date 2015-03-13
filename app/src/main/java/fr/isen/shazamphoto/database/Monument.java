@@ -1,12 +1,5 @@
 package fr.isen.shazamphoto.database;
 
-import android.app.Activity;
-import android.util.Base64;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +26,12 @@ public class Monument implements Serializable {
 
     public Monument() {
         this(0, "", "", "", 0, 0, 0, null, new Address());
+    }
+
+    public Monument(KeyPoint[] keyPoints, Mat descriptors){
+        this();
+        this.descriptors = descriptors;
+        this.keyPoints = keyPoints;
     }
 
     public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization) {

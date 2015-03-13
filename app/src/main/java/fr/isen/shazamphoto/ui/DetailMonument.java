@@ -26,11 +26,12 @@ import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.NearestMonumentsDAO;
 import fr.isen.shazamphoto.events.RequestNearestFromMonument;
+import fr.isen.shazamphoto.utils.ConfigurationShazam;
 import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
 
-public class DetailMonument extends ActionBarActivity implements ScrollViewListener{
+public class DetailMonument extends ActionBarActivity implements ScrollViewListener {
 
     public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE = 4;
     public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_PORTRAIT = 3;
@@ -51,10 +52,10 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(0, 0, 0, 0)));
 
         //Retrieve the TextView, the buttons and the imageView
-        gridView = (GridView)findViewById(R.id.gridView_nearestMonuments);
+        gridView = (GridView) findViewById(R.id.gridView_nearestMonuments);
         TextView nbLike = (TextView) findViewById(R.id.textView_nbLike);
         nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
-        noNearestMonument = (TextView)findViewById(R.id.adm_textview_nonearestmonument);
+        noNearestMonument = (TextView) findViewById(R.id.adm_textview_nonearestmonument);
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
         ADMScrollView scrollView = (ADMScrollView) findViewById(R.id.adm_scrollview);
 
@@ -68,7 +69,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         setTitle("");
 
         //Set the picture
-        if(monument.getPhotoPath() != null && !monument.getPhotoPath().isEmpty()){
+        if (monument.getPhotoPath() != null && !monument.getPhotoPath().isEmpty()) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 4;
             Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath(), options);
@@ -118,13 +119,13 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         NearestMonumentsDAO nearestMonumentsDAO = new NearestMonumentsDAO(this);
         nearestMonumentsDAO.open();
         ArrayList<Monument> monuments = nearestMonumentsDAO.getNearestMonuments(this.monument.getId());
-        if(!monuments.isEmpty()){
+        if (!monuments.isEmpty()) {
             setGridViewArrayList(monuments);
-        }else{
+        } else {
             RequestNearestFromMonument requestNearestFromMonument = new RequestNearestFromMonument(this);
             GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(requestNearestFromMonument);
-            getMonumentByLocalization.execute(Float.valueOf(monument.getLocalization().getLatitude()).toString(),
-                    Float.valueOf(monument.getLocalization().getLongitude()).toString(), "0.09");
+            getMonumentByLocalization.execute(Double.valueOf(monument.getLocalization().getLatitude()).toString(),
+                    Double.valueOf(monument.getLocalization().getLongitude()).toString(), ConfigurationShazam.DELTA_LOCALIZATION);
         }
 
         scrollView.setScrollViewListener(this);
@@ -160,9 +161,9 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     }
 
-    public void setListNearestMonuments(ArrayList<Monument> monuments){
+    public void setListNearestMonuments(ArrayList<Monument> monuments) {
 
-        if(!monuments.isEmpty()) {
+        if (!monuments.isEmpty()) {
 
             noNearestMonument.setVisibility(View.INVISIBLE);
 
@@ -193,7 +194,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         }
     }
 
-    public void setColumnWidthView(int orientation){
+    public void setColumnWidthView(int orientation) {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -202,16 +203,16 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
         // Checks the orientation of the screen
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            columnWidth = ((width - 2*GRIDVIEW_PADDING -2*GRIDVIEW_SPACING)/(NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE+1)) ;
+            columnWidth = ((width - 2 * GRIDVIEW_PADDING - 2 * GRIDVIEW_SPACING) / (NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE + 1));
 
-        } else if (orientation == Configuration.ORIENTATION_PORTRAIT){
-            columnWidth = ((width - 2*GRIDVIEW_PADDING -2*GRIDVIEW_SPACING)/(NBMAX_MONUMENT_NEAREST_TO_DISPLAY_PORTRAIT+1)) ;
+        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            columnWidth = ((width - 2 * GRIDVIEW_PADDING - 2 * GRIDVIEW_SPACING) / (NBMAX_MONUMENT_NEAREST_TO_DISPLAY_PORTRAIT + 1));
         }
 
         gridView.setColumnWidth(columnWidth);
     }
 
-    public void setGridViewArrayList(ArrayList<Monument> m){
+    public void setGridViewArrayList(ArrayList<Monument> m) {
         // Set the grid view of the nearests monuments
         GridViewAdapter gridViewAdapter = new GridViewAdapter(this, m);
         gridView.setAdapter(gridViewAdapter);
@@ -223,16 +224,16 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
 
         double downScrolled = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
-        double startShowMenu = (view.getBottom() *0.3);
-        double fullShowMenu = (view.getBottom() *0.6);
+        double startShowMenu = (view.getBottom() * 0.3);
+        double fullShowMenu = (view.getBottom() * 0.6);
         double lengthArea = fullShowMenu - startShowMenu;
 
-        if ( startShowMenu >= downScrolled && downScrolled <= fullShowMenu  ){
+        if (startShowMenu >= downScrolled && downScrolled <= fullShowMenu) {
             double deltaScrolled = startShowMenu - downScrolled;
-            int newAlpha = (int)((deltaScrolled*255.0)/lengthArea);
+            int newAlpha = (int) ((deltaScrolled * 255.0) / lengthArea);
             int alpha = newAlpha > 255 ? 255 : newAlpha;
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(alpha, 0, 0, 0)));
-        }else if( downScrolled > startShowMenu){
+        } else if (downScrolled > startShowMenu) {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(0, 0, 0, 0)));
         }
     }

@@ -14,6 +14,7 @@ public class DeleteDialog extends DialogFragment {
 
     public DeleteDialog() {
     }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction

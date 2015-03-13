@@ -2,15 +2,11 @@ package fr.isen.shazamphoto.database;
 
 import android.util.Base64;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.opencv.core.Mat;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Created by sylvain on 11/03/15.

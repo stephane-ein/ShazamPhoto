@@ -1,18 +1,18 @@
 package fr.isen.shazamphoto.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.LocationManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.events.EventLocalizationFound;
 import fr.isen.shazamphoto.events.RequestNearestMonumentsAndMap;
-import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
+import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 
 
-public class ActionPlacePopMenu extends PopupMenu implements PopupMenu.OnMenuItemClickListener{
+public class ActionPlacePopMenu extends PopupMenu implements PopupMenu.OnMenuItemClickListener, SearchLocalizationItem {
 
     private View menuItemView;
     private Home home;
@@ -23,7 +23,7 @@ public class ActionPlacePopMenu extends PopupMenu implements PopupMenu.OnMenuIte
         this.menuItemView = anchor;
         this.home = context instanceof Home ? (Home) context : null;
         setOnMenuItemClickListener(this);
-        this.locateManager = new LocateManager(locationManager);
+        this.locateManager = new LocateManager(locationManager, this);
         this.locateManager.home = home;
     }
 
@@ -54,5 +54,10 @@ public class ActionPlacePopMenu extends PopupMenu implements PopupMenu.OnMenuIte
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void foundLocalization(EventLocalizationFound eventLocalizationFound) {
+
     }
 }

@@ -6,15 +6,15 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 public class Localization implements Serializable{
-    long id;
-    float latitude;
-    float longitude;
+    private long id;
+    private double latitude;
+    private double longitude;
 
     public Localization() {
-        this(0, 0, 0);
+        this(0, 0.0, 0.0);
     }
 
-    public Localization(long id, float latitude, float longitude) {
+    public Localization(long id, Double latitude, Double longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -23,8 +23,8 @@ public class Localization implements Serializable{
     public Localization(JSONObject jsonObject){
         try{
             this.id = -1;
-            this.latitude = Float.valueOf(jsonObject.getString("latitude")).floatValue();
-            this.longitude =  Float.valueOf(jsonObject.getString("longitude")).floatValue();
+            this.latitude = Double.valueOf(jsonObject.getString("latitude")).floatValue();
+            this.longitude =  Double.valueOf(jsonObject.getString("longitude")).floatValue();
         }catch(Exception e){
         }
     }
@@ -32,8 +32,8 @@ public class Localization implements Serializable{
     public JSONObject toJson(){
         JSONObject jsonObj = new JSONObject();
         try{
-            jsonObj.put("latitude", Float.valueOf(latitude).toString());
-            jsonObj.put("longitude", Float.valueOf(longitude).toString());
+            jsonObj.put("latitude", Double.valueOf(latitude).toString());
+            jsonObj.put("longitude", Double.valueOf(longitude).toString());
         }
         catch (JSONException e){}
 
@@ -48,23 +48,23 @@ public class Localization implements Serializable{
         this.id = id;
     }
 
-    public float getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public float getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
     public String toString(){
-        return "Lat: "+Float.valueOf(getLatitude()).toString() +" Lon: "+Float.valueOf(getLongitude()).toString();
+        return "Lat: "+Double.valueOf(getLatitude()).toString() +" Lon: "+Double.valueOf(getLongitude()).toString();
     }
 }

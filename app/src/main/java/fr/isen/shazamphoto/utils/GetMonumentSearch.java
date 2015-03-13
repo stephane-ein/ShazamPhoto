@@ -19,7 +19,7 @@ import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 
 public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
-    private static final String URL = "http://37.187.216.159/shazam/api.php?n=";
+    private static final String URL = "http://"+ConfigurationShazam.IP_SERVER+"/shazam/api.php?n=";
     private HttpClient client;
     private ArrayList<Monument> monuments;
     private JSONObject jsonResponse;

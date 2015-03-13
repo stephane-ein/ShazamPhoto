@@ -48,8 +48,8 @@ public class NearestMonumentsDAO extends ShazamDAO{
                         DatabaseHandler.LOCALIZATION_ALL_COLUMNS,
                         DatabaseHandler.LOCALIZATION_KEY + " = ?", args2, "", "", "");
                 if(cM.moveToFirst()) {
-                    monument.setLocalization(new Localization(cM.getLong(0), cM.getInt(1),
-                            cM.getInt(2)));
+                    monument.setLocalization(new Localization(cM.getLong(0), cM.getDouble(1),
+                            cM.getDouble(2)));
                 }
             }
             monuments.add(monument);

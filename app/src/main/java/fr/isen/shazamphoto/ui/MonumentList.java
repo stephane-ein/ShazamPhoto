@@ -24,7 +24,7 @@ public abstract class MonumentList extends Fragment {
     private String typeOfList;
     private ModelNavigation modelNavigation;
 
-    public MonumentList(){
+    public MonumentList() {
 
     }
 
@@ -63,15 +63,15 @@ public abstract class MonumentList extends Fragment {
         }
     }
 
-    public void setView(){
-        if(typeOfList.equals(FavouriteMonument.class.getSimpleName())){
+    public void setView() {
+        if (typeOfList.equals(FavouriteMonument.class.getSimpleName())) {
             setFavouriteMonuments();
-        }else if(typeOfList.equals(TaggedMonument.class.getSimpleName())){
+        } else if (typeOfList.equals(TaggedMonument.class.getSimpleName())) {
             setTaggedMonuments();
         }
     }
 
-    public void setFavouriteMonuments(){
+    public void setFavouriteMonuments() {
         FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(getActivity());
         favouriteMonumentDAO.open();
         final List<Monument> monumentsList = favouriteMonumentDAO.getAllMonuments();
@@ -83,7 +83,7 @@ public abstract class MonumentList extends Fragment {
         setListMonuments(monuments);
     }
 
-    public void setTaggedMonuments(){
+    public void setTaggedMonuments() {
         TaggedMonumentDAO taggedMonumentDAO = new TaggedMonumentDAO(getActivity());
         taggedMonumentDAO.open();
         final List<Monument> monumentsList = taggedMonumentDAO.getAllMonuments();
@@ -95,7 +95,7 @@ public abstract class MonumentList extends Fragment {
         setListMonuments(monuments);
     }
 
-    public void setListMonuments(final ArrayList<Monument> monuments){
+    public void setListMonuments(final ArrayList<Monument> monuments) {
         CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
         ListView listview = (ListView) view.findViewById(R.id.listview_favourite_monument);
         listview.setAdapter(adapter);

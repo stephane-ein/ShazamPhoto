@@ -1,22 +1,15 @@
 package fr.isen.shazamphoto.utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Environment;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
@@ -29,18 +22,9 @@ import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.KeyPoint;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
-import fr.isen.shazamphoto.database.Descriptors;
-import fr.isen.shazamphoto.database.KeyPoints;
-import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.ui.UnidentifiedMonument;
-
-public class ImageProcessing extends AsyncTask<String, Void, JSONObject> {
+public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
 
     public static final Size size = new Size(640, 480);
 
@@ -49,14 +33,23 @@ public class ImageProcessing extends AsyncTask<String, Void, JSONObject> {
     private HttpResponse response;
     private String keyPointToSend = null;
     private String descriptorToSend = null;
+
+    // Information about the picture
     private Mat descriptors;
     private KeyPoint[] keyPointArray;
+    private String photoPath;
+
+    // Add the several information about the picture to the request to identify the monument
+    private ShazamProcessing shazamProcessing;
 
     private Context activityContext = null;
 
 
-    public ImageProcessing(Context activityContext) {
+    public ImageProcessing(Context activityContext, ShazamProcessing shazamProcessing,
+                           String photoPath) {
         setActivityContext(activityContext);
+        this.shazamProcessing = shazamProcessing;
+        this.photoPath = photoPath;
     }
 
     public Context getActivityContext() {
@@ -201,7 +194,7 @@ public class ImageProcessing extends AsyncTask<String, Void, JSONObject> {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
                     String picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-                    File imgFile = new File(picturesDir + "/test1.jpg");
+                    File imgFile = new File(photoPath);
                     if (imgFile != null && imgFile.exists()) {
 
                         Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
@@ -224,18 +217,19 @@ public class ImageProcessing extends AsyncTask<String, Void, JSONObject> {
 
                         descriptor.compute(img1, keypoints, descriptors);
                         descriptors = descriptors.clone();
+                        keyPointArray = keypoints.toArray();
 
+                        shazamProcessing.setDescriptors(descriptors);
+                        shazamProcessing.setKeyPoints(keyPointArray);
                         /*setKeyPointToSend(keypointsToJson(keypoints));
                         setDescriptorToSend(matToJson(descriptors));
                         setKeyPointArray(keypoints.toArray());*/
 
-                        process.execute();
+                        //process.execute();
 
                     } else {
                         Toast.makeText(activityContext, "Error : image null or doesn't exist", Toast.LENGTH_LONG).show();
                     }
-
-
                 }
                 break;
                 default: {
@@ -245,7 +239,7 @@ public class ImageProcessing extends AsyncTask<String, Void, JSONObject> {
             }
         }
     };
-
+/*
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -284,14 +278,14 @@ public class ImageProcessing extends AsyncTask<String, Void, JSONObject> {
     @Override
     public void onPostExecute(JSONObject result) {
         //monument doesn't exist
-      /*  Monument monument1 = new Monument();
+        Monument monument1 = new Monument();
         monument1.setDescriptors(this.descriptors);
         monument1.setKeyPoints(this.keyPointArray);
         Intent intent = new Intent(this.getActivityContext(), UnidentifiedMonument.class);
         Bundle args = new Bundle();
         args.putSerializable(Monument.NAME_SERIALIZABLE, monument1);
         intent.putExtras(args);
-        getActivityContext().startActivity(intent);*/
+        getActivityContext().startActivity(intent);
 
         try {
 
@@ -317,7 +311,7 @@ public class ImageProcessing extends AsyncTask<String, Void, JSONObject> {
             Toast.makeText(this.activityContext, "Error : "+e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-
+*/
 
     public HttpPost getHttppost() {
         return httppost;

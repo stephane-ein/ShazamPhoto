@@ -1,8 +1,6 @@
 package fr.isen.shazamphoto.utils;
 
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -20,18 +18,13 @@ import java.util.ArrayList;
 
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
 import fr.isen.shazamphoto.events.RequestLocalization;
 import fr.isen.shazamphoto.events.RequestNearestFromMonument;
-import fr.isen.shazamphoto.events.RequestNearestMonuments;
-import fr.isen.shazamphoto.ui.DetailMonument;
 import fr.isen.shazamphoto.ui.Home;
-import fr.isen.shazamphoto.ui.NearestMonumentsFragment;
-import fr.isen.shazamphoto.ui.UnidentifiedMonument;
 
 public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObject> {
 
-    private static final String URL = "http://37.187.216.159/shazam/api.php?";
+    private static final String URL = "http://"+ConfigurationShazam.IP_SERVER+"/shazam/api.php?";
     private HttpClient client;
     private JSONObject jsonResponse;
     private String urlWithArguments;
@@ -57,7 +50,7 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
 
         if (args.length == 3) {
             setArgument(args[0], args[1], args[2]);
-            localization = new Localization(-1, Float.valueOf(args[0]), Float.valueOf(args[1]));
+            localization = new Localization(-1, Double.valueOf(args[0]), Double.valueOf(args[1]));
             try {
                 HttpGet request = new HttpGet(urlWithArguments);
                 request.setHeader("Content-type", "application/json");

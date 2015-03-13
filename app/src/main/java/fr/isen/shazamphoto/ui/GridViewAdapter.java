@@ -39,9 +39,9 @@ public class GridViewAdapter extends ArrayAdapter {
 
             TextView textViewTitle = (TextView) row.findViewById(R.id.textView_gridView);
             ImageView imageViewIte = (ImageView) row.findViewById(R.id.imageView_gridView);
-            if(position < monuments.size()){
+            if (position < monuments.size()) {
                 Monument monument = monuments.get(position);
-                if(monument != null){
+                if (monument != null) {
                     textViewTitle.setText(monument.getName());
                 }
                 imageViewIte.setImageResource(R.drawable.monument_1);

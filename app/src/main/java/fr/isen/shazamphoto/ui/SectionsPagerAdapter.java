@@ -22,7 +22,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         home = act;
         fragments = new ArrayList<>(nbPage);
-        for(int i = 0; i<nbPage; i++) fragments.add(null);
+        for (int i = 0; i < nbPage; i++) fragments.add(null);
     }
 
     @Override
@@ -33,18 +33,18 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                if(fragments.get(Shazam.POSITION) == null){
+                if (fragments.get(Shazam.POSITION) == null) {
                     fragments.add(Shazam.POSITION, Shazam.newInstance(
                             (LocationManager) home.getSystemService(Context.LOCATION_SERVICE),
-                            home.getModelNavigation()));
+                            home.getModelNavigation(), home));
                 }
                 result = fragments.get(Shazam.POSITION);
                 break;
             case 1:
-                if(fragments.get(NearestMonumentsFragment.POSITION) == null){
-                  fragments.add(NearestMonumentsFragment.POSITION,
-                          NearestMonumentsFragment.newInstance((LocationManager)
-                                  home.getSystemService(Context.LOCATION_SERVICE)));
+                if (fragments.get(NearestMonumentsFragment.POSITION) == null) {
+                    fragments.add(NearestMonumentsFragment.POSITION,
+                            NearestMonumentsFragment.newInstance((LocationManager)
+                                    home.getSystemService(Context.LOCATION_SERVICE)));
                 }
                 result = fragments.get(NearestMonumentsFragment.POSITION);
                 break;
