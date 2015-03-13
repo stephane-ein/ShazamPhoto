@@ -21,6 +21,7 @@ import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.RequestLocalization;
 import fr.isen.shazamphoto.events.RequestNearestFromMonument;
 import fr.isen.shazamphoto.ui.Home;
+import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
 
 public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObject> {
 
@@ -31,13 +32,17 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
     private RequestLocalization requestLocalization;
     private Localization localization;
     public Home home;
+    private SearchMonumentsByLocalization searchMonumentsByLocalization;
 
-    public GetMonumentByLocalization(RequestLocalization requestLocalization) {
+
+    public GetMonumentByLocalization(RequestLocalization requestLocalization,
+                                     SearchMonumentsByLocalization searchMonumentsByLocalization) {
         client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
                 "android");
 
         this.requestLocalization = requestLocalization;
+        this.searchMonumentsByLocalization = searchMonumentsByLocalization;
     }
 
     public void setArgument(String latitude, String longitude, String delta) {
@@ -89,7 +94,8 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
                 Toast.makeText(requestNearestFromMonument.getDetailMonument(), "Thread executed GetMonumentBylocation", Toast.LENGTH_LONG).show();
             }
 
-            requestLocalization.doPostAction(monuments, localization);
+            searchMonumentsByLocalization.monumentsFoundByLocalization(monuments);
+           // requestLocalization.doPostAction(monuments, localization);
         }
 
     }

@@ -46,8 +46,6 @@ public class PromptNameMonument extends Fragment {
                     // Ask the server if the monument already exist
                     // If yes, we add more information about the descriptor of the monument
 
-                    // GetMonumentSearch getMonumentSearch = new GetMonumentSearch(new SearchMonumentUnidentified((UnidentifiedMonument)getActivity()));
-                    // getMonumentSearch.execute(v.getText().toString());
                 }
                 return false;
             }

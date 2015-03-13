@@ -66,9 +66,9 @@
                 android:text="ADD" />
 
             <TextView
+                android:id="@+id/adm_logJSON"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/adm_logJSON"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
 

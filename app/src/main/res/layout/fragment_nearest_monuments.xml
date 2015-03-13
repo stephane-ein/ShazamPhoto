@@ -1,23 +1,87 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/list_divider"
     tools:context="fr.isen.shazamphoto.ui.NearestMonumentsFragment">
 
-    <ListView
-        android:id="@+id/listview_nearest_monument"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp"
-        android:listSelector="@drawable/list_row_selector" />
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/fnm_button_makecircuit"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:background="@drawable/rectangle"
+                android:fontFamily="sans-serif-thin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="@string/makecircuit"
+                android:textSize="@dimen/abc_text_size_body_2_material"
+                android:visibility="invisible" />
+
+
+            <Button
+                android:id="@+id/fnm_button_cancelcircuit"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:layout_weight="1"
+                android:background="@drawable/rectangle"
+                android:fontFamily="sans-serif-thin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="@string/cancelcircuit"
+                android:textSize="@dimen/abc_text_size_body_2_material"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/fnm_textview_informationfdm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ListView
+            android:id="@+id/listview_nearest_monument"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10.0sp"
+            android:listSelector="@drawable/list_row_selector"
+            android:visibility="invisible" />
+
+
+    </LinearLayout>
+
 
     <Button
+        android:id="@+id/fnm_button_searchnearestmonument"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Search the nearest Monument !"
-        android:id="@+id/button_search_nearest_monuments"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:background="@drawable/rectangle"
+        android:fontFamily="sans-serif-thin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="@string/searchnearestmonuments"
+        android:textSize="@dimen/abc_text_size_body_2_material" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fnm_textview_table"/>
 </FrameLayout>

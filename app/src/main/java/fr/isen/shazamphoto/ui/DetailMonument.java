@@ -26,12 +26,13 @@ import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.NearestMonumentsDAO;
 import fr.isen.shazamphoto.events.RequestNearestFromMonument;
+import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
 import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
 
-public class DetailMonument extends ActionBarActivity implements ScrollViewListener {
+public class DetailMonument extends ActionBarActivity implements ScrollViewListener, SearchMonumentsByLocalization {
 
     public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE = 4;
     public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_PORTRAIT = 3;
@@ -118,14 +119,21 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         // Get the nearest monuments
         NearestMonumentsDAO nearestMonumentsDAO = new NearestMonumentsDAO(this);
         nearestMonumentsDAO.open();
-        ArrayList<Monument> monuments = nearestMonumentsDAO.getNearestMonuments(this.monument.getId());
+        ArrayList<Monument> monuments =
+                nearestMonumentsDAO.getNearestMonuments(this.monument.getId());
+
+        // Set the nearest monuments in the gridView
         if (!monuments.isEmpty()) {
             setGridViewArrayList(monuments);
         } else {
-            RequestNearestFromMonument requestNearestFromMonument = new RequestNearestFromMonument(this);
-            GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(requestNearestFromMonument);
-            getMonumentByLocalization.execute(Double.valueOf(monument.getLocalization().getLatitude()).toString(),
-                    Double.valueOf(monument.getLocalization().getLongitude()).toString(), ConfigurationShazam.DELTA_LOCALIZATION);
+            RequestNearestFromMonument requestNearestFromMonument =
+                    new RequestNearestFromMonument(this);
+            GetMonumentByLocalization getMonumentByLocalization =
+                    new GetMonumentByLocalization(requestNearestFromMonument, this);
+            getMonumentByLocalization.execute(
+                    Double.valueOf(monument.getLocalization().getLatitude()).toString(),
+                    Double.valueOf(monument.getLocalization().getLongitude()).toString(),
+                    ConfigurationShazam.DELTA_LOCALIZATION);
         }
 
         scrollView.setScrollViewListener(this);
@@ -236,5 +244,10 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         } else if (downScrolled > startShowMenu) {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(0, 0, 0, 0)));
         }
+    }
+
+    @Override
+    public void monumentsFoundByLocalization(ArrayList<Monument> monuments) {
+
     }
 }
