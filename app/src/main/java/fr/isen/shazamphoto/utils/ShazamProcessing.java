@@ -8,9 +8,11 @@ import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
@@ -18,6 +20,7 @@ import org.opencv.core.Mat;
 import org.opencv.features2d.KeyPoint;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +37,7 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
     // Attributes to contact thr server
     private HttpClient httpclient = new DefaultHttpClient();
     private HttpPost httppost =
-            new HttpPost("http://+"+ConfigurationShazam.IP_SERVER+"/shazam/identify.php");
+            new HttpPost("http://"+ConfigurationShazam.IP_SERVER+"/shazam/identify.php");
     private HttpResponse response;
 
     // Arguments to send to the server
@@ -106,11 +109,6 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
         startTime = System.currentTimeMillis();
         timerHandler.postDelayed(timerRunnable, 0);
 
-    }
-
-    public void setKeyPoints(KeyPoint[] keyPoints) {
-
-        checkSendRequest();
     }
 
     public boolean checkSendRequest(){
