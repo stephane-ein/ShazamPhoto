@@ -45,10 +45,14 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
     // Handle the UI of the application
     private ModelNavigation modelNavigation;
 
-    //To display the different result
+    // To display the different result
     private Activity activity;
 
+    // Attributes to handle the thread
     private boolean isSend;
+    private long startTime = 0;
+    private Handler timerHandler = new Handler();
+    private Runnable timerRunnable;
 
     public ShazamProcessing(ModelNavigation modelNavigation, Activity activity) {
         this.localization = null;
@@ -64,47 +68,57 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
         checkSendRequest();
     }
 
-    public void setDescriptors(Mat descriptors) {
+    public void setDescriptorsKeyKeyPoints(Mat descriptors, KeyPoint[] keyPoints) {
         this.descriptors = descriptors;
-        checkSendRequest();
+        this.keyPoints = keyPoints;
+
+        // Set the timer
+        timerRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                long millis = System.currentTimeMillis() - startTime;
+                int seconds = (int) (millis / 1000);
+                seconds = seconds % 60;
+
+                // Check if the request has not been already send and if we have all the argument in
+                // the remaining time
+                if( isSend==false && (seconds >= 5 || checkSendRequest())){
+                    isSend = true;
+                    // Execute the request (despite not having a localization)
+                    execute();
+                    // Remove the timer
+                    timerHandler.removeCallbacks(timerRunnable);
+
+                    if(checkSendRequest()){
+                        Toast.makeText(activity, "identify a monument with localization",Toast.LENGTH_SHORT).show();
+                    }else if(seconds >= 5){
+                        Toast.makeText(activity, "identify a monument without localization",Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+                timerHandler.postDelayed(this, 500);
+            }
+        };
+
 
         // Start the timer
         startTime = System.currentTimeMillis();
         timerHandler.postDelayed(timerRunnable, 0);
+
     }
 
     public void setKeyPoints(KeyPoint[] keyPoints) {
-        this.keyPoints = keyPoints;
+
         checkSendRequest();
     }
 
-    public void checkSendRequest(){
+    public boolean checkSendRequest(){
         // If we have all the argument required, we send the request
-        //if( localization != null && descriptors != null && keyPoints != null) execute();
+        return localization != null && descriptors != null && keyPoints != null;
     }
 
-    long startTime = 0;
-    //runs without a timer by reposting this handler at the end of the runnable
-    Handler timerHandler = new Handler();
-    Runnable timerRunnable = new Runnable() {
 
-        @Override
-        public void run() {
-            long millis = System.currentTimeMillis() - startTime;
-            int seconds = (int) (millis / 1000);
-            seconds = seconds % 60;
-            // If we did not have a localization, we send the request
-            if(seconds >= 5 && !isSend){
-                isSend = true;
-                // Execute the request despite not having a localization
-                execute();
-                // Remove the timer
-                timerHandler.removeCallbacks(timerRunnable);
-                Toast.makeText(activity, "identify a monument without localization",Toast.LENGTH_SHORT).show();
-            }
-            timerHandler.postDelayed(this, 500);
-        }
-    };
 
     @Override
     protected JSONObject doInBackground(String... params) {
@@ -135,7 +149,6 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
             }
             jsonResponse = new JSONObject(result.toString());
 
-            isSend = true;
             System.out.println("Result Identify : " + result.toString());
 
         } catch (Exception e) {}
@@ -145,15 +158,6 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
 
     @Override
     public void onPostExecute(JSONObject result) {
-        //monument doesn't exist
-      /*  Monument monument1 = new Monument();
-        monument1.setDescriptors(this.descriptors);
-        monument1.setKeyPoints(this.keyPointArray);
-        Intent intent = new Intent(this.getActivityContext(), UnidentifiedMonument.class);
-        Bundle args = new Bundle();
-        args.putSerializable(Monument.NAME_SERIALIZABLE, monument1);
-        intent.putExtras(args);
-        getActivityContext().startActivity(intent);*/
 
         try {
 
@@ -163,11 +167,6 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
                     Monument monument = new Monument(keyPoints, descriptors);
                     modelNavigation.changeAppView(
                             new EventUnidentifiedMonument(activity, monument));
-                   /* Intent intent = new Intent(this.getActivityContext(), UnidentifiedMonument.class);
-                    Bundle args = new Bundle();
-                    args.putSerializable(Monument.NAME_SERIALIZABLE, monument);
-                    intent.putExtras(args);
-                    getActivityContext().startActivity(intent);*/
                 } else{
                     Toast.makeText(activity, "Monument identified", Toast.LENGTH_LONG).show();
                     Toast.makeText(activity, "Result : "+result.toString(), Toast.LENGTH_LONG).show();

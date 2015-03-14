@@ -219,13 +219,7 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
                         descriptors = descriptors.clone();
                         keyPointArray = keypoints.toArray();
 
-                        shazamProcessing.setDescriptors(descriptors);
-                        shazamProcessing.setKeyPoints(keyPointArray);
-                        /*setKeyPointToSend(keypointsToJson(keypoints));
-                        setDescriptorToSend(matToJson(descriptors));
-                        setKeyPointArray(keypoints.toArray());*/
-
-                        //process.execute();
+                        shazamProcessing.setDescriptorsKeyKeyPoints(descriptors, keyPointArray);
 
                     } else {
                         Toast.makeText(activityContext, "Error : image null or doesn't exist", Toast.LENGTH_LONG).show();
