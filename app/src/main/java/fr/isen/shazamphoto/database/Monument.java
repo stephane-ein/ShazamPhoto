@@ -101,55 +101,8 @@ public class Monument implements Serializable {
             jsonObj.put("localization", localization.toJson());
             jsonObj.put("address", address.toJson());
 
-            // Parse the JSON keypoints
-            /*JSONArray jsonArr = new JSONArray();
-            for (int i = 0; i < keyPoints.length; i++) {
-                KeyPoint kp = keyPoints[i];
-
-                JSONObject obj = new JSONObject();
-
-                obj.put("class_id", kp.class_id);
-                obj.put("x", kp.pt.x);
-                obj.put("y", kp.pt.y);
-                obj.put("size", kp.size);
-                obj.put("angle", kp.angle);
-                obj.put("octave", kp.octave);
-                obj.put("response", kp.response);
-
-                jsonArr.put(obj);
-            }
-
-            JSONObject list = new JSONObject();
-            list.put("keypoints", jsonArr);
-            jsonObj.put("listskeypoints", list);*/
+            // Parse the JSON keypoints and the dexcriptors
             jsonObj.put(KeyPoints.KEY, KeyPoints.toJson(keyPoints));
-
-            //Parse the JSON descriptor
-            /*JSONObject objDesciprtor = new JSONObject();
-
-            if (descriptors.isContinuous()) {
-                int cols = descriptors.cols();
-                int rows = descriptors.rows();
-                int elemSize = (int) descriptors.elemSize();
-
-                byte[] data = new byte[cols * rows * elemSize];
-
-                descriptors.get(0, 0, data);
-
-                objDesciprtor.put("rows", descriptors.rows());
-                objDesciprtor.put("cols", descriptors.cols());
-                objDesciprtor.put("type", descriptors.type());
-
-                // We cannot set binary data to a json object, so:
-                // Encoding data byte array to Base64.
-                String dataString = new String(Base64.encode(data, Base64.DEFAULT));
-
-                objDesciprtor.put("data", dataString);
-            }
-
-            JSONArray jsonArrayDescriptor = new JSONArray();
-            jsonArrayDescriptor.put(objDesciprtor);
-            jsonObj.put("descriptors", jsonArrayDescriptor);*/
             jsonObj.put(Descriptors.KEY, Descriptors.toJson(descriptors));
 
         } catch (JSONException ex) {
@@ -260,6 +213,10 @@ public class Monument implements Serializable {
 
     public void setDescriptors(Mat descriptors) {
         this.descriptors = descriptors;
+    }
+
+    public String toString(){
+        return getName() +" ";
     }
 }
 

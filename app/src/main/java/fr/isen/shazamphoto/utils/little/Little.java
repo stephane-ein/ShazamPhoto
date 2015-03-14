@@ -15,6 +15,10 @@ public class Little {
         shortPath=new ArrayList<>();
     }
 
+    public List<Point> getShortPath() {
+        return shortPath;
+    }
+
     public void doLittle(){
         boolean check;
         if(nbCity>2){
@@ -177,8 +181,8 @@ public class Little {
     public void deleteCurly(){
         int size = shortPath.size();
         Point p1;
-        int i;
-        int j;
+        long i;
+        long j;
         this.pathSort();
         for(int x =0;x<size;x++){
             p1=shortPath.get(x);
