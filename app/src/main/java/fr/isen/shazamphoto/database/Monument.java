@@ -59,7 +59,7 @@ public class Monument implements Serializable {
 
     public Monument(JSONObject jsonMonument) {
         try {
-            id = -1;
+            id = Long.valueOf(jsonMonument.getString("id")).longValue();
             year = Integer.valueOf(jsonMonument.getString("year")).intValue();
             photoPath = jsonMonument.getString("photopath");
             nbVisitors = Integer.valueOf(jsonMonument.getInt("nbvisitors")).intValue();
@@ -216,7 +216,7 @@ public class Monument implements Serializable {
     }
 
     public String toString(){
-        return getName() +" ";
+        return getName() +" "+Long.valueOf(getId()).toString();
     }
 }
 

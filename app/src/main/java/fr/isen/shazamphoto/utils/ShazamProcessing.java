@@ -3,6 +3,7 @@ package fr.isen.shazamphoto.utils;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -44,8 +45,10 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
     // Handle the UI of the application
     private ModelNavigation modelNavigation;
 
-    //,To display the differents result
+    //To display the different result
     private Activity activity;
+
+    private boolean isSend;
 
     public ShazamProcessing(ModelNavigation modelNavigation, Activity activity) {
         this.localization = null;
@@ -53,6 +56,7 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
         this.keyPoints = null;
         this.modelNavigation = modelNavigation;
         this.activity = activity;
+        isSend = false;
     }
 
     public void setLocalization(Localization localization) {
@@ -63,6 +67,10 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
     public void setDescriptors(Mat descriptors) {
         this.descriptors = descriptors;
         checkSendRequest();
+
+        // Start the timer
+        startTime = System.currentTimeMillis();
+        timerHandler.postDelayed(timerRunnable, 0);
     }
 
     public void setKeyPoints(KeyPoint[] keyPoints) {
@@ -72,8 +80,31 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
 
     public void checkSendRequest(){
         // If we have all the argument required, we send the request
-        if( localization != null && descriptors != null && keyPoints != null) execute();
+        //if( localization != null && descriptors != null && keyPoints != null) execute();
     }
+
+    long startTime = 0;
+    //runs without a timer by reposting this handler at the end of the runnable
+    Handler timerHandler = new Handler();
+    Runnable timerRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            long millis = System.currentTimeMillis() - startTime;
+            int seconds = (int) (millis / 1000);
+            seconds = seconds % 60;
+            // If we did not have a localization, we send the request
+            if(seconds >= 5 && !isSend){
+                isSend = true;
+                // Execute the request despite not having a localization
+                execute();
+                // Remove the timer
+                timerHandler.removeCallbacks(timerRunnable);
+                Toast.makeText(activity, "identify a monument without localization",Toast.LENGTH_SHORT).show();
+            }
+            timerHandler.postDelayed(this, 500);
+        }
+    };
 
     @Override
     protected JSONObject doInBackground(String... params) {
@@ -104,6 +135,7 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
             }
             jsonResponse = new JSONObject(result.toString());
 
+            isSend = true;
             System.out.println("Result Identify : " + result.toString());
 
         } catch (Exception e) {}

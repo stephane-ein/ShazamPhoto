@@ -28,8 +28,9 @@
     <string name="no_nearest_monument">No monument around, sorry.</string>
     <string name="title_activity_delete">Map</string>
     <string name="googlemap_hint">Use google map</string>
-    <string name="makecircuit">Make a circuit</string>
-    <string name="searchnearestmonuments">Nearest monuments</string>
-    <string name="cancelcircuit">Cancel</string>
+    <string name="makecircuit">OK</string>
+    <string name="searchnearestmonuments">NEAREST MONUMENTS</string>
+    <string name="cancelcircuit">CANCEL</string>
+    <string name="modecircuit">CREATE CIRCUIT</string>
 
 </resources>
