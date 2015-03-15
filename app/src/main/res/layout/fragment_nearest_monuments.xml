@@ -55,6 +55,15 @@
                 android:text="@string/modecircuit"
                 android:visibility="invisible" />
 
+            <Button
+                android:id="@+id/fnm_button_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:background="@drawable/rectangle"
+                android:text="@string/back"
+                android:visibility="invisible" />
+
 
         </RelativeLayout>
 
@@ -76,6 +85,11 @@
             android:visibility="invisible" />
 
 
+        <TextView
+            android:id="@+id/fnm_textview_table"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
 
@@ -87,9 +101,6 @@
         android:background="@drawable/rectangle"
         android:text="@string/searchnearestmonuments" />
 
-    <TextView
-        android:id="@+id/fnm_textview_table"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
 
 </FrameLayout>

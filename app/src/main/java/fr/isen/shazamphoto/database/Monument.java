@@ -34,6 +34,11 @@ public class Monument implements Serializable {
         this.keyPoints = keyPoints;
     }
 
+    public Monument(long id, Localization localization){
+        this();
+        this.id = id;
+        this.localization = localization;
+    }
     public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization) {
         this(id, name, photoPath, description, year, nbVisitors, nbLike, localization, new Address());
     }

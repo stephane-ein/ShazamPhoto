@@ -1,7 +1,6 @@
 package fr.isen.shazamphoto.ui;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -41,11 +40,13 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
     private ListView listView;
 
-    private ArrayList<Monument> monuments;
+    private ArrayList<Monument> monumentsNearest;
+    private ArrayList<Monument> monumentCircuit;
 
     private HashMap<Long, Monument> monumentsForCircuit;
     private Monument startMonument;
     private boolean isCircuitMode;
+    private final long idUser = -2;
 
     private Localization localization;
     private LocateManager locateManager;
@@ -56,6 +57,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     private Button buttonMakeCircuit;
     private Button buttonCancelCircuit;
     private Button buttonModeCircuit;
+    private Button buttonBack;
     private LinearLayout linearLayoutActionsCircuit;
 
     public static NearestMonumentsFragment newInstance(LocationManager locationManager) {
@@ -66,7 +68,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
     public NearestMonumentsFragment() {
         listView = null;
-        monuments = new ArrayList<>();
+        monumentsNearest = new ArrayList<>();
+        monumentCircuit = new ArrayList<>();
         localization = null;
         isCircuitMode = false;
         startMonument = null;
@@ -87,6 +90,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         // Retrieve the different item
         listView = (ListView) view.findViewById(R.id.listview_nearest_monument);
         buttonNearestMonuments = (Button) view.findViewById(R.id.fnm_button_searchnearestmonument);
+        buttonBack = (Button) view.findViewById(R.id.fnm_button_back);
         buttonMakeCircuit = (Button) view.findViewById(R.id.fnm_button_makecircuit);
         buttonCancelCircuit = (Button) view.findViewById(R.id.fnm_button_cancelcircuit);
         textViewTable = (TextView) view.findViewById(R.id.fnm_textview_table);
@@ -95,17 +99,16 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         linearLayoutActionsCircuit = (LinearLayout) view.findViewById(R.id.fnm_linearlayout_actionscircuit);
 
         // Set the several listeners
-        /*setListenerListView(listView);
+        setListenerListView(listView);
         setListenerNearestMonuments(buttonNearestMonuments, this);
         setListenerMakeCircuit(buttonMakeCircuit);
         setListenerModeCircuit(buttonModeCircuit);
         setListenerCancelCircuit(buttonCancelCircuit);
-*/
+        setListenerBack(buttonBack);
+
         // Check if we have a monumentsForCircuit of nearest monument already found
         // Case for sweeping fragment
-        if (!monuments.isEmpty()) {
-            setListNearestMonuments(monuments);
-        }
+        if (!monumentsNearest.isEmpty()) setListNearestMonuments(monumentsNearest);
 
         setRetainInstance(true);
         return view;
@@ -119,8 +122,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         this.localization = localization;
     }
 
-    public ArrayList<Monument> getMonuments() {
-        return monuments;
+    public ArrayList<Monument> getMonumentsNearest() {
+        return monumentsNearest;
     }
 
     public void setLocateManager(LocateManager locateManager) {
@@ -128,21 +131,34 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     }
 
     public void setListNearestMonuments(ArrayList<Monument> monuments) {
-        this.monuments = monuments;
+        // Stop he listener on the network
+        locateManager.stopListening();
+
+        // Display the list view
+        this.monumentsNearest = monuments;
         CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         buttonNearestMonuments.setVisibility(View.INVISIBLE);
-        locateManager.stopListening();
+        listView.setVisibility(View.VISIBLE);
+
+        // Display the button to make a circuit
+        buttonModeCircuit.setVisibility(View.VISIBLE);
+
+        // Display the information
+        textViewInformation.setText("Create a circuit by choosing the monumentsNearest");
+        textViewInformation.setVisibility(View.VISIBLE);
     }
 
     public void setListCircuitMonuments(ArrayList<Monument> monuments) {
-        this.monuments = monuments;
+        this.monumentCircuit = monuments;
         CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         listView.setVisibility(View.VISIBLE);
-        buttonNearestMonuments.setVisibility(View.INVISIBLE);
+        // Display the button back and hide the action for the mode circuit
+        buttonBack.setVisibility(View.VISIBLE);
+        linearLayoutActionsCircuit.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -150,41 +166,84 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         // Retrieve the localization found
         localization = eventLocalizationFound.getLocalization();
         locateManager.stopListening();
+        // Retrieve the nearest monumentsNearest
+        executeGetMonumentByLocalization();
         Toast.makeText(getActivity(), "Localization found", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void monumentsFoundByLocalization(ArrayList<Monument> monuments) {
-        Toast.makeText(getActivity(), "Monuments found", Toast.LENGTH_SHORT).show();
         //Set the several nearest monument found
         setListNearestMonuments(monuments);
-        listView.setVisibility(View.VISIBLE);
-        // Display the button to make a circuit
-        buttonModeCircuit.setVisibility(View.VISIBLE);
-        // Display the information
-        textViewInformation.setText("Create a circuit by choosing the monuments");
-        textViewInformation.setVisibility(View.VISIBLE);
+        Toast.makeText(getActivity(), "Monuments found", Toast.LENGTH_SHORT).show();
     }
 
     private void setListenerListView(ListView listView) {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Monument m =  monuments.get(position);
-                if(!isCircuitMode){
+                Monument m = monumentsNearest.get(position);
+                if (!isCircuitMode) {
                     // If the user did not activate the circuit mode
                     // we just display the detail about the monument selected
                     Intent intent = new Intent(getActivity(), DetailMonument.class);
                     intent.putExtra(Monument.NAME_SERIALIZABLE, m);
                     startActivity(intent);
-                }else{
+                } else {
                     // The circuit is activated, we add the monument to visit in the hasp map
                     monumentsForCircuit.put(m.getId(), m);
-                    if(startMonument == null) startMonument = m;
-                    view.setBackgroundColor(Color.BLUE);
-                    Toast.makeText(getActivity(), "Size mouments : "+monumentsForCircuit.size()+ " m: "+m.toString(), Toast.LENGTH_SHORT).show();
+                    if (startMonument == null){
+                        // Add the position of the user in the monument to visit (To modify)
+                        startMonument = new Monument(idUser, localization);
+                        monumentsForCircuit.put(startMonument.getId(), startMonument);
+                    }
+                    Toast.makeText(getActivity(), "Monument selected: "+m.getName(),
+                            Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
 
+
+    public void displayDefaultUI(){
+        // Deactivate the circuit mode and remove the first monument selected
+        // and clearing the list of monument selected
+        isCircuitMode = false;
+        startMonument = null;
+        monumentsForCircuit.clear();
+        // Set the default UI for the fragment
+        linearLayoutActionsCircuit.setVisibility(View.INVISIBLE);
+        buttonBack.setVisibility(View.INVISIBLE);
+        buttonMakeCircuit.setVisibility(View.VISIBLE);
+        setListNearestMonuments(monumentsNearest);
+    }
+
+    public void displayModeCircuit(){
+        // Display the different action to create a circuit
+        linearLayoutActionsCircuit.setVisibility(View.VISIBLE);
+        // hide the button to pass on mode circuit
+        buttonModeCircuit.setVisibility(View.INVISIBLE);
+        // Change the mode of the listener on the list view, in order to retrieve
+        // the monument selected for the circuit
+        isCircuitMode = true;
+        textViewInformation.setText("Please select the monument to visit");
+    }
+
+    public void executeGetMonumentByLocalization() {
+        GetMonumentByLocalization getMonumentByLocalization =
+                new GetMonumentByLocalization(new RequestNearestMonuments(this),
+                        this);
+        getMonumentByLocalization.execute(
+                Double.valueOf(localization.getLatitude()).toString(),
+                Double.valueOf(localization.getLongitude()).toString(),
+                ConfigurationShazam.DELTA_LOCALIZATION);
+    }
+
+    private void setListenerBack(Button buttonBack) {
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayDefaultUI();
             }
         });
     }
@@ -193,14 +252,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         buttonCancelCircuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Desactivate the circuit mode and remove the first monument selected
-                // and clearing the list of monument selected
-                isCircuitMode = false;
-                startMonument = null;
-                monumentsForCircuit.clear();
-                // Set the default UI for the fragment
-                linearLayoutActionsCircuit.setVisibility(View.INVISIBLE);
-                buttonMakeCircuit.setVisibility(View.VISIBLE);
+                displayDefaultUI();
             }
         });
     }
@@ -213,14 +265,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                 if (localization == null) {
                     locateManager.startListening(new RequestNearestMonuments(fragment));
                 } else {
-                    GetMonumentByLocalization getMonumentByLocalization =
-                            new GetMonumentByLocalization(new RequestNearestMonuments(fragment),
-                                    fragment);
-                    getMonumentByLocalization.execute(
-                            Double.valueOf(localization.getLatitude()).toString(),
-                            Double.valueOf(localization.getLongitude()).toString(),
-                            ConfigurationShazam.DELTA_LOCALIZATION);
-                    buttonModeCircuit.setVisibility(View.VISIBLE);
+                    executeGetMonumentByLocalization();
                 }
             }
         });
@@ -250,7 +295,9 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                     littleMatrix[index][0] = (int) monument.getId();
                     littleMatrix[0][index] = (int) monument.getId();
 
-                    //Get the distance between two monuments
+                    int jIndex = 1;
+
+                    //Get the distance between two monumentsNearest
                     for (long j : monumentsForCircuit.keySet()) {
 
                         if (j != i) {
@@ -262,9 +309,10 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                                     endLocalization.getLatitude(), endLocalization.getLongitude(),
                                     result);
                             // Set the distance found
-                            littleMatrix[index][(int) (j + 1)] = Math.round(result[0]);
+                            littleMatrix[index][jIndex] = Math.round(result[0]);
                         }
 
+                        jIndex++;
                     }
 
                     littleMatrix[index][index] = -1;
@@ -273,6 +321,9 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                     index++;
                 }
 
+                System.out.println(toStringArray(littleMatrix, size));
+
+                // Do the little
                 Little little = new Little(monumentsForCircuit.size(), littleMatrix);
                 little.doLittle();
                 List<Point> shortPath = little.getShortPath();
@@ -280,59 +331,47 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                 Point start = null;
                 int i = 0;
 
-                Toast.makeText(getActivity(), "Size path : "+Integer.valueOf(shortPath.size()).toString(), Toast.LENGTH_LONG).show();
                 // Retrieve the first monument to visit
                 while (start == null && i < shortPath.size()) {
                     Point p = shortPath.get(i);
-                    Toast.makeText(getActivity(), "Point: "+Long.valueOf(p.getFrom()).toString() +" m: "+Long.valueOf(startMonument.getId()).toString(), Toast.LENGTH_LONG).show();
-                    if (p.getFrom() == startMonument.getId()){
+                    if (p.getFrom() == idUser) {
                         start = p;
-                        Toast.makeText(getActivity(), "Start point found", Toast.LENGTH_LONG).show();
                     }
                     i++;
                 }
 
-                if(start != null){
-                    // Set the circuit for the monuments in order
-                    monumentPath.add(monumentsForCircuit.get(start.getFrom()));
+                if (start != null) {
+                    // Set the circuit for the monumentsNearest in order
+                    monumentPath.add(monumentsForCircuit.get(start.getTo()));
                     start = start.getNext();
-                    while (start.getFrom() != startMonument.getId()) {
-                        System.out.println(Long.valueOf(start.getFrom()).toString() + " " + monumentsForCircuit.get(start.getFrom()));
-                        monumentPath.add(monumentsForCircuit.get(start.getFrom()));
+                    while (start.getTo() != startMonument.getId()) {
+                        monumentPath.add(monumentsForCircuit.get(start.getTo()));
                         start = start.getNext();
                     }
 
                     // Display the result
                     setListCircuitMonuments(monumentPath);
                 }
-
             }
         });
     }
 
-    public void setListenerModeCircuit(final Button button_){
+    public void setListenerModeCircuit(final Button button_) {
         button_.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Display the different action to create a circuit
-                linearLayoutActionsCircuit.setVisibility(View.VISIBLE);
-                // Make the current button
-                button_.setVisibility(View.INVISIBLE);
-                // Change the mode of the listener on the list view, in order to retrieve
-                // the monument selected for the circuit
-                isCircuitMode = true;
-                textViewInformation.setText("Please select the monument to visit");
+                displayModeCircuit();
             }
         });
     }
 
 
-    public String toStringArray(String[][] array, int size) {
+    public String toStringArray(int[][] array, int size) {
         String result = "";
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                result += array[i][j] + "    ";
+                result += Integer.valueOf(array[i][j]).toString() + "    ";
             }
             result += "\n";
         }

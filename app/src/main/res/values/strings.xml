@@ -32,5 +32,6 @@
     <string name="searchnearestmonuments">NEAREST MONUMENTS</string>
     <string name="cancelcircuit">CANCEL</string>
     <string name="modecircuit">CREATE CIRCUIT</string>
+    <string name="back">BACK</string>
 
 </resources>

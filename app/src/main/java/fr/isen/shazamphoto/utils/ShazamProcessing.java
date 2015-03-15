@@ -84,7 +84,7 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
                 int seconds = (int) (millis / 1000);
                 seconds = seconds % 60;
 
-                // Check if the request has not been already send and if we have all the argument in
+                // Check if the request has not been already sent and if we have all the argument in
                 // the remaining time
                 if( isSend==false && (seconds >= 5 || checkSendRequest())){
                     isSend = true;
