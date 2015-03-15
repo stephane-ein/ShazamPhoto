@@ -133,7 +133,8 @@ public class Monument implements Serializable {
     }
 
     public String getName() {
-        if (characteristics.get(LanguageAvailable.DEFAULT_VALUE) == null) {
+        if (characteristics == null || (characteristics != null &&
+                characteristics.get(LanguageAvailable.DEFAULT_VALUE) == null)) {
             return "Null";
         } else {
             return characteristics.get(LanguageAvailable.DEFAULT_VALUE).getName();

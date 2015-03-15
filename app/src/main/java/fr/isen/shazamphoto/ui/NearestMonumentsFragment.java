@@ -136,7 +136,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
         // Display the list view
         this.monumentsNearest = monuments;
-        CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
+        NearestListAdapter adapter = new NearestListAdapter(getActivity(), monuments);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         buttonNearestMonuments.setVisibility(View.INVISIBLE);
@@ -152,7 +152,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
     public void setListCircuitMonuments(ArrayList<Monument> monuments) {
         this.monumentCircuit = monuments;
-        CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
+        NearestListAdapter adapter = new NearestListAdapter(getActivity(), monuments);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         listView.setVisibility(View.VISIBLE);
@@ -168,7 +168,6 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         locateManager.stopListening();
         // Retrieve the nearest monumentsNearest
         executeGetMonumentByLocalization();
-       // textViewTable.setText(localization.toString());
     }
 
     @Override

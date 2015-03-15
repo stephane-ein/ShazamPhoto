@@ -64,10 +64,10 @@ public class AddMonumentFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Send the POST request to the serveur
+                //Send the POST request to the server
                 AddMonument addMonument = new AddMonument((UnidentifiedMonument) getActivity());
-                ref.monument.setName("ISEN");
-                ref.monument.setDescription("Description");
+                ref.monument.setName(editTextName.getText().toString());
+                ref.monument.setDescription(editTextDescription.getText().toString());
                 ref.monument.setYear(1959);
                 ref.monument.setNbLike(12);
                 ref.monument.setNbVisitors(1);

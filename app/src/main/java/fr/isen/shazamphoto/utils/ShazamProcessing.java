@@ -29,6 +29,7 @@ import fr.isen.shazamphoto.database.Descriptors;
 import fr.isen.shazamphoto.database.KeyPoints;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.EventUnidentifiedMonument;
 import fr.isen.shazamphoto.model.ModelNavigation;
 
@@ -168,9 +169,11 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
                 } else{
                     Toast.makeText(activity, "Monument identified", Toast.LENGTH_LONG).show();
                     Toast.makeText(activity, "Result : "+result.toString(), Toast.LENGTH_LONG).show();
+                    Monument m = new Monument(result);
+                    modelNavigation.changeAppView(new EventDisplayDetailMonument(activity, m));
                 }
             }else{
-                Toast.makeText(activity, "Answser server NULL", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Answer server NULL", Toast.LENGTH_LONG).show();
                 Monument monument = new Monument(keyPoints, descriptors);
                 modelNavigation.changeAppView(
                         new EventUnidentifiedMonument(activity, monument));

@@ -144,13 +144,6 @@ public class Home extends ActionBarActivity implements SearchableItem {
                 sectionsPagerAdapter.getItem(Shazam.POSITION);
 
                 break;
-            case R.id.action_place:
-                //Show the pop menu
-                ActionPlacePopMenu popupMenu = new ActionPlacePopMenu(this,
-                        findViewById(R.id.action_place),
-                        (LocationManager) getSystemService(Context.LOCATION_SERVICE));
-                popupMenu.showPopup();
-                break;
         }
 
         return super.onOptionsItemSelected(item);

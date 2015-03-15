@@ -10,11 +10,4 @@
         app:showAsAction="collapseActionView|ifRoom|withText"
         android:title=""/>
 
-    <item
-        android:id="@+id/action_place"
-        android:icon="@drawable/ic_action_place"
-        android:queryHint="@string/googlemap_hint"
-        app:showAsAction="collapseActionView|ifRoom|withText"
-        android:title=""/>
-
 </menu>

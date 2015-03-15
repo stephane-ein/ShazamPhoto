@@ -58,7 +58,6 @@ public class AddMonument extends AsyncTask<Monument, Void, String> {
                 result.append(line);
             }
             JSONObject jsonResponse = new JSONObject(result.toString());
-            Toast.makeText(home, jsonResponse.toString(), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
         }
 

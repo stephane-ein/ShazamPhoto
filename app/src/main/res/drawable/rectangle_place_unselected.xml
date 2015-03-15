@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_action_place"
+        style="?android:attr/borderlessButtonStyle">
+        <shape
+            android:shape="rectangle"
+            style="?android:attr/borderlessButtonStyle">
+            <solid android:color="#717D8C" />
+            <corners android:radius="8dip"/>
+        </shape>
+    </item>
+</layer-list>
