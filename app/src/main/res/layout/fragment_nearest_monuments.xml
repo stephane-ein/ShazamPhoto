@@ -14,25 +14,28 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp">
 
             <LinearLayout
+                android:id="@+id/fnm_linearlayout_actionscircuit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/fnm_linearlayout_actionscircuit"
-                android:visibility="invisible">
+                android:visibility="invisible"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                >
 
                 <Button
                     android:id="@+id/fnm_button_makecircuit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|center"
+                    android:layout_marginRight="12dp"
                     android:background="@drawable/rectangle"
-                    android:text="@string/makecircuit"
-                    android:layout_marginRight="12dp"/>
+                    android:text="@string/makecircuit" />
 
                 <Button
                     android:id="@+id/fnm_button_cancelcircuit"
@@ -41,29 +44,27 @@
                     android:layout_gravity="top|center"
                     android:layout_weight="1"
                     android:background="@drawable/rectangle"
-                    android:text="@string/cancelcircuit"/>
+                    android:text="@string/cancelcircuit" />
 
-                </LinearLayout>
+            </LinearLayout>
 
+                <Button
+                    android:id="@+id/fnm_button_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/rectangle"
+                    android:text="@string/back"
+                    android:visibility="invisible" />
 
-            <Button
-                android:id="@+id/fnm_button_modecircuit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center"
-                android:background="@drawable/rectangle"
-                android:text="@string/modecircuit"
-                android:visibility="invisible" />
-
-            <Button
-                android:id="@+id/fnm_button_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center"
-                android:background="@drawable/rectangle"
-                android:text="@string/back"
-                android:visibility="invisible" />
-
+                <Button
+                    android:id="@+id/fnm_button_modecircuit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/rectangle"
+                    android:text="@string/modecircuit"
+                    android:visibility="invisible" />
 
         </RelativeLayout>
 
@@ -72,8 +73,9 @@
             android:id="@+id/fnm_textview_informationfdm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:gravity="center"/>
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:visibility="invisible" />
 
         <ListView
             android:id="@+id/listview_nearest_monument"
@@ -100,7 +102,6 @@
         android:layout_gravity="center"
         android:background="@drawable/rectangle"
         android:text="@string/searchnearestmonuments" />
-
 
 
 </FrameLayout>

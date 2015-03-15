@@ -168,7 +168,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         locateManager.stopListening();
         // Retrieve the nearest monumentsNearest
         executeGetMonumentByLocalization();
-        Toast.makeText(getActivity(), "Localization found", Toast.LENGTH_SHORT).show();
+       // textViewTable.setText(localization.toString());
     }
 
     @Override
@@ -197,13 +197,12 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                         startMonument = new Monument(idUser, localization);
                         monumentsForCircuit.put(startMonument.getId(), startMonument);
                     }
-                    Toast.makeText(getActivity(), "Monument selected: "+m.getName(),
+                    Toast.makeText(getActivity(), "Monument selected: "+m.toString(),
                             Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-
 
     public void displayDefaultUI(){
         // Deactivate the circuit mode and remove the first monument selected
@@ -230,6 +229,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     }
 
     public void executeGetMonumentByLocalization() {
+        // Retrieve the nearest monuments with the localization of the user
         GetMonumentByLocalization getMonumentByLocalization =
                 new GetMonumentByLocalization(new RequestNearestMonuments(this),
                         this);
@@ -364,7 +364,6 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
             }
         });
     }
-
 
     public String toStringArray(int[][] array, int size) {
         String result = "";

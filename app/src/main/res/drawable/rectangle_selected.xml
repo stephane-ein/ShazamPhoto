@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            style="?android:attr/borderlessButtonStyle"
+            android:fontFamily="sans-serif-thin"
+            android:shape="rectangle"
+            android:textSize="@dimen/abc_text_size_body_2_material">
+            <padding
+                android:left="@dimen/activity_horizontal_margin"
+                android:right="@dimen/activity_horizontal_margin" />
+            <solid android:color="#717D8C" />
+            <corners android:radius="8dip" />
+        </shape>
+    </item>
+</layer-list>
