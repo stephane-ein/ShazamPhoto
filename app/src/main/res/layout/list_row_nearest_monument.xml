@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
-    android:layout_width="fill_parent"
+    android:layout_width="wrap_content"
     android:layout_height="120dp"
     android:layout_gravity="left"
     android:layout_marginLeft="50dp"
@@ -28,8 +28,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="6dp">
+            android:layout_marginTop="6dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/lrnm_title"
@@ -40,6 +40,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:text="Title"
                 android:textSize="@dimen/title" />
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -70,16 +71,15 @@
                         android:text="200 visiteurs"
                         android:textColor="@color/genre"
                         android:textSize="@dimen/rating" />
-                </LinearLayout>
 
-                <Button
+                </LinearLayout>
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-                    style="?android:attr/borderlessButtonStyle"
+                    android:id="@+id/lrnm_map"
                     android:background="@drawable/rectangle_place"/>
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,15 +48,23 @@ public class NearestListAdapter extends BaseAdapter {
         if (inflater == null)
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null) {
+        //if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_row_nearest_monument, null);
-        }
+        //}
 
 
         ImageView image = (ImageView) convertView.findViewById(R.id.lrnm_imageView);
         TextView title = (TextView) convertView.findViewById(R.id.lrnm_title);
         TextView distance = (TextView) convertView.findViewById(R.id.lrnm_distance);
         TextView visitor = (TextView) convertView.findViewById(R.id.lrnm_visitors);
+        ImageView map = (ImageView) convertView.findViewById(R.id.lrnm_map);
+
+        map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Click on map");
+            }
+        });
 
         // getting movie data for the row
         Monument m = monumentItems.get(position);
@@ -67,6 +76,7 @@ public class NearestListAdapter extends BaseAdapter {
             GetMonumentImage getMonumentImage = new GetMonumentImage(image);
             getMonumentImage.execute(m.getPhotoPath());
         }
+
 
         return convertView;
     }

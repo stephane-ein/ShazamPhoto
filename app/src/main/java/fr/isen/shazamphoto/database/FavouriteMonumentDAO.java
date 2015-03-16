@@ -50,9 +50,10 @@ public class FavouriteMonumentDAO extends ListMonumentDAO{
             String selection = DatabaseHandler.MONUMENTS_KEY + " = ?";
             String[] selectionArgs = {Long.toString(filmId)};
             Cursor c2 = mDb.query(DatabaseHandler.MONUMENTS_TABLE_NAME, DatabaseHandler.MONUMENTS_ALL_COLUMNS, selection, selectionArgs, null, null, null);
-            c2.moveToFirst();
-            Monument monument = cursorToMonument(c2);
-            monuments.add(monument);
+            if(c2.moveToFirst()){
+                Monument monument = cursorToMonument(c2);
+                monuments.add(monument);
+            }
         }
         c.close();
         return monuments;

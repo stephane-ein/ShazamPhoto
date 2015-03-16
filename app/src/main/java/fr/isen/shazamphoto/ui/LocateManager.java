@@ -25,13 +25,12 @@ public class LocateManager {
 
     public void startListening(final RequestLocalization requestLocalization) {
 
-        if (home != null) Toast.makeText(home, "Called Listener", Toast.LENGTH_SHORT).show();
+       System.out.println("Called listener");
 
         locationListener = new LocationListener() {
 
             public void onLocationChanged(Location location) {
-                if (home != null)
-                    Toast.makeText(home, "localisation found", Toast.LENGTH_SHORT).show();
+                System.out.println("Found localization");
                 /*GetMonumentByLocalization getMonumentByLocalization =
                         new GetMonumentByLocalization(requestLocalization);
                 getMonumentByLocalization.execute(Double.valueOf(location.getLatitude()).toString(),

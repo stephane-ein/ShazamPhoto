@@ -122,10 +122,6 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         this.localization = localization;
     }
 
-    public ArrayList<Monument> getMonumentsNearest() {
-        return monumentsNearest;
-    }
-
     public void setLocateManager(LocateManager locateManager) {
         this.locateManager = locateManager;
     }
@@ -166,6 +162,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         // Retrieve the localization found
         localization = eventLocalizationFound.getLocalization();
         locateManager.stopListening();
+        Toast.makeText(getActivity(), "Localization monument", Toast.LENGTH_SHORT).show();
         // Retrieve the nearest monumentsNearest
         executeGetMonumentByLocalization();
     }
@@ -181,6 +178,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("Item clicked");
                 Monument m = monumentsNearest.get(position);
                 if (!isCircuitMode) {
                     // If the user did not activate the circuit mode
@@ -260,6 +258,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getActivity(), "Search nearest monument", Toast.LENGTH_SHORT).show();
                 // Search a localization if we don't have it
                 if (localization == null) {
                     locateManager.startListening(new RequestNearestMonuments(fragment));
