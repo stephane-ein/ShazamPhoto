@@ -73,9 +73,8 @@ public class AddMonumentFragment extends Fragment {
                 ref.monument.setNbVisitors(1);
                 ref.monument.setLocalization(new Localization(-1, 3.0, 50.0));
                 ref.monument.setPhotoPath("");
-                //addMonument.execute(new Monument(-1, "ISEN", "", "Description", 1959, 12, 1, new Localization(-1, 3, 50)));
                 addMonument.execute(monument);
-                ref.textView.setText(monument.toJSON().toString());
+                ref.getActivity().finish();
             }
         });
         return view;

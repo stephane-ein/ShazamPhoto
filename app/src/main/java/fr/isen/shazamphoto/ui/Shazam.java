@@ -108,6 +108,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                 ExifInterface exifInterface = new ExifInterface(photoPath);
                 float[] localisation = new float[2];
 
+                this.shazamProcessing = new ShazamProcessing(modelNavigation, getActivity());
                 // Set the localization of the monument to the request to identify the monumennt
                 if (exifInterface.getLatLong(localisation)) {
                     /*GetMonumentByLocalization getMonumentByLocalization =

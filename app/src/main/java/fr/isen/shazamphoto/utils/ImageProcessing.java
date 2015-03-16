@@ -197,8 +197,8 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
                     File imgFile = new File(photoPath);
                     if (imgFile != null && imgFile.exists()) {
 
-                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
+                        Bitmap myBitmap = BitmapFactory.decodeFile(photoPath);
+                        System.out.println("Image : "+imgFile.getAbsoluteFile());
                         FeatureDetector detector = FeatureDetector.create(FeatureDetector.ORB);
                         DescriptorExtractor descriptor = DescriptorExtractor.create(DescriptorExtractor.ORB);
 
