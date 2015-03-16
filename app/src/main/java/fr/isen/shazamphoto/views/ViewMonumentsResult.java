@@ -1,6 +1,8 @@
 package fr.isen.shazamphoto.views;
 
 
+import android.widget.Toast;
+
 import fr.isen.shazamphoto.events.Event;
 import fr.isen.shazamphoto.events.EventSearchMonumentByName;
 import fr.isen.shazamphoto.ui.Shazam;
@@ -15,7 +17,10 @@ public class ViewMonumentsResult extends View {
 
             EventSearchMonumentByName evt = (EventSearchMonumentByName) event;
             Shazam shazam = evt.getShazam();
-            shazam.setListResult(evt.getMonuments());
+            shazam.setListResult(evt.getMonuments(), evt.getActivity());
+
+            System.out.println("ViewMonumentResults : " + shazam.getActivity());
+
         }
     }
 }

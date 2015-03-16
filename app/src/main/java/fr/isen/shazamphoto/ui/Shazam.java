@@ -45,7 +45,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     private Button button;
     private String photoPath;
     private ArrayList<Monument> monuments;
-    private ListView listView;
+    private static ListView listView;
     private LocateManager locateManager;
     private ModelNavigation modelNavigation;
     private ShazamProcessing shazamProcessing;
@@ -94,7 +94,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
             }
         });
 
-        if (!monuments.isEmpty()) setListResult(monuments);
+        if (!monuments.isEmpty()) setListResult(monuments, getActivity());
 
         setRetainInstance(true);
 
@@ -169,13 +169,11 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         }
     }
 
-    public void setListResult(final ArrayList<Monument> monuments) {
-        if (!monuments.isEmpty() && listView != null && locateManager != null) {
-
-            locateManager.stopListening();
+    public void setListResult(final ArrayList<Monument> monuments, final Activity activity) {
+        if (!monuments.isEmpty() && listView != null) {
 
             this.monuments = monuments;
-            CustomListAdapter adapter = new CustomListAdapter(getActivity(), monuments);
+            CustomListAdapter adapter = new CustomListAdapter(activity, monuments);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
@@ -184,7 +182,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                 @Override
                 public void onItemClick(AdapterView<?> arg0, View arg1,
                                         int position, long arg3) {
-                    modelNavigation.changeAppView(new EventDisplayDetailMonument(getActivity(),
+                    modelNavigation.changeAppView(new EventDisplayDetailMonument(activity,
                             monuments.get(position)));
                 }
             });

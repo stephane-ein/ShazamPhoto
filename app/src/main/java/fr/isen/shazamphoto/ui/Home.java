@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -35,8 +36,9 @@ public class Home extends ActionBarActivity implements SearchableItem {
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
     private SectionsPagerAdapter sectionsPagerAdapter;
-    private GetMonumentSearch getMonumentSearch;
     private ModelNavigation modelNavigation;
+
+    private ListView listView;
 
     //handle the keyboard
     private InputMethodManager imm;
@@ -45,8 +47,6 @@ public class Home extends ActionBarActivity implements SearchableItem {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        this.getMonumentSearch = new GetMonumentSearch(this);
 
         // Set the Model of the navigation with his views
         this.modelNavigation = new ModelNavigation();
@@ -74,6 +74,8 @@ public class Home extends ActionBarActivity implements SearchableItem {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
 
+        final Home home = this;
+
         searchMenuItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchMenuItem.getActionView();
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
@@ -81,6 +83,9 @@ public class Home extends ActionBarActivity implements SearchableItem {
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+
+        //Close the view results
+        listView = (ListView) findViewById(R.id.listview_result_monument);
 
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -91,8 +96,7 @@ public class Home extends ActionBarActivity implements SearchableItem {
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
-                    //Close the view results
-                    View listView = findViewById(R.id.listview_result_monument);
+
                     listView.setLayoutParams(new LinearLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT, 0, 0));
                     listView.setVisibility(View.INVISIBLE);
@@ -116,8 +120,10 @@ public class Home extends ActionBarActivity implements SearchableItem {
                 imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
                 //Make de search
+                GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
                 getMonumentSearch.execute(query);
 
+                Toast.makeText(home, "Request done", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -139,35 +145,30 @@ public class Home extends ActionBarActivity implements SearchableItem {
                 searchView.setIconified(false);
                 searchView.requestFocusFromTouch();
 
-                //Set the view on the shazam fragment
-                mViewPager.setCurrentItem(Shazam.POSITION);
-                sectionsPagerAdapter.getItem(Shazam.POSITION);
-
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public SectionsPagerAdapter getSectionsPagerAdapter() {
-        return sectionsPagerAdapter;
-    }
-
-    public ViewPager getmViewPager() {
-        return mViewPager;
-    }
-
     @Override
     public void onPostSearch(ArrayList<Monument> monuments) {
         Shazam shazam = (Shazam) getSectionsPagerAdapter().getItem(Shazam.POSITION);
-        modelNavigation.changeAppView(new EventSearchMonumentByName(monuments, shazam));
+        modelNavigation.changeAppView(new EventSearchMonumentByName(monuments, shazam, this));
+
+        Toast.makeText(getApplication(), "Monument found : "+monuments.size(), Toast.LENGTH_SHORT).show();
+
+        //Set the view on the shazam fragment
+        mViewPager.setCurrentItem(Shazam.POSITION);
+        sectionsPagerAdapter.getItem(Shazam.POSITION);
+    }
+
+    public SectionsPagerAdapter getSectionsPagerAdapter() {
+        return sectionsPagerAdapter;
     }
 
     public ModelNavigation getModelNavigation() {
         return modelNavigation;
     }
 
-    public SearchView getSearchView() {
-        return searchView;
-    }
 }
