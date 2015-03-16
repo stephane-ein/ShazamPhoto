@@ -74,6 +74,7 @@ public class AddMonumentFragment extends Fragment {
                 ref.monument.setLocalization(new Localization(-1, 3.0, 50.0));
                 ref.monument.setPhotoPath("");
                 addMonument.execute(monument);
+                //ref.textView.setText(monument.toJSON().toString());
                 ref.getActivity().finish();
             }
         });

@@ -129,7 +129,11 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
             List<NameValuePair> nameValuePairs = new ArrayList<>(3);
             nameValuePairs.add(new BasicNameValuePair("listskeypoints", KeyPoints.toJson(keyPoints).toString()));
             nameValuePairs.add(new BasicNameValuePair("descriptors", Descriptors.toJson(descriptors).toString()));
-            nameValuePairs.add(new BasicNameValuePair("localization", localization.toJson().toString()));
+
+            if(localization != null) {
+                nameValuePairs.add(new BasicNameValuePair("localization", localization.toJson().toString()));
+            }
+
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 
             entity.setContentType("application/x-www-form-urlencoded");
