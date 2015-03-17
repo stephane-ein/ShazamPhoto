@@ -23,6 +23,9 @@ import org.opencv.features2d.KeyPoint;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
 
@@ -203,6 +206,16 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
                         FeatureDetector detector = FeatureDetector.create(FeatureDetector.ORB);
                         DescriptorExtractor descriptor = DescriptorExtractor.create(DescriptorExtractor.ORB);
 
+                        File outputDir = getActivityContext().getCacheDir(); // If in an Activity (otherwise getActivity.getCacheDir();
+                        File outputFile = null;
+                        try {
+                            outputFile = File.createTempFile("orbDetectorParams", ".YAML", outputDir);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        writeToFile(outputFile, "%YAML:1.0\nscaleFactor: 1.2\nnLevels: 8\nfirstLevel: 0 " +
+                                "\nedgeThreshold: 31\npatchSize: 31\nWTA_K: 2\nscoreType: 0\nnFeatures: 4000\n");
+                        detector.read(outputFile.getPath());
 
                         Mat img1 = new Mat();
                         Mat resized = new Mat();
@@ -235,6 +248,22 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
             }
         }
     };
+
+
+    private void writeToFile(File file, String data) {
+
+
+        try {
+            FileOutputStream stream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(stream);
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 /*
     @Override
     protected void onPreExecute() {
@@ -352,4 +381,6 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
     public void setKeyPointArray(KeyPoint[] keyPointArray) {
         this.keyPointArray = keyPointArray;
     }
+
+
 }
