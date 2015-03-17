@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.ui;
+package fr.isen.shazamphoto.ui.CustomAdapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,13 +15,13 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.utils.GetMonumentImage;
 
-public class NearestListAdapter extends BaseAdapter {
 
+public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Monument> monumentItems;
 
-    public NearestListAdapter(Activity activity, List<Monument> monuments) {
+    public CustomListAdapter(Activity activity, List<Monument> monuments) {
         this.activity = activity;
         this.monumentItems = monuments;
     }
@@ -48,38 +47,34 @@ public class NearestListAdapter extends BaseAdapter {
         if (inflater == null)
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_row_nearest_monument, null);
-        //}
-
-
-        ImageView image = (ImageView) convertView.findViewById(R.id.lrnm_imageView);
-        TextView title = (TextView) convertView.findViewById(R.id.lrnm_title);
-        TextView distance = (TextView) convertView.findViewById(R.id.lrnm_distance);
-        TextView visitor = (TextView) convertView.findViewById(R.id.lrnm_visitors);
-        ImageView map = (ImageView) convertView.findViewById(R.id.lrnm_map);
-
-        map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("Click on map");
+        if (convertView == null) {
+            if (position % 2 == 0) {
+                convertView = inflater.inflate(R.layout.list_row_right, null);
+            } else {
+                convertView = inflater.inflate(R.layout.list_row_left, null);
             }
-        });
+
+        }
+
+
+        ImageView image = (ImageView) convertView.findViewById(R.id.imageView);
+        TextView title = (TextView) convertView.findViewById(R.id.title);
+        TextView rating = (TextView) convertView.findViewById(R.id.rating);
+        TextView genre = (TextView) convertView.findViewById(R.id.genre);
+        TextView year = (TextView) convertView.findViewById(R.id.releaseYear);
 
         // getting movie data for the row
         Monument m = monumentItems.get(position);
 
         title.setText(m.getName());
-        visitor.setText(Integer.valueOf(m.getNbVisitors()).toString() +" visitors");
+        year.setText(String.valueOf(m.getYear()));
 
         if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
             GetMonumentImage getMonumentImage = new GetMonumentImage(image);
             getMonumentImage.execute(m.getPhotoPath());
         }
 
-
         return convertView;
     }
 
 }
-

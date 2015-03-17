@@ -2,6 +2,7 @@ package fr.isen.shazamphoto.ui;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -12,12 +13,15 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import fr.isen.shazamphoto.R;
+import fr.isen.shazamphoto.database.Descriptors;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.utils.AddMonument;
+import fr.isen.shazamphoto.utils.FunctionsLayout;
 
 
 public class AddMonumentFragment extends Fragment {
@@ -58,24 +62,34 @@ public class AddMonumentFragment extends Fragment {
         addListenerCloseKeyboard(editTextDescription);
         textView = (TextView) view.findViewById(R.id.adm_logJSON);
 
+        // Set the picture
+        ImageView imageView = (ImageView) view.findViewById(R.id.fam_imageview_monument);
+        FunctionsLayout.setPicture(monument, imageView);
+
         //Set the listener for the ADD button
         Button button = (Button) view.findViewById(R.id.button_add);
         final AddMonumentFragment ref = this;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Send the POST request to the server
                 AddMonument addMonument = new AddMonument((UnidentifiedMonument) getActivity());
                 ref.monument.setName(editTextName.getText().toString());
                 ref.monument.setDescription(editTextDescription.getText().toString());
-                ref.monument.setYear(1959);
-                ref.monument.setNbLike(12);
+
+                //TOMODIFY
+                String year = editTextDate.getText().toString();
+                if(isInteger(year)){
+                    ref.monument.setYear(Integer.valueOf(year));
+                }else{
+                    ref.monument.setYear(0);
+                }
+
+                ref.monument.setNbLike(0);
                 ref.monument.setNbVisitors(1);
-                ref.monument.setLocalization(new Localization(-1, 3.0, 50.0));
                 ref.monument.setPhotoPath("");
                 addMonument.execute(monument);
-                //ref.textView.setText(monument.toJSON().toString());
-                ref.getActivity().finish();
+                ref.textView.setText(Descriptors.toJson(monument.getDescriptors()).toString());
+                //ref.getActivity().finish();
             }
         });
         return view;
@@ -98,6 +112,16 @@ public class AddMonumentFragment extends Fragment {
                 }
             });
         }
+    }
+
+    public boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch(NumberFormatException e) {
+            return false;
+        }
+        // only got here if we didn't return false
+        return true;
     }
 
 

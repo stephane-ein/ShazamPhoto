@@ -31,6 +31,7 @@ import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
 import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
 import fr.isen.shazamphoto.model.ModelNavigation;
+import fr.isen.shazamphoto.ui.CustomAdapter.CustomListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.utils.ImageProcessing;
 import fr.isen.shazamphoto.utils.ShazamProcessing;

@@ -2,8 +2,12 @@ package fr.isen.shazamphoto.utils;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -32,6 +36,7 @@ import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.EventUnidentifiedMonument;
 import fr.isen.shazamphoto.model.ModelNavigation;
+import fr.isen.shazamphoto.ui.Dialogs.NetworkDialog;
 
 public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
 
@@ -57,6 +62,9 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
     private long startTime = 0;
     private Handler timerHandler = new Handler();
     private Runnable timerRunnable;
+
+    // Path of the picture of the monument
+    private String photoPath;
 
     public ShazamProcessing(ModelNavigation modelNavigation, Activity activity) {
         this.localization = null;
@@ -166,8 +174,8 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
 
             if(result != null){
                 if (result.toString().equals("{}")) {
+                    Monument monument = new Monument(keyPoints, descriptors, localization, photoPath);
                     Toast.makeText(activity, " Monument not identify", Toast.LENGTH_LONG).show();
-                    Monument monument = new Monument(keyPoints, descriptors);
                     modelNavigation.changeAppView(
                             new EventUnidentifiedMonument(activity, monument));
                 } else{
@@ -177,13 +185,18 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
                     modelNavigation.changeAppView(new EventDisplayDetailMonument(activity, m));
                 }
             }else{
-                Toast.makeText(activity, "Answer server NULL", Toast.LENGTH_LONG).show();
-                Monument monument = new Monument(keyPoints, descriptors);
-                modelNavigation.changeAppView(
-                        new EventUnidentifiedMonument(activity, monument));
+                NetworkDialog networkDialog = new NetworkDialog();
+                networkDialog.setActivity(activity);
+                networkDialog.show(activity.getFragmentManager(), "Unable to connect");
+
             }
         } catch (Exception e) {
             Toast.makeText(activity, "Error : "+e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+
+    public void setPhotoPath(String path) {
+        this.photoPath = path;
+    }
+
 }

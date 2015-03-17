@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.ui;
+package fr.isen.shazamphoto.ui.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

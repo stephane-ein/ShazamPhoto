@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.ui;
+package fr.isen.shazamphoto.ui.CustomAdapter;
 
 import android.app.Activity;
 import android.content.Context;

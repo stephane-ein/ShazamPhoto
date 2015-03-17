@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="120dp"
     android:layout_gravity="left"
     android:layout_marginLeft="50dp"
@@ -26,8 +26,10 @@
             android:src="@drawable/monument_1" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="6dp"
             android:layout_marginTop="6dp"
             android:orientation="vertical">
 
@@ -41,45 +43,58 @@
                 android:text="Title"
                 android:textSize="@dimen/title" />
 
-
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/lrnm_distance"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="1dip"
-                        android:fontFamily="sans-serif-thin"
-                        android:text="à 500m"
-                        android:textSize="@dimen/rating" />
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/lrnm_visitors"
-                        android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/lrnm_distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dip"
+                            android:fontFamily="sans-serif-thin"
+                            android:text="à 500m"
+                            android:textSize="@dimen/rating" />
+
+                        <TextView
+                            android:id="@+id/lrnm_visitors"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="sans-serif-thin"
+                            android:text="200 visiteurs"
+                            android:textColor="@color/genre"
+                            android:textSize="@dimen/rating" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:fontFamily="sans-serif-thin"
-                        android:text="200 visiteurs"
-                        android:textColor="@color/genre"
-                        android:textSize="@dimen/rating" />
+                        android:layout_weight="1">
 
+                        <ImageView
+                            android:id="@+id/lrnm_map"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:layout_marginLeft="16dp"
+                            android:background="@drawable/rectangle_place" />
+                    </LinearLayout>
                 </LinearLayout>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:id="@+id/lrnm_map"
-                    android:background="@drawable/rectangle_place"/>
+
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

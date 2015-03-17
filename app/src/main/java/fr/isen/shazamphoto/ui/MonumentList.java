@@ -18,6 +18,7 @@ import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.TaggedMonumentDAO;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.model.ModelNavigation;
+import fr.isen.shazamphoto.ui.CustomAdapter.CustomListAdapter;
 
 public abstract class MonumentList extends Fragment {
     private View view;

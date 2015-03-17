@@ -2,8 +2,6 @@ package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -26,9 +24,12 @@ import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.NearestMonumentsDAO;
 import fr.isen.shazamphoto.events.RequestNearestFromMonument;
+import fr.isen.shazamphoto.ui.CustomAdapter.GridViewAdapter;
+import fr.isen.shazamphoto.ui.Dialogs.DeleteDialog;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
 import fr.isen.shazamphoto.utils.FunctionsDB;
+import fr.isen.shazamphoto.utils.FunctionsLayout;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 
 
@@ -70,13 +71,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         setTitle("");
 
         //Set the picture
-        if (monument.getPhotoPath() != null && !monument.getPhotoPath().isEmpty()) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 4;
-            Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath(), options);
-            photoView.setImageBitmap(bitmap);
-        }
-
+        FunctionsLayout.setPicture(monument, photoView);
 
         //Set the monument information
         nbLike.setText(monument.getName());

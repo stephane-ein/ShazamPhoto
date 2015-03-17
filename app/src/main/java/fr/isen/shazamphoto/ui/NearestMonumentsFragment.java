@@ -24,6 +24,7 @@ import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
 import fr.isen.shazamphoto.events.RequestNearestMonuments;
+import fr.isen.shazamphoto.ui.CustomAdapter.NearestListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
@@ -142,7 +143,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         buttonModeCircuit.setVisibility(View.VISIBLE);
 
         // Display the information
-        textViewInformation.setText("Create a circuit by choosing the monumentsNearest");
+        textViewInformation.setText("Create a circuit by choosing the monument to visit");
         textViewInformation.setVisibility(View.VISIBLE);
     }
 
@@ -162,7 +163,6 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         // Retrieve the localization found
         localization = eventLocalizationFound.getLocalization();
         locateManager.stopListening();
-        Toast.makeText(getActivity(), "Localization monument", Toast.LENGTH_SHORT).show();
         // Retrieve the nearest monumentsNearest
         executeGetMonumentByLocalization();
     }

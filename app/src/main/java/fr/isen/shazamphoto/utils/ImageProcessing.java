@@ -194,10 +194,11 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
                     String picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-                    File imgFile = new File(photoPath);
+                    String path = photoPath;
+                    File imgFile = new File(path);
                     if (imgFile != null && imgFile.exists()) {
 
-                        Bitmap myBitmap = BitmapFactory.decodeFile(photoPath);
+                        Bitmap myBitmap = BitmapFactory.decodeFile(path);
                         System.out.println("Image : "+imgFile.getAbsoluteFile());
                         FeatureDetector detector = FeatureDetector.create(FeatureDetector.ORB);
                         DescriptorExtractor descriptor = DescriptorExtractor.create(DescriptorExtractor.ORB);
@@ -220,6 +221,7 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
                         keyPointArray = keypoints.toArray();
 
                         shazamProcessing.setDescriptorsKeyKeyPoints(descriptors, keyPointArray);
+                        shazamProcessing.setPhotoPath(path);
 
                     } else {
                         Toast.makeText(activityContext, "Error : image null or doesn't exist", Toast.LENGTH_LONG).show();
