@@ -44,7 +44,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     private ArrayList<Monument> monumentsNearest;
     private ArrayList<Monument> monumentCircuit;
 
-    private HashMap<Long, Monument> monumentsForCircuit;
+    private HashMap<Integer, Monument> monumentsForCircuit;
+    private int i;
 
     private Monument startMonument;
     private boolean isCircuitMode;
@@ -76,6 +77,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         isCircuitMode = false;
         startMonument = null;
         monumentsForCircuit = new HashMap<>();
+        i = 1;
     }
 
     @Override
@@ -189,14 +191,18 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                     intent.putExtra(Monument.NAME_SERIALIZABLE, m);
                     startActivity(intent);
                 } else {
-                    // The circuit is activated, we add the monument to visit in the hasp map
-                    monumentsForCircuit.put(m.getId(), m);
+                    // The circuit is activated
                     if (startMonument == null){
                         // Add the position of the user in the monument to visit (To modify)
-                        startMonument = new Monument(idUser, localization);
-                        monumentsForCircuit.put(startMonument.getId(), startMonument);
+                        startMonument = new Monument(i, localization);
+                        monumentsForCircuit.put(startMonument.getIdNearest(), startMonument);
+                        i++;
                     }
-                    Toast.makeText(getActivity(), "Monument selected: "+m.toString(),
+                    // We add the monument to visit in the hasp map
+                    m.setIdNearest(i);
+                    monumentsForCircuit.put(m.getIdNearest(), m);
+                    i++;
+                    Toast.makeText(getActivity(), "Monument selected: "+m.getName(),
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -287,18 +293,18 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                 littleMatrix[size - 1][size - 1] = 0;
                 littleMatrix[0][size - 1] = 0;
 
-                for (long i : monumentsForCircuit.keySet()) {
+                for (Integer i : monumentsForCircuit.keySet()) {
                     Monument monument = monumentsForCircuit.get(i);
                     Localization startLocalization = monument.getLocalization();
 
                     // Put the id of the monument in the matrix
-                    littleMatrix[index][0] = (int) monument.getId();
-                    littleMatrix[0][index] = (int) monument.getId();
+                    littleMatrix[index][0] =  monument.getIdNearest();
+                    littleMatrix[0][index] =  monument.getIdNearest();
 
                     int jIndex = 1;
 
                     //Get the distance between two monumentsNearest
-                    for (long j : monumentsForCircuit.keySet()) {
+                    for (Integer j : monumentsForCircuit.keySet()) {
 
                         if (j != i) {
                             Monument nextMonument = monumentsForCircuit.get(j);
@@ -321,7 +327,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                     index++;
                 }
 
-                System.out.println(toStringArray(littleMatrix, size));
+
+                System.out.println("NFM table \n"+toStringArray(littleMatrix, size));
 
                 // Do the little
                 Little little = new Little(monumentsForCircuit.size(), littleMatrix);
@@ -331,23 +338,29 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                 Point start = null;
                 int i = 0;
 
+
                 // Retrieve the first monument to visit
                 while (start == null && i < shortPath.size()) {
                     Point p = shortPath.get(i);
-                    if (p.getFrom() == idUser) {
+                    if (p.getFrom() == startMonument.getIdNearest()) {
                         start = p;
                     }
                     i++;
                 }
 
+
+
                 if (start != null) {
                     // Set the circuit for the monumentsNearest in order
-                    monumentPath.add(monumentsForCircuit.get(start.getTo()));
+                    monumentPath.add(monumentsForCircuit.get((int)start.getTo()));
                     start = start.getNext();
-                    while (start.getTo() != startMonument.getId()) {
-                        monumentPath.add(monumentsForCircuit.get(start.getTo()));
+                    while ((int)(start.getTo()) != startMonument.getIdNearest()) {
+                        monumentPath.add(monumentsForCircuit.get((int)start.getTo()));
                         start = start.getNext();
                     }
+
+
+                    System.out.println("NFM path "+toStringPath(monumentPath));
 
                     // Display the result
                     setListCircuitMonuments(monumentPath);
@@ -382,7 +395,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         String result = "";
 
         for (Monument p : arrayList) {
-            result += (p == null ? "null " : p.toString());
+            result += (p == null ? "null " : p.getName()+ " ");
         }
 
         return result;

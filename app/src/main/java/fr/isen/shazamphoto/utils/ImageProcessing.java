@@ -36,6 +36,7 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
     private HttpResponse response;
     private String keyPointToSend = null;
     private String descriptorToSend = null;
+    private File imgFile;
 
     // Information about the picture
     private Mat descriptors;
@@ -197,8 +198,8 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
                     String picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-                    String path = photoPath;
-                    File imgFile = new File(path);
+                    String path = picturesDir +"/test1.jpg";
+                    imgFile = new File(path);
                     if (imgFile != null && imgFile.exists()) {
 
                         Bitmap myBitmap = BitmapFactory.decodeFile(path);
@@ -213,8 +214,7 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        writeToFile(outputFile, "%YAML:1.0\nscaleFactor: 1.2\nnLevels: 8\nfirstLevel: 0 " +
-                                "\nedgeThreshold: 31\npatchSize: 31\nWTA_K: 2\nscoreType: 0\nnFeatures: 4000\n");
+                        writeToFile(outputFile, "%YAML:1.0\nscaleFactor: 1.2\nnLevels: 8\nfirstLevel: 0 "+"\nedgeThreshold: 31\npatchSize: 31\nWTA_K: 2\nscoreType: 0\nnFeatures: 4000\n");
                         detector.read(outputFile.getPath());
 
                         Mat img1 = new Mat();

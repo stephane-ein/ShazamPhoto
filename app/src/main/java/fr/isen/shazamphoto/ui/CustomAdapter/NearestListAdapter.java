@@ -68,7 +68,7 @@ public class NearestListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Localization l = monumentItems.get(position).getLocalization();
-                Uri gmmIntentUri = Uri.parse("google.navigation:q="+l.getLatitude()+","+l.getLongitude()+"&mode=w");
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + l.getLatitude() + "," + l.getLongitude() + "&mode=w");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 activity.startActivity(mapIntent);
@@ -79,7 +79,7 @@ public class NearestListAdapter extends BaseAdapter {
         Monument m = monumentItems.get(position);
 
         title.setText(m.getName());
-        visitor.setText(Integer.valueOf(m.getNbVisitors()).toString() +" visitors");
+        visitor.setText(Integer.valueOf(m.getNbVisitors()).toString() + " visitors");
 
         if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
             GetMonumentImage getMonumentImage = new GetMonumentImage(image);

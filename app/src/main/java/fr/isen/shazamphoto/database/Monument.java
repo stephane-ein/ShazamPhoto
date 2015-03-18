@@ -21,6 +21,7 @@ public class Monument implements Serializable {
     private Address address;
     private KeyPoint[] keyPoints;
     private Mat descriptors;
+    private int idNearest;
 
     public static final String NAME_SERIALIZABLE = "fr.isen.shazamphoto.database.monument_serializable";
 
@@ -37,6 +38,7 @@ public class Monument implements Serializable {
     public Monument(long id, Localization localization){
         this();
         this.id = id;
+        this.idNearest = (int)id;
         this.localization = localization;
     }
 
@@ -230,6 +232,14 @@ public class Monument implements Serializable {
 
     public String toString(){
         return getName() +" "+Long.valueOf(getId()).toString();
+    }
+
+    public int getIdNearest() {
+        return idNearest;
+    }
+
+    public void setIdNearest(int idNearest) {
+        this.idNearest = idNearest;
     }
 }
 
