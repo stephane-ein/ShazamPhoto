@@ -12,6 +12,7 @@ public class FunctionsDB {
         if (monument != null && monument.getId() == -1) {
             MonumentDAO dao = new MonumentDAO(context);
             dao.open();
+            System.out.println("FunctionDB : "+monument.getId());
             long id = dao.getMonumentId(monument);
             if (id == -1) {
                 id = dao.insert(monument);

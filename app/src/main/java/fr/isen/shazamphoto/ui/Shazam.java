@@ -110,14 +110,8 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                 float[] localisation = new float[2];
 
                 this.shazamProcessing = new ShazamProcessing(modelNavigation, getActivity());
-                // Set the localization of the monument to the request to identify the monumennt
+                // Set the localization of the monument to the request to identify the monument
                 if (exifInterface.getLatLong(localisation)) {
-                    /*GetMonumentByLocalization getMonumentByLocalization =
-                            new GetMonumentByLocalization(new RequestIdentifyByLocalization(
-                                    (Home) getActivity(), photoPath));
-                    getMonumentByLocalization.execute(Float.valueOf(localisation[0]).toString(),
-                            Float.valueOf(localisation[1]).toString(),
-                            ConfigurationShazam.DELTA_LOCALIZATION);*/
                     this.shazamProcessing.setLocalization(new Localization(-1,
                             Double.valueOf(localisation[0]), Double.valueOf(localisation[1])));
                 } else {
@@ -125,7 +119,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                             new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
                 }
 
-                // Generate the descriptors and the keypoints of the picture
+                // Generate the descriptors and the key points and descriptors of the picture
                 ImageProcessing imageProcessing =
                         new ImageProcessing(this.getActivity(), shazamProcessing, photoPath);
                 imageProcessing.recognise();

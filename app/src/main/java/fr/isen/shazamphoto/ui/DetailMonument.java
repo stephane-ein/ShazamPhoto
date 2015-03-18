@@ -120,7 +120,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         // Set the nearest monuments in the gridView
         if (!monuments.isEmpty()) {
             setGridViewArrayList(monuments);
-        } else {
+        } else if(monument.getLocalization() != null){
             RequestNearestFromMonument requestNearestFromMonument =
                     new RequestNearestFromMonument(this);
             GetMonumentByLocalization getMonumentByLocalization =

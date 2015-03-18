@@ -174,6 +174,7 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
 
             if(result != null){
                 if (result.toString().equals("{}")) {
+                    localization = new Localization(-1, 0.0, 0.0);
                     Monument monument = new Monument(keyPoints, descriptors, localization, photoPath);
                     Toast.makeText(activity, " Monument not identify", Toast.LENGTH_LONG).show();
                     modelNavigation.changeAppView(
@@ -182,6 +183,7 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
                     Toast.makeText(activity, "Monument identified", Toast.LENGTH_LONG).show();
                     Toast.makeText(activity, "Result : "+result.toString(), Toast.LENGTH_LONG).show();
                     Monument m = new Monument(result);
+
                     modelNavigation.changeAppView(new EventDisplayDetailMonument(activity, m));
                 }
             }else{

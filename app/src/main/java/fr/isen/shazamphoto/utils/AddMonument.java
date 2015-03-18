@@ -39,9 +39,8 @@ public class AddMonument extends AsyncTask<Monument, Void, String> {
     public String doInBackground(Monument... monuments) {
         Monument monument = monuments[0];
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<>(1);
-            nameValuePairs.add(new BasicNameValuePair("monument", monument.toJSON().toString()));
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
+
+            StringEntity entity = new StringEntity("monument=" + monument.toJSON().toString(), "UTF8");
             entity.setContentType("application/x-www-form-urlencoded");
             httppost.setEntity(entity);
 

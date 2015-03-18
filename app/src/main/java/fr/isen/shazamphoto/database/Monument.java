@@ -70,7 +70,8 @@ public class Monument implements Serializable {
 
     public Monument(JSONObject jsonMonument) {
         try {
-            id = Long.valueOf(jsonMonument.getString("id")).longValue();
+            //id = Long.valueOf(jsonMonument.getString("id")).longValue();
+            id = -1;
             year = Integer.valueOf(jsonMonument.getString("year")).intValue();
             photoPath = jsonMonument.getString("photopath");
             nbVisitors = Integer.valueOf(jsonMonument.getInt("nbvisitors")).intValue();
@@ -112,7 +113,7 @@ public class Monument implements Serializable {
             jsonObj.put("localization", localization.toJson());
             jsonObj.put("address", address.toJson());
 
-            // Parse the JSON keypoints and the dexcriptors
+            // Parse the JSON keypoints and the descriptors
             jsonObj.put(KeyPoints.KEY, KeyPoints.toJson(keyPoints));
             jsonObj.put(Descriptors.KEY, Descriptors.toJson(descriptors));
 

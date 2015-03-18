@@ -45,6 +45,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     private ArrayList<Monument> monumentCircuit;
 
     private HashMap<Long, Monument> monumentsForCircuit;
+
     private Monument startMonument;
     private boolean isCircuitMode;
     private final long idUser = -2;
@@ -163,6 +164,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         // Retrieve the localization found
         localization = eventLocalizationFound.getLocalization();
         locateManager.stopListening();
+        System.out.println("NearestMonument Loacalization found");
         // Retrieve the nearest monumentsNearest
         executeGetMonumentByLocalization();
     }
@@ -171,7 +173,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     public void monumentsFoundByLocalization(ArrayList<Monument> monuments) {
         //Set the several nearest monument found
         setListNearestMonuments(monuments);
-        Toast.makeText(getActivity(), "Monuments found", Toast.LENGTH_SHORT).show();
+        System.out.println("NearestMonument Monuments found");
     }
 
     private void setListenerListView(ListView listView) {
