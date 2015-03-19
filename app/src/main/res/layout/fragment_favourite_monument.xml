@@ -1,9 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
+<!--
     <ListView
         android:id="@+id/listview_favourite_monument"
         android:layout_width="fill_parent"
@@ -13,5 +13,14 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="10.0sp"
         android:listSelector="@drawable/list_row_selector" />
+-->
+    <GridView
+        android:id="@+id/ffm_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:verticalSpacing="0dp"
+        android:horizontalSpacing="0dp"
+        android:stretchMode="columnWidth"
+        android:numColumns="2"/>
 
-</RelativeLayout>
+</FrameLayout>

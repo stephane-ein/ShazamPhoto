@@ -2,7 +2,6 @@ package fr.isen.shazamphoto.ui;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -17,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import fr.isen.shazamphoto.R;
-import fr.isen.shazamphoto.database.Descriptors;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.utils.AddMonument;

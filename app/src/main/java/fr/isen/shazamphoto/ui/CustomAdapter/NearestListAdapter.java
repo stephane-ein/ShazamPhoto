@@ -11,8 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.opencv.core.MatOfKeyPoint;
-
 import java.util.List;
 
 import fr.isen.shazamphoto.R;

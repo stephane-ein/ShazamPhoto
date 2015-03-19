@@ -47,6 +47,7 @@ public class FavouriteMonumentDAO extends ListMonumentDAO{
         Cursor c = mDb.query(DatabaseHandler.FAVOURITE_MONUMENTS_TABLE_NAME, DatabaseHandler.FAVOURITE_MONUMENTS_ALL_COLUMNS, null, null, null, null, null);
         while(c.moveToNext()) {
             long filmId = c.getLong(0);
+            System.out.println("FavoriteMonumentDAO id : "+filmId);
             String selection = DatabaseHandler.MONUMENTS_KEY + " = ?";
             String[] selectionArgs = {Long.toString(filmId)};
             Cursor c2 = mDb.query(DatabaseHandler.MONUMENTS_TABLE_NAME, DatabaseHandler.MONUMENTS_ALL_COLUMNS, selection, selectionArgs, null, null, null);

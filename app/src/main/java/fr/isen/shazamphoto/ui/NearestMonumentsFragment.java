@@ -295,6 +295,15 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
                 for (Integer i : monumentsForCircuit.keySet()) {
                     Monument monument = monumentsForCircuit.get(i);
+                   /* boolean found = false;
+                    if(monument.getIdNearest()==i) found = true;
+                    int iP = i + 1;
+                    while(!found){
+
+                        monument = monumentsForCircuit.get()
+                    }*/
+
+
                     Localization startLocalization = monument.getLocalization();
 
                     // Put the id of the monument in the matrix
