@@ -53,13 +53,15 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         final Activity activity = this;
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(0, 0, 0, 0)));
 
-        //Retrieve the TextView, the buttons and the imageView
+        //Retrieve the several items
+        ADMScrollView scrollView = (ADMScrollView) findViewById(R.id.adm_scrollview);
         gridView = (GridView) findViewById(R.id.gridView_nearestMonuments);
         TextView nbLike = (TextView) findViewById(R.id.textView_nbLike);
         nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
         noNearestMonument = (TextView) findViewById(R.id.adm_textview_nonearestmonument);
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
-        ADMScrollView scrollView = (ADMScrollView) findViewById(R.id.adm_scrollview);
+        Button buttonFavourite = (Button) findViewById(R.id.button_add_favorite);
+        Button buttonLike = (Button) findViewById(R.id.button_like);
 
         // retrieve the monument and some element of the monument detail activity
         monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
@@ -77,37 +79,18 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         nbLike.setText(monument.getName());
         nbVisitor.setText("More than " + monument.getNbLike() + " likes and " + monument.getNbVisitors() + " visitors");
 
-        Button button = (Button) findViewById(R.id.button_like);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
+        // Set the several listeners
+        setListenerFavorite(buttonFavourite);
+        setListenerLike(buttonLike);
+        scrollView.setScrollViewListener(this);
 
-        // Set the button favourite
-        final Button favouriteButton = (Button) findViewById(R.id.button_add_favorite);
-        favouriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FunctionsDB.addMonumentToDB(monument, getApplicationContext());
-                FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(activity);
-                favouriteMonumentDAO.open();
-                if (favouriteMonumentDAO.select(monument.getId()) != null) {
-                    favouriteMonumentDAO.delete(monument);
-                    favouriteButton.setText("ADD TO FAVORITE");
-                } else {
-                    favouriteMonumentDAO.insert(monument);
-                    favouriteButton.setText("REMOVE FROM FAV.");
-                }
-                favouriteMonumentDAO.close();
-            }
-        });
+
         FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(activity);
         favouriteMonumentDAO.open();
         if (favouriteMonumentDAO.select(monument.getId()) != null) {
-            favouriteButton.setText("REMOVE FROM FAV.");
+            buttonFavourite.setText("REMOVE FROM FAV.");
         } else {
-            favouriteButton.setText("ADD TO FAVORITE");
+            buttonFavourite.setText("ADD TO FAVORITE");
         }
         favouriteMonumentDAO.close();
 
@@ -120,7 +103,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         // Set the nearest monuments in the gridView
         if (!monuments.isEmpty()) {
             setGridViewArrayList(monuments);
-        } else if(monument.getLocalization() != null){
+        } else if (monument.getLocalization() != null) {
             RequestNearestFromMonument requestNearestFromMonument =
                     new RequestNearestFromMonument(this);
             GetMonumentByLocalization getMonumentByLocalization =
@@ -131,7 +114,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                     ConfigurationShazam.DELTA_LOCALIZATION);
         }
 
-        scrollView.setScrollViewListener(this);
     }
 
     @Override
@@ -244,5 +226,32 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     @Override
     public void monumentsFoundByLocalization(ArrayList<Monument> monuments) {
 
+    }
+
+    public void setListenerFavorite(final Button button) {
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FunctionsDB.addMonumentToDB(monument, getApplicationContext());
+                FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(getApplicationContext());
+                favouriteMonumentDAO.open();
+                if (favouriteMonumentDAO.select(monument.getId()) != null) {
+                    favouriteMonumentDAO.delete(monument);
+                    button.setText("ADD TO FAVORITE");
+                } else {
+                    favouriteMonumentDAO.insert(monument);
+                    button.setText("REMOVE FROM FAV.");
+                }
+                favouriteMonumentDAO.close();
+            }
+        });
+    }
+
+    public void setListenerLike(Button button){
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
     }
 }
