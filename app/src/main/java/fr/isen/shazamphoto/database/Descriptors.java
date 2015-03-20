@@ -28,7 +28,7 @@ public class Descriptors {
             if (descriptors.isContinuous()) {
 
 
-              /*  int cols = descriptors.cols();
+                int cols = descriptors.cols();
                 int rows = descriptors.rows();
                 int elemSize = (int) descriptors.elemSize();
 
@@ -39,15 +39,16 @@ public class Descriptors {
                 objDesciprtor.put("rows", descriptors.rows());
                 objDesciprtor.put("cols", descriptors.cols());
                 objDesciprtor.put("type", descriptors.type());
-*/
+
                 // We cannot set binary data to a json object, so:
                 // Encoding data byte array to Base64.
-                //dataString = Base64.encodeToString(data, Base64.DEFAULT);
-                dataString = matToJson(descriptors);
+                dataString = new String(Base64.encode(data, Base64.DEFAULT));
+                // dataString = matToJson(descriptors);
 
-               // objDesciprtor.put("data", dataString);
+                objDesciprtor.put("data", dataString);
 
 
+                //for(int i = 0; i<data.length; i++) System.out.println(data[i]);
                 System.out.println(dataString);
                 // Display the data
                /* byte[] data2 = new byte[cols * rows * elemSize];
@@ -69,7 +70,7 @@ public class Descriptors {
                 // objDesciprtor.put("data",  Arrays.toString(buff));
             }
 
-            jsonArrayDescriptor.put(dataString);
+            jsonArrayDescriptor.put(objDesciprtor);
 
         } catch (Exception e) {
         }
