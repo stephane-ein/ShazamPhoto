@@ -36,7 +36,7 @@ public class FavouriteMonument extends MonumentList {
         View view = inflater.inflate(R.layout.fragment_favourite_monument, container, false);
 
         setAdapter(new GridFavrouriteAdapter(getActivity(), getFavouriteMonuments()));
-       setAbsListView((GridView) view.findViewById(R.id.ffm_gridview));
+        setAbsListView((GridView) view.findViewById(R.id.ffm_gridview));
 
         // The the monuments in the grid view
         setListMonuments(getFavouriteMonuments(), getAdapter(), getAbsListView());
@@ -46,14 +46,6 @@ public class FavouriteMonument extends MonumentList {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getActivity() != null) {
-            setListMonuments(getFavouriteMonuments(), getAdapter(), getAbsListView());
-            setRetainInstance(true);
-        }
-    }
 
     public ArrayList<Monument> getFavouriteMonuments() {
         FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(getActivity());

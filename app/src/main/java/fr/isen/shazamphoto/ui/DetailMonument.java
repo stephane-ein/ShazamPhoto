@@ -1,13 +1,17 @@
 package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Display;
 import android.view.Menu;
@@ -20,7 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
@@ -90,6 +96,8 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         setListenerLike(buttonLike);
         setListenerPlace(buttonPlace);
         setListenerNavigation(buttonNavigation);
+        setListenerShareFacebook(buttonFacebook);
+        setListenerShareTwitter(buttonTwitter);
         scrollView.setScrollViewListener(this);
 
 
@@ -122,6 +130,25 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                     ConfigurationShazam.DELTA_LOCALIZATION);
         }
 
+    }
+
+    private void setListenerShareTwitter(Button buttonTwitter) {
+        buttonTwitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareItTwitter();
+            }
+        });
+    }
+
+    private void setListenerShareFacebook(Button buttonFacebook) {
+        buttonFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Facebook");
+                shareItFacebook();
+            }
+        });
     }
 
     private void setListenerNavigation(Button buttonNavigation) {
@@ -299,5 +326,73 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             public void onClick(View v) {
             }
         });
+    }
+
+    private void shareItTwitter() {
+        try {
+
+            Intent tweetIntent = new Intent(Intent.ACTION_SEND);
+            tweetIntent.setClassName("com.twitter.android", "com.twitter.android.PostActivity");
+            String filename = " test1.jpg";
+            File imageFile = new File(Environment.getExternalStorageDirectory(), filename);
+            tweetIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(imageFile));
+            tweetIntent.setType("image/*");
+
+            PackageManager pm = this.getPackageManager();
+            List<ResolveInfo> lract = pm.queryIntentActivities(tweetIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            boolean resolved = false;
+            for (ResolveInfo ri : lract) {
+                if (ri.activityInfo.name.contains("com.twitter.android")) {
+                    tweetIntent.setClassName(ri.activityInfo.packageName,
+                            ri.activityInfo.name);
+                    resolved = true;
+                    break;
+                }
+            }
+
+            startActivity(resolved ?
+                    tweetIntent :
+                    Intent.createChooser(tweetIntent, "Choose one"));
+        } catch (final ActivityNotFoundException e) {
+            Toast.makeText(this, "You don't seem to have twitter installed on this device", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+    public void shareItFacebook(){
+
+        try{
+            String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+            Uri myImageContentUri = Uri.fromFile(new File(path + "/test1.jpg")); // A content Uri to the image you would like to share.
+            String myAppId = "465418986947825";
+
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.setType("image/*");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, myImageContentUri);
+
+            // Include your Facebook App Id for attribution
+            shareIntent.putExtra("com.facebook.platform.extra.465418986947825", myAppId);
+
+            PackageManager pm = this.getPackageManager();
+            List<ResolveInfo> lract = pm.queryIntentActivities(shareIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            boolean resolved = false;
+            for (ResolveInfo ri : lract) {
+                if (ri.activityInfo.name.contains("facebook")) {
+                    shareIntent.setClassName(ri.activityInfo.packageName,
+                            ri.activityInfo.name);
+                    resolved = true;
+                    break;
+                }
+            }
+
+            startActivityForResult(resolved ? shareIntent : Intent.createChooser(shareIntent, "Share"), 1);
+
+        } catch (final ActivityNotFoundException e) {
+            Toast.makeText(this, "You don't seem to have Facebook installed on this device", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }

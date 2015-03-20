@@ -5,4 +5,5 @@ public class ConfigurationShazam {
 
     public static final String DELTA_LOCALIZATION = "0.9";
     public static final String IP_SERVER = "37.187.216.159";
+    public static final String FACEBOOK_ID = "465418986947825";
 }

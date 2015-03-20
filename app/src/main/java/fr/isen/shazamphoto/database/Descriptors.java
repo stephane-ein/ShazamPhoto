@@ -22,11 +22,13 @@ public class Descriptors {
         JSONArray jsonArrayDescriptor = new JSONArray();
         JSONObject objDesciprtor = new JSONObject();
         String dataString = "";
+        String dataStringToSend = "";
+
         try {
             if (descriptors.isContinuous()) {
 
 
-                int cols = descriptors.cols();
+              /*  int cols = descriptors.cols();
                 int rows = descriptors.rows();
                 int elemSize = (int) descriptors.elemSize();
 
@@ -37,16 +39,25 @@ public class Descriptors {
                 objDesciprtor.put("rows", descriptors.rows());
                 objDesciprtor.put("cols", descriptors.cols());
                 objDesciprtor.put("type", descriptors.type());
-
+*/
                 // We cannot set binary data to a json object, so:
                 // Encoding data byte array to Base64.
-                //String dataString = Base64.encodeToString(data, Base64.DEFAULT);
+                //dataString = Base64.encodeToString(data, Base64.DEFAULT);
                 dataString = matToJson(descriptors);
-                objDesciprtor.put("data", dataString);
 
-                byte[] data2 = new byte[cols * rows * elemSize];
+               // objDesciprtor.put("data", dataString);
+
 
                 System.out.println(dataString);
+                // Display the data
+               /* byte[] data2 = new byte[cols * rows * elemSize];
+                descriptors.get(0, 0, data2);
+                System.out.println("Descriptors data : \n\n");
+                for(int i =0; i<data2.length; i++){
+
+                    System.out.println(data2[i]);
+                }*/
+
                 /*
                 byte[] data2 = Base64.decode(dataString.getBytes(), Base64.DEFAULT);
                 String text = new String(dataString.getBytes("UTF-8"), "UTF-8");
