@@ -1,28 +1,27 @@
-<fr.isen.shazamphoto.ui.ADMScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<fr.isen.shazamphoto.ui.ADMScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/adm_scrollview"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="wrap_content">
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:context="fr.isen.shazamphoto.ui.DetailMonument">
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imageView1"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/no_picture" />
+                android:src="@drawable/image_not_found" />
 
             <LinearLayout
                 android:id="@+id/linearLayoutLike"
@@ -74,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/rectangle"
+                    android:background="@drawable/button"
                     android:fontFamily="sans-serif-thin"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -90,15 +89,15 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="20dp"
                     android:layout_weight="1"
-                    android:background="@drawable/rectangle"
+                    android:background="@drawable/button"
                     android:fontFamily="sans-serif-thin"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:text="ADD TO FAVORITE"
                     android:textSize="@dimen/abc_text_size_body_2_material" />
             </LinearLayout>
-        </LinearLayout>
 
+        </LinearLayout>
 
         <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card_view_informations"
@@ -183,52 +182,76 @@
         </android.support.v7.widget.CardView>
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view_otheractions"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/abc_text_size_body_2_material"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/abc_text_size_body_2_material"
-                android:fontFamily="sans-serif-thin"
-                android:gravity="center"
-                android:text="Share this monument"
-                android:textStyle="italic" />
+            card_view:cardCornerRadius="4dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/abc_text_size_body_2_material"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
-                <Button
-                    android:id="@+id/adm_button_sharetwitter"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:background="@drawable/rectanglefacebook" />
+                <TextView
+                    android:id="@+id/adm_textview_otheractions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/abc_text_size_body_2_material"
+                    android:layout_marginTop="@dimen/abc_text_size_body_2_material"
+                    android:fontFamily="sans-serif-thin"
+                    android:gravity="center"
+                    android:text="Share and navigiation"
+                    android:textSize="@dimen/abc_text_size_medium_material"
+                    android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/adm_button_sharefacebook"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/rectangletwitter" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <Button
+                        android:id="@+id/adm_button_sharetwitter"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/buttonfacebook" />
+
+                    <Button
+                        android:id="@+id/adm_button_sharefacebook"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/buttontwitter" />
+
+                    <Button
+                        android:id="@+id/adm_button_place"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/buttonplace" />
+
+                    <Button
+                        android:id="@+id/adm_button_navigation"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/buttonnavigation" />
 
 
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 
 </fr.isen.shazamphoto.ui.ADMScrollView>

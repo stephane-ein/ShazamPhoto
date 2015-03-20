@@ -14,7 +14,7 @@ public class UnidentifiedMonument extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unidentified_monument);
-        AddMonumentFragment addMonumentFragment = new AddMonumentFragment();
+        PromptNameMonument addMonumentFragment = new PromptNameMonument();
         Bundle args = new Bundle();
         args.putSerializable(Monument.NAME_SERIALIZABLE, getIntent().getExtras().getSerializable(Monument.NAME_SERIALIZABLE));
         addMonumentFragment.setArguments(args);

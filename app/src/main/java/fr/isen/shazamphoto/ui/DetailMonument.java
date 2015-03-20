@@ -1,10 +1,12 @@
 package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Display;
@@ -16,11 +18,13 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
+import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.NearestMonumentsDAO;
 import fr.isen.shazamphoto.events.RequestNearestFromMonument;
@@ -62,13 +66,15 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
         Button buttonFavourite = (Button) findViewById(R.id.button_add_favorite);
         Button buttonLike = (Button) findViewById(R.id.button_like);
+        Button buttonPlace = (Button) findViewById(R.id.adm_button_place);
+        Button buttonNavigation = (Button) findViewById(R.id.adm_button_navigation);
+        Button buttonFacebook = (Button) findViewById(R.id.adm_button_sharefacebook);
+        Button buttonTwitter = (Button) findViewById(R.id.adm_button_sharetwitter);
 
         // retrieve the monument and some element of the monument detail activity
         monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
 
         setColumnWidthView(getResources().getConfiguration().orientation);
-
-        //localization.setText(monument.getLocalization().toString());
 
         setTitle("");
 
@@ -82,6 +88,8 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         // Set the several listeners
         setListenerFavorite(buttonFavourite);
         setListenerLike(buttonLike);
+        setListenerPlace(buttonPlace);
+        setListenerNavigation(buttonNavigation);
         scrollView.setScrollViewListener(this);
 
 
@@ -114,6 +122,44 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                     ConfigurationShazam.DELTA_LOCALIZATION);
         }
 
+    }
+
+    private void setListenerNavigation(Button buttonNavigation) {
+        buttonNavigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Localization l = monument.getLocalization();
+                if (l != null) {
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + l.getLatitude() + "," + l.getLongitude() + "&mode=w");
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "This monument has not a localization, sorry", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+    }
+
+    private void setListenerPlace(Button buttonPlace) {
+        buttonPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Localization l = monument.getLocalization();
+                if (l != null) {
+                    Uri gmmIntentUri = Uri.parse("geo:" + l.getLatitude() + "," + l.getLongitude());
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "This monument has not a localization, sorry", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
     }
 
     @Override
@@ -247,7 +293,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         });
     }
 
-    public void setListenerLike(Button button){
+    public void setListenerLike(Button button) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
