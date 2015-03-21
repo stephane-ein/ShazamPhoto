@@ -3,6 +3,7 @@ package fr.isen.shazamphoto.ui.CustomAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,9 +68,11 @@ public class NearestListAdapter extends BaseAdapter {
         Monument m = monumentItems.get(position);
 
         title.setText(m.getName());
-        if(m.getName().equals("End")){
+        System.out.println("NLA : "+m.getIdNearest());
+        if(m.getIdNearest() == -2){
             // Case where the item is just the final point in the circuit
-            ((LinearLayout)image.getParent()).removeView(image);
+            image.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(),
+                    R.drawable.finish));
         }else{
             // Case where the item is a monument
             map.setOnClickListener(new View.OnClickListener() {
@@ -90,9 +93,6 @@ public class NearestListAdapter extends BaseAdapter {
                 getMonumentImage.execute(m.getPhotoPath());
             }
         }
-
-
-
 
         return convertView;
     }

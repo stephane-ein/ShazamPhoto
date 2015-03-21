@@ -40,6 +40,7 @@ public class AddMonument extends AsyncTask<Monument, Void, String> {
         Monument monument = monuments[0];
         try {
 
+            System.out.println(" AM : "+monument.getPhotoPath());
             StringEntity entity = new StringEntity("monument=" + monument.toJSON().toString(), "UTF8");
             entity.setContentType("application/x-www-form-urlencoded");
             httppost.setEntity(entity);
