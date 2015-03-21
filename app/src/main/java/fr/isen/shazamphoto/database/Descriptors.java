@@ -22,7 +22,6 @@ public class Descriptors {
         JSONArray jsonArrayDescriptor = new JSONArray();
         JSONObject objDesciprtor = new JSONObject();
         String dataString = "";
-        String dataStringToSend = "";
 
         try {
             if (descriptors.isContinuous()) {
@@ -43,31 +42,15 @@ public class Descriptors {
                 // We cannot set binary data to a json object, so:
                 // Encoding data byte array to Base64.
                 dataString = new String(Base64.encode(data, Base64.DEFAULT));
-                // dataString = matToJson(descriptors);
 
                 objDesciprtor.put("data", dataString);
 
+                // Display the data encoded
+                //System.out.println(dataString);
 
-                //for(int i = 0; i<data.length; i++) System.out.println(data[i]);
-                System.out.println(dataString);
-                // Display the data
-               /* byte[] data2 = new byte[cols * rows * elemSize];
-                descriptors.get(0, 0, data2);
-                System.out.println("Descriptors data : \n\n");
-                for(int i =0; i<data2.length; i++){
+                // Display the data decoded
+                for(int i =0; i<60; i++) System.out.println(data[i]);
 
-                    System.out.println(data2[i]);
-                }*/
-
-                /*
-                byte[] data2 = Base64.decode(dataString.getBytes(), Base64.DEFAULT);
-                String text = new String(dataString.getBytes("UTF-8"), "UTF-8");
-                System.out.println("Descriptors decoded\n" + text);*/
-
-                // byte buff[] = new byte[(int)descriptors.total() * descriptors.channels()];
-                // descriptors.get(0, 0, buff);
-                // System.out.println("Description \n"+ Arrays.toString(buff));
-                // objDesciprtor.put("data",  Arrays.toString(buff));
             }
 
             jsonArrayDescriptor.put(objDesciprtor);
@@ -77,55 +60,5 @@ public class Descriptors {
 
         return jsonArrayDescriptor;
 
-    }
-
-    public static String matToJson(Mat mat) {
-        JsonObject obj = new JsonObject();
-
-        if (mat.isContinuous()) {
-            int cols = mat.cols();
-            int rows = mat.rows();
-            int elemSize = (int) mat.elemSize();
-
-            byte[] data = new byte[cols * rows * elemSize];
-
-            mat.get(0, 0, data);
-
-            obj.addProperty("rows", mat.rows());
-            obj.addProperty("cols", mat.cols());
-            obj.addProperty("type", mat.type());
-
-            // We cannot set binary data to a json object, so:
-            // Encoding data byte array to Base64.
-            String dataString = new String(Base64.encode(data, Base64.DEFAULT));
-
-            obj.addProperty("data", dataString);
-
-            Gson gson = new Gson();
-            String json = gson.toJson(obj);
-
-            return json;
-        } else {
-
-        }
-        return "{}";
-    }
-
-
-    public static Mat matFromJson(String json) {
-        JsonParser parser = new JsonParser();
-        JsonObject JsonObject = parser.parse(json).getAsJsonObject();
-
-        int rows = JsonObject.get("rows").getAsInt();
-        int cols = JsonObject.get("cols").getAsInt();
-        int type = JsonObject.get("type").getAsInt();
-
-        String dataString = JsonObject.get("data").getAsString();
-        byte[] data = Base64.decode(dataString.getBytes(), Base64.DEFAULT);
-
-        Mat mat = new Mat(rows, cols, type);
-        mat.put(0, 0, data);
-
-        return mat;
     }
 }

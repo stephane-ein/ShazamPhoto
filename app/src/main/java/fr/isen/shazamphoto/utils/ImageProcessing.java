@@ -198,7 +198,7 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
                     String picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-                    String path = photoPath;  //picturesDir +"/test1.jpg"; / //photoPath;
+                    String path = picturesDir +"/test1.jpg"; //photoPath;
                     imgFile = new File(path);
                     if (imgFile != null && imgFile.exists()) {
 
