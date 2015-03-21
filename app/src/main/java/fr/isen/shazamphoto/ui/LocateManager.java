@@ -25,16 +25,9 @@ public class LocateManager {
 
     public void startListening(final RequestLocalization requestLocalization) {
 
-       System.out.println("Called listener");
-
         locationListener = new LocationListener() {
 
             public void onLocationChanged(Location location) {
-                System.out.println("Found localization");
-                /*GetMonumentByLocalization getMonumentByLocalization =
-                        new GetMonumentByLocalization(requestLocalization);
-                getMonumentByLocalization.execute(Double.valueOf(location.getLatitude()).toString(),
-                        Double.valueOf(location.getLongitude()).toString(), "0.09");*/
                 Localization localization = new Localization(-1, location.getLatitude(),
                         location.getLongitude());
                 searchLocalizationItem.foundLocalization(new EventLocalizationFound(localization));
@@ -57,7 +50,6 @@ public class LocateManager {
 
     public void stopListening() {
         if (locationListener != null) {
-            if (home != null) Toast.makeText(home, "Stop Listener", Toast.LENGTH_SHORT).show();
             lm.removeUpdates(locationListener);
         }
     }

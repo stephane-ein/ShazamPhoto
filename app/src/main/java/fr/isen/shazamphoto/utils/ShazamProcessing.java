@@ -131,6 +131,7 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
     protected JSONObject doInBackground(String... params) {
 
         JSONObject jsonResponse = null;
+        Descriptors.activity = activity;
 
         try {
             // Set the arguments in the POST request
