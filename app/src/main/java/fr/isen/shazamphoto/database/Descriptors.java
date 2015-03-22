@@ -1,14 +1,9 @@
 package fr.isen.shazamphoto.database;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,13 +12,12 @@ import org.opencv.core.Mat;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.Arrays;
 
 public class Descriptors {
 
     public static final String KEY = "descriptors";
     public static Activity activity;
+    public static char[] b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
 
     public static JSONArray toJson(Mat descriptors) {
 
@@ -43,6 +37,7 @@ public class Descriptors {
                 byte[] data = new byte[cols * rows * elemSize];
 
                 descriptors.get(0, 0, data);
+
 
                 objDesciprtor.put("rows", descriptors.rows());
                 objDesciprtor.put("cols", descriptors.cols());

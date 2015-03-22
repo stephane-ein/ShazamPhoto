@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.ui;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -158,7 +159,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         // Display the list view
         this.monumentsNearest = monuments;
         this.monuments = monuments;
-        NearestListAdapter adapter = new NearestListAdapter(getActivity(), monuments);
+        NearestListAdapter adapter = new NearestListAdapter(getActivity(), monuments, localization);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         listView.setVisibility(View.VISIBLE);
@@ -171,7 +172,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
     public void setListCircuitMonuments(ArrayList<Monument> monuments) {
         this.monuments = monuments;
-        NearestListAdapter adapter = new NearestListAdapter(getActivity(), monuments);
+        System.out.println("NMF : "+toStringPath(monuments));
+        NearestListAdapter adapter = new NearestListAdapter(getActivity(), monuments, localization);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         listView.setVisibility(View.VISIBLE);
@@ -199,6 +201,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                         //monumentsForCircuit.put(startMonument.getIdNearest(), startMonument);
                         background = R.drawable.list_row_nearest_monument_start;
                     }
+
+                    textViewInformation.setText("... and the other monuments to visit");
 
                     // We add the monument to visit in the hasp map
                     m.setIdNearest(i);
@@ -351,7 +355,6 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                 Point start = null;
                 int i = 0;
 
-
                 // Retrieve the first monument to visit
                 while (start == null && i < shortPath.size()) {
                     Point p = shortPath.get(i);
@@ -360,8 +363,6 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                     }
                     i++;
                 }
-
-
 
                 if (start != null) {
                     // Set the circuit for the monumentsNearest in order
@@ -372,11 +373,12 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                         start = start.getNext();
                     }
 
-                    monumentPath.add(new Monument(-2, startMonument.getLocalization(), startMonument.getName()));
+                    // Add the first monument to the end of the circuit with a specific id
+                    Monument end = new Monument(-2, startMonument.getLocalization(), startMonument.getName());
+                    monumentPath.add(end);
 
                     // Display the result
                     setListCircuitMonuments(monumentPath);
-                    System.out.println("Path : "+ toStringPath(monumentPath));
                 }
             }
         });

@@ -84,6 +84,7 @@ public class AddMonumentFragment extends Fragment {
 
                 ref.monument.setNbLike(0);
                 ref.monument.setNbVisitors(1);
+                ref.monument.setPhotoPath("");
                 ref.monument.setLocalization(new Localization(0, 0.0, 0.0));
                 addMonument.execute(monument);
                 ref.getActivity().finish();

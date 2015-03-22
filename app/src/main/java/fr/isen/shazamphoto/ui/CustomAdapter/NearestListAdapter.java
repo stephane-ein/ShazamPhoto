@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,6 +18,7 @@ import java.util.List;
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.utils.GetDistance;
 import fr.isen.shazamphoto.utils.GetMonumentImage;
 
 public class NearestListAdapter extends BaseAdapter {
@@ -25,10 +26,12 @@ public class NearestListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Monument> monumentItems;
+    private Localization localizationUser;
 
-    public NearestListAdapter(Activity activity, List<Monument> monuments) {
+    public NearestListAdapter(Activity activity, List<Monument> monuments, Localization localizationUser) {
         this.activity = activity;
         this.monumentItems = monuments;
+        this.localizationUser = localizationUser;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class NearestListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.list_row_nearest_monument, null);
         }
 
-
+        // Retrieve the several items of the layout
         ImageView image = (ImageView) convertView.findViewById(R.id.lrnm_imageView);
         TextView title = (TextView) convertView.findViewById(R.id.lrnm_title);
         TextView distance = (TextView) convertView.findViewById(R.id.lrnm_distance);
@@ -64,17 +67,29 @@ public class NearestListAdapter extends BaseAdapter {
         ImageView map = (ImageView) convertView.findViewById(R.id.lrnm_map);
 
 
-        // getting movie data for the row
+        // Getting movie data for the row
         Monument m = monumentItems.get(position);
 
+        // Set the title with the name of the monument
         title.setText(m.getName());
-        System.out.println("NLA : "+m.getIdNearest());
-        if(m.getIdNearest() == -2){
-            // Case where the item is just the final point in the circuit
+
+        if(m.getIdNearest()==-2){
+            // Case where the monument is just the final point in the circuit
             image.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(),
                     R.drawable.finish));
         }else{
-            // Case where the item is a monument
+            // Case where the monument is not at the end of the circuit
+            // Set the image of the monument
+            if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
+                GetMonumentImage getMonumentImage = new GetMonumentImage(image);
+                getMonumentImage.execute(m.getPhotoPath());
+            }else{
+                // Default image
+                image.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(),
+                        R.drawable.monument_1));
+            }
+
+            // Set the button to display the navigation
             map.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -86,12 +101,17 @@ public class NearestListAdapter extends BaseAdapter {
                 }
             });
 
+            // Set the number of visitor and the distance between the monument and the user
             visitor.setText(Integer.valueOf(m.getNbVisitors()).toString() + " visitors");
-
-            if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
-                GetMonumentImage getMonumentImage = new GetMonumentImage(image);
-                getMonumentImage.execute(m.getPhotoPath());
-            }
+            Localization destionLocalization = m.getLocalization();
+            /*float[] result = new float[3];
+            Location.distanceBetween(
+                    startLocalization.getLatitude(), startLocalization.getLongitude(),
+                    localizationUser.getLatitude(), localizationUser.getLongitude(),
+                    result);
+            distance.setText("to "+Float.valueOf(result[0]).toString()+"m");*/
+            GetDistance getDistance = new GetDistance();
+            getDistance.execute(localizationUser, destionLocalization);
         }
 
         return convertView;
