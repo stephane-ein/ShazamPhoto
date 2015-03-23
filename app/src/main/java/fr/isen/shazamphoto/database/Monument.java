@@ -22,6 +22,7 @@ public class Monument implements Serializable {
     private KeyPoint[] keyPoints;
     private Mat descriptors;
     private int idNearest;
+    private int databaseId;
 
     public static final String NAME_SERIALIZABLE = "fr.isen.shazamphoto.database.monument_serializable";
 
@@ -75,11 +76,12 @@ public class Monument implements Serializable {
         try {
             //id = Long.valueOf(jsonMonument.getString("id")).longValue();
             id = -1;
-            year = Integer.valueOf(jsonMonument.getString("year")).intValue();
+            year = jsonMonument.getInt("year");
             photoPath = jsonMonument.getString("photopath");
-            nbVisitors = Integer.valueOf(jsonMonument.getInt("nbvisitors")).intValue();
-            nbLike = Integer.valueOf(jsonMonument.getInt("nblikes")).intValue();
+            nbVisitors = jsonMonument.getInt("nbvisitors");
+            nbLike = jsonMonument.getInt("nblikes");
             localization = new Localization(jsonMonument.getJSONObject("localization"));
+            databaseId = jsonMonument.getInt("id");
 
             //Get all the characteristic monument
             this.characteristics = new HashMap<>();
@@ -241,6 +243,14 @@ public class Monument implements Serializable {
 
     public void setIdNearest(int idNearest) {
         this.idNearest = idNearest;
+    }
+
+    public int getDatabaseId() {
+        return databaseId;
+    }
+
+    public void setDatabaseId(int databaseId) {
+        this.databaseId = databaseId;
     }
 }
 
