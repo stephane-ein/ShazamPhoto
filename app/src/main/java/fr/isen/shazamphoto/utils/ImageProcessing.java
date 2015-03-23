@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
 
 public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
 
@@ -204,7 +205,7 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
 
                         Bitmap myBitmap = BitmapFactory.decodeFile(path);
                         FeatureDetector detector = FeatureDetector.create(FeatureDetector.ORB);
-                        DescriptorExtractor descriptor = DescriptorExtractor.create(DescriptorExtractor.ORB);
+                        DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
 
                         File outputDir = getActivityContext().getCacheDir(); // If in an Activity (otherwise getActivity.getCacheDir();
                         File outputFile = null;
@@ -226,10 +227,16 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
                         Imgproc.resize(img1, resized, size);
                         Imgproc.cvtColor(img1, img1, Imgproc.COLOR_BGR2GRAY, 7);
 
-                        detector.detect(img1, keypoints);
+                        detector.detect(resized, keypoints);
 
-                        descriptor.compute(img1, keypoints, descriptors);
+                        extractor.compute(resized, keypoints, descriptors);
+
                         descriptors = descriptors.clone();
+
+                        byte buff[] = new byte[(int)descriptors.total() * descriptors.channels()];
+                        descriptors.get(0, 0, buff);
+
+
                         keyPointArray = keypoints.toArray();
 
                         shazamProcessing.setDescriptorsKeyKeyPoints(descriptors, keyPointArray);

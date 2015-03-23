@@ -48,15 +48,14 @@ public class Descriptors {
                 StringBuilder byteString = new StringBuilder();
                 for(int i = 0; i < data.length; i++){
                     byteString.append(Integer.valueOf(data[i]).toString());
-                    Log.v("Shazam", "Data i : "+Integer.valueOf(data[i]).toString());
+
                 }
 
-                Log.v("Shazam", "Descriptors bytes encoded ");
 
                 dataString = mEncode(byteString.toString());
 
                 // Display data encoded
-                Log.v("Shazam", "Data encoded : " + dataString);
+
 
                 objDesciprtor.put("data", dataString);
 
@@ -78,10 +77,10 @@ public class Descriptors {
 
         Log.v("Shazam", "Descriptors : " + toEncode);
         int expectedSize = toEncode.length();
-        String base64Str = "";
+        StringBuilder base64Str = new StringBuilder();
 
         if (toEncode.length() == 0) {
-            return base64Str;
+            return base64Str.toString();
         } else {
             while ((expectedSize % 3) != 0) {
                 expectedSize++;
@@ -91,25 +90,25 @@ public class Descriptors {
             for (i = 0; i < toEncode.length()-3; i += 3) {
                 String block = toEncode.substring(i, i + 3);
                 String encodedBlock=blockEncode(block);
-                base64Str = base64Str + encodedBlock;
+                base64Str.append(encodedBlock);
 
             }
             if(toEncode.length()<expectedSize){
-                String lastBlock = "";
+                StringBuilder lastBlock = new StringBuilder();
                 for (; i < expectedSize; i++) {
                     if (i < toEncode.length()) {
-                        lastBlock = lastBlock + toEncode.charAt(i);
+                        lastBlock.append(toEncode.charAt(i));
                     }else{
 
-                        lastBlock = lastBlock + "0";
+                        lastBlock.append("0");
                     }
                 }
 
-                String encodedBlock=blockEncode(lastBlock);
-                base64Str = base64Str + encodedBlock;
+                String encodedBlock=blockEncode(lastBlock.toString());
+                base64Str.append(encodedBlock);
             }
         }
-        return base64Str;
+        return base64Str.toString();
     }
 
     public static String blockEncode(String block) {
