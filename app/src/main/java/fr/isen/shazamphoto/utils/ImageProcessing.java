@@ -225,7 +225,7 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
                         Utils.bitmapToMat(myBitmap, img1);
 
                         Imgproc.resize(img1, resized, size);
-                        Imgproc.cvtColor(img1, img1, Imgproc.COLOR_BGR2GRAY, 7);
+                        Imgproc.cvtColor(resized, resized, Imgproc.COLOR_BGR2GRAY, 7);
 
                         detector.detect(resized, keypoints);
 
