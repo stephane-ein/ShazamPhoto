@@ -46,6 +46,7 @@ public class Descriptors {
 
                 dataString = mEncode(byteString);
 
+                // Display data encoded
                 Log.v("Shazam", "Data encoded : " + dataString);
 
                 if(activity != null){
