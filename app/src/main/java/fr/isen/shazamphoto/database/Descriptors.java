@@ -42,30 +42,21 @@ public class Descriptors {
                 // Encoding data byte array to Base64.
                 //dataString = new String(Base64.encode(data, Base64.DEFAULT));
 
-                String byteString = new String(data);
+                Log.v("Shazam", "Descriptors before ");
 
-                dataString = mEncode(byteString);
+                //String byteString = new String(data);
+                StringBuilder byteString = new StringBuilder();
+                for(int i = 0; i < data.length; i++){
+                    byteString.append(Integer.valueOf(data[i]).toString());
+                    Log.v("Shazam", "Data i : "+Integer.valueOf(data[i]).toString());
+                }
+
+                Log.v("Shazam", "Descriptors bytes encoded ");
+
+                dataString = mEncode(byteString.toString());
 
                 // Display data encoded
                 Log.v("Shazam", "Data encoded : " + dataString);
-
-                if(activity != null){
-                    try {
-                        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-                        File file = new File(path + "/dataString2.txt");
-                        FileOutputStream stream = new FileOutputStream(file);
-                        try {
-                            stream.write(dataString.getBytes());
-                        } finally {
-                            stream.close();
-                        }
-                    }
-                    catch (IOException e) {
-                        Log.e("Exception", "File write failed: " + e.toString());
-                    }
-                }else {
-                    System.out.println("Activity null");
-                }
 
                 objDesciprtor.put("data", dataString);
 
@@ -76,13 +67,16 @@ public class Descriptors {
             }
 
             jsonArrayDescriptor.put(objDesciprtor);
-        } catch (Exception e) { }
+        } catch (Exception e) {
+            Log.v("Shazam", "Descriptors exception : "+e.getMessage());
+        }
 
         return jsonArrayDescriptor;
     }
 
     public static String mEncode(String toEncode) {
 
+        Log.v("Shazam", "Descriptors : " + toEncode);
         int expectedSize = toEncode.length();
         String base64Str = "";
 
@@ -94,7 +88,7 @@ public class Descriptors {
             }
 
             int i = 0;
-            for (i = 0; i < toEncode.length(); i += 3) {
+            for (i = 0; i < toEncode.length()-3; i += 3) {
                 String block = toEncode.substring(i, i + 3);
                 String encodedBlock=blockEncode(block);
                 base64Str = base64Str + encodedBlock;
@@ -120,16 +114,16 @@ public class Descriptors {
 
     public static String blockEncode(String block) {
 
-        char mask1 = 0b00000011;
-        char mask2 = 0b11110000;
-        char mask3 = 0b00001111;
-        char mask4 = 0b11000000;
-
+        char mask1 = 0b0000000000000011;
+        char mask2 = 0b0000000011110000;
+        char mask3 = 0b0000000000001111;
+        char mask4 = 0b0000000011000000;
+        char mask5 = 0b0000000000111111;
         int[] b64Index = new int[4];
         b64Index[0] = block.charAt(0)>>2;
         b64Index[1] = ((block.charAt(0) & mask1 ) <<4 ) ^((block.charAt(1) & mask2) >>4 );
         b64Index[2] = ((block.charAt(1) & mask3 ) <<2 ) ^((block.charAt(2) & mask4) >>6 );
-        b64Index[3] = block.charAt(2) & (~mask4);
+        b64Index[3] = block.charAt(2) & (mask5);
 
         char[] myChar = {base64_chars.charAt(b64Index[0]), base64_chars.charAt(b64Index[1]), base64_chars.charAt(b64Index[2]), base64_chars.charAt(b64Index[3])};
 
