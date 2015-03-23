@@ -12,7 +12,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +36,7 @@ import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.NearestMonumentsDAO;
 import fr.isen.shazamphoto.events.RequestNearestFromMonument;
+import fr.isen.shazamphoto.ui.CustomAdapter.GridFavrouriteAdapter;
 import fr.isen.shazamphoto.ui.CustomAdapter.GridViewAdapter;
 import fr.isen.shazamphoto.ui.Dialogs.DeleteDialog;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
@@ -120,10 +123,8 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         if (!monuments.isEmpty()) {
             setGridViewArrayList(monuments);
         } else if (monument.getLocalization() != null) {
-            RequestNearestFromMonument requestNearestFromMonument =
-                    new RequestNearestFromMonument(this);
             GetMonumentByLocalization getMonumentByLocalization =
-                    new GetMonumentByLocalization(requestNearestFromMonument, this);
+                    new GetMonumentByLocalization(null, this);
             getMonumentByLocalization.execute(
                     Double.valueOf(monument.getLocalization().getLatitude()).toString(),
                     Double.valueOf(monument.getLocalization().getLongitude()).toString(),
@@ -145,7 +146,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         buttonFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Facebook");
                 shareItFacebook();
             }
         });
@@ -271,9 +271,10 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     }
 
     public void setGridViewArrayList(ArrayList<Monument> m) {
-        // Set the grid view of the nearests monuments
+        // Set the grid view of the nearest monuments
         GridViewAdapter gridViewAdapter = new GridViewAdapter(this, m);
         gridView.setAdapter(gridViewAdapter);
+        gridViewAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -329,70 +330,60 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     }
 
     private void shareItTwitter() {
-        try {
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
 
-            Intent tweetIntent = new Intent(Intent.ACTION_SEND);
-            tweetIntent.setClassName("com.twitter.android", "com.twitter.android.PostActivity");
-            String filename = " test1.jpg";
-            File imageFile = new File(Environment.getExternalStorageDirectory(), filename);
-            tweetIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(imageFile));
-            tweetIntent.setType("image/*");
-
-            PackageManager pm = this.getPackageManager();
-            List<ResolveInfo> lract = pm.queryIntentActivities(tweetIntent, PackageManager.MATCH_DEFAULT_ONLY);
-            boolean resolved = false;
-            for (ResolveInfo ri : lract) {
-                if (ri.activityInfo.name.contains("com.twitter.android")) {
-                    tweetIntent.setClassName(ri.activityInfo.packageName,
-                            ri.activityInfo.name);
-                    resolved = true;
-                    break;
-                }
-            }
-
-            startActivity(resolved ?
-                    tweetIntent :
-                    Intent.createChooser(tweetIntent, "Choose one"));
-        } catch (final ActivityNotFoundException e) {
-            Toast.makeText(this, "You don't seem to have twitter installed on this device", Toast.LENGTH_SHORT).show();
-        }
+        File toto =new File(path + "/test1.jpg"); // A content Uri to the image you would like to share.
+        share("twitter", toto.toString(),"waza");
     }
-
-
 
     public void shareItFacebook(){
 
-        try{
-            String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-            Uri myImageContentUri = Uri.fromFile(new File(path + "/test1.jpg")); // A content Uri to the image you would like to share.
-            String myAppId = "465418986947825";
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
 
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.setType("image/*");
-            shareIntent.putExtra(Intent.EXTRA_STREAM, myImageContentUri);
-
-            // Include your Facebook App Id for attribution
-            shareIntent.putExtra("com.facebook.platform.extra.465418986947825", myAppId);
-
-            PackageManager pm = this.getPackageManager();
-            List<ResolveInfo> lract = pm.queryIntentActivities(shareIntent, PackageManager.MATCH_DEFAULT_ONLY);
-            boolean resolved = false;
-            for (ResolveInfo ri : lract) {
-                if (ri.activityInfo.name.contains("facebook")) {
-                    shareIntent.setClassName(ri.activityInfo.packageName,
-                            ri.activityInfo.name);
-                    resolved = true;
-                    break;
-                }
-            }
-
-            startActivityForResult(resolved ? shareIntent : Intent.createChooser(shareIntent, "Share"), 1);
-
-        } catch (final ActivityNotFoundException e) {
-            Toast.makeText(this, "You don't seem to have Facebook installed on this device", Toast.LENGTH_SHORT).show();
-        }
+        File toto =new File(path + "/test1.jpg"); // A content Uri to the image you would like to share.
+        share("facebook", toto.toString(),"waza");
 
 
     }
+
+    public void share(String nameApp, String imagePath, String message) {
+        try {
+            List<Intent> targetedShareIntents = new ArrayList<Intent>();
+            Intent share = new Intent(android.content.Intent.ACTION_SEND);
+            share.setType("image/*");
+            List<ResolveInfo> resInfo = getPackageManager()
+                    .queryIntentActivities(share, 0);
+            if (!resInfo.isEmpty()) {
+                for (ResolveInfo info : resInfo) {
+                    Intent targetedShare = new Intent(
+                            android.content.Intent.ACTION_SEND);
+                    targetedShare.setType("image/jpeg"); // put here your mime
+                    // type
+                    if (info.activityInfo.packageName.toLowerCase().contains(
+                            nameApp)
+                            || info.activityInfo.name.toLowerCase().contains(
+                            nameApp)) {
+                        targetedShare.putExtra(Intent.EXTRA_SUBJECT,
+                                "Sample Photo");
+                        targetedShare.putExtra(Intent.EXTRA_TEXT, message);
+                        targetedShare.putExtra(Intent.EXTRA_STREAM,
+                                Uri.fromFile(new File(imagePath)));
+                        targetedShare.setPackage(info.activityInfo.packageName);
+                        targetedShareIntents.add(targetedShare);
+                    }
+                }
+                Intent chooserIntent = Intent.createChooser(
+                        targetedShareIntents.remove(0), "Select app to share");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+                        targetedShareIntents.toArray(new Parcelable[] {}));
+                startActivity(chooserIntent);
+            }
+        } catch (Exception e) {
+            Log.v("VM",
+                    "Exception while sending image on" + nameApp + " "
+                            + e.getMessage());
+        }
+    }
+
+
 }

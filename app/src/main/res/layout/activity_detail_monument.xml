@@ -217,7 +217,7 @@
                     android:paddingRight="@dimen/activity_horizontal_margin">
 
                     <Button
-                        android:id="@+id/adm_button_sharetwitter"
+                        android:id="@+id/adm_button_sharefacebook"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
@@ -225,7 +225,7 @@
                         android:background="@drawable/buttonfacebook" />
 
                     <Button
-                        android:id="@+id/adm_button_sharefacebook"
+                        android:id="@+id/adm_button_sharetwitter"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_width="48dp"
                         android:layout_height="48dp"

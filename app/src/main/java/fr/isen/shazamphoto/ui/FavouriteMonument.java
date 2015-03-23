@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class FavouriteMonument extends MonumentList {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v("Shazam", "FM onCreate");
     }
 
     @Override
@@ -41,12 +43,9 @@ public class FavouriteMonument extends MonumentList {
         // The the monuments in the grid view
         setListMonuments(getFavouriteMonuments(), getAdapter(), getAbsListView());
 
-        setRetainInstance(true);
-
+        Log.v("Shazam", "FM onCreateView");
         return view;
     }
-
-
     public ArrayList<Monument> getFavouriteMonuments() {
         FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(getActivity());
         favouriteMonumentDAO.open();

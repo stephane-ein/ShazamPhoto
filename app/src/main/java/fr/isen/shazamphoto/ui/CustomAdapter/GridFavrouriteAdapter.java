@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.ui.CustomAdapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,8 +56,9 @@ public class GridFavrouriteAdapter extends BaseAdapter {
 
         Monument m = getItem(i);
 
+        System.out.println("GFA : size "+mItems.size()+" m: "+m);
         if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
-            System.out.println("GFA : photoPath found");
+            Log.v("Shazam", "GFA : photoPath found");
            /* GetMonumentImage getMonumentImage = new GetMonumentImage(picture);
             getMonumentImage.execute(m.getPhotoPath());
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -66,7 +68,6 @@ public class GridFavrouriteAdapter extends BaseAdapter {
 
             picture.setImageResource(R.drawable.monument_1);
         }else{
-            System.out.println("GFA : monument_1");
             picture.setImageResource(R.drawable.monument_1);
         }
         name.setText(m.getName());
