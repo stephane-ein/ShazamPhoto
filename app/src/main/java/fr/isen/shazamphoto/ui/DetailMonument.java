@@ -40,6 +40,7 @@ import fr.isen.shazamphoto.ui.CustomAdapter.GridFavrouriteAdapter;
 import fr.isen.shazamphoto.ui.CustomAdapter.GridViewAdapter;
 import fr.isen.shazamphoto.ui.Dialogs.DeleteDialog;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
+import fr.isen.shazamphoto.utils.AddLikeTask;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
 import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.FunctionsLayout;
@@ -325,6 +326,8 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AddLikeTask task = new AddLikeTask();
+                task.execute(monument);
             }
         });
     }
