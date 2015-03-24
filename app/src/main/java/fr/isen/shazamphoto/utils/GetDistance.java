@@ -31,7 +31,7 @@ public class GetDistance extends AsyncTask<Localization, Void, JSONObject> {
             String originURL = "origin="+Double.valueOf(origin.getLatitude()).toString()+","+Double.valueOf(origin.getLongitude()).toString();
             String destURL = "destination="+Double.valueOf(dest.getLatitude()).toString()+","+Double.valueOf(dest.getLongitude()).toString();
             String URL = "https://maps.googleapis.com/maps/api/directions/json?";
-            String urlWithArguments = URL +originURL+"&"+destURL+"&avoid=highways&mode=walking&key="+ConfigurationShazam.API_KEY;
+            String urlWithArguments = URL +originURL+"&"+destURL+"&avoid=highways&mode=walking&key=AIzaSyDWQbON7gqa8LGgbVGJxInUo0YEMaS2CWY";
             HttpGet request = new HttpGet(urlWithArguments);
             request.setHeader("Content-type", "application/json");
             request.setURI(new URI(urlWithArguments));

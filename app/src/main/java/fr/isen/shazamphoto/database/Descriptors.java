@@ -40,29 +40,18 @@ public class Descriptors {
 
                 // We cannot set binary data to a json object, so:
                 // Encoding data byte array to Base64.
-                //dataString = new String(Base64.encode(data, Base64.DEFAULT));
-
-                Log.v("Shazam", "Descriptors before ");
-
-                //String byteString = new String(data);
                 StringBuilder byteString = new StringBuilder();
-                for(int i = 0; i < data.length; i++){
-                    byteString.append(Integer.valueOf(data[i]).toString());
-
+                Log.v("Shazam", "Descriptors table byte\n");
+                for(int i = 0; i < 100; i++){
+                    byteString.append(Integer.valueOf(data[i]).toString()+",");
                 }
 
+                Log.v("Shazam", "Decriptors table byte : \n "+byteString);
 
-                dataString = mEncode(byteString.toString());
+                dataString = mEncode(data);
 
                 // Display data encoded
-
-
                 objDesciprtor.put("data", dataString);
-
-                // Display the data encoded
-                //System.out.println(dataString);
-                // Display the data decoded
-                //for(int i =0; i<data.length; i++) System.out.println(data[i]);
             }
 
             jsonArrayDescriptor.put(objDesciprtor);
@@ -73,13 +62,12 @@ public class Descriptors {
         return jsonArrayDescriptor;
     }
 
-    public static String mEncode(String toEncode) {
+    public static String mEncode(byte[] toEncode) {
 
-        Log.v("Shazam", "Descriptors : " + toEncode);
-        int expectedSize = toEncode.length();
+        int expectedSize = toEncode.length;
         StringBuilder base64Str = new StringBuilder();
 
-        if (toEncode.length() == 0) {
+        if (toEncode.length == 0) {
             return base64Str.toString();
         } else {
             while ((expectedSize % 3) != 0) {
@@ -87,31 +75,41 @@ public class Descriptors {
             }
 
             int i = 0;
-            for (i = 0; i < toEncode.length()-3; i += 3) {
-                String block = toEncode.substring(i, i + 3);
-                String encodedBlock=blockEncode(block);
+            for (i = 0; i < toEncode.length - 3; i += 3) {
+               // String block = toEncode.substring(i, i + 3);
+                String encodedBlock = blockEncode(toEncode[i], toEncode[i+1], toEncode[i+2], toEncode[i+3]);
                 base64Str.append(encodedBlock);
 
             }
-            if(toEncode.length()<expectedSize){
-                StringBuilder lastBlock = new StringBuilder();
-                for (; i < expectedSize; i++) {
-                    if (i < toEncode.length()) {
-                        lastBlock.append(toEncode.charAt(i));
+            if(toEncode.length<expectedSize){
+                //StringBuilder lastBlock = new StringBuilder();
+                byte[] lastBlock = new byte[expectedSize-toEncode.length];
+                Log.v("Shazam", "LastBlock : "+lastBlock.length);
+                int k = 0;
+                for (int j = i; j < expectedSize; j++) {
+                    if (j < toEncode.length) {
+                        lastBlock[k] = toEncode[j];
                     }else{
-
-                        lastBlock.append("0");
+                        lastBlock[k] = 0;
                     }
+                    k++;
                 }
 
-                String encodedBlock=blockEncode(lastBlock.toString());
+                String encodedBlock=blockEncode(lastBlock[0], lastBlock[1], lastBlock[2], lastBlock[3]);
                 base64Str.append(encodedBlock);
             }
         }
+
+        Log.v("Shazam", "Final descriptors : \n"+base64Str.toString());
         return base64Str.toString();
     }
 
-    public static String blockEncode(String block) {
+    public static String blockEncode(byte arg1B, byte arg2B, byte arg3B, byte arg4B) {
+
+        int arg1 = checkByte(arg1B);
+        int arg2 = checkByte(arg2B);
+        int arg3 = checkByte(arg3B);
+        int arg4 = checkByte(arg4B);
 
         char mask1 = 0b0000000000000011;
         char mask2 = 0b0000000011110000;
@@ -119,15 +117,24 @@ public class Descriptors {
         char mask4 = 0b0000000011000000;
         char mask5 = 0b0000000000111111;
         int[] b64Index = new int[4];
-        b64Index[0] = block.charAt(0)>>2;
-        b64Index[1] = ((block.charAt(0) & mask1 ) <<4 ) ^((block.charAt(1) & mask2) >>4 );
-        b64Index[2] = ((block.charAt(1) & mask3 ) <<2 ) ^((block.charAt(2) & mask4) >>6 );
-        b64Index[3] = block.charAt(2) & (mask5);
+        b64Index[0] = arg1>>2;
+        b64Index[1] = ((arg1 & mask1 ) <<4 ) ^((arg2 & mask2) >>4 );
+        b64Index[2] = ((arg2 & mask3 ) <<2 ) ^((arg3 & mask4) >>6 );
+        b64Index[3] = arg3 & (mask5);
 
         char[] myChar = {base64_chars.charAt(b64Index[0]), base64_chars.charAt(b64Index[1]), base64_chars.charAt(b64Index[2]), base64_chars.charAt(b64Index[3])};
 
         String encodedBlock =  new String(myChar);
 
         return encodedBlock;
+    }
+
+    public static int checkByte(byte arg ){
+        int a = Byte.valueOf(arg).intValue();
+        if(a<0){
+            a+=256;
+        }
+
+        return a;
     }
 }
