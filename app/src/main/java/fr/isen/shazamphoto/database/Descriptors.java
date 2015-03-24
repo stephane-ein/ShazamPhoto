@@ -14,7 +14,6 @@ public class Descriptors {
 
     public static final String KEY = "descriptors";
     public static Activity activity;
-    public static char[] b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
     public static String base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     public static JSONArray toJson(Mat descriptors) {
@@ -42,12 +41,12 @@ public class Descriptors {
                 // Encoding data byte array to Base64.
                 StringBuilder byteString = new StringBuilder();
                 Log.v("Shazam", "Descriptors table byte\n");
-                for(int i = 0; i < 100; i++){
+                for(int i = 0; i < data.length; i++){
                     byteString.append(Integer.valueOf(data[i]).toString()+",");
                 }
 
                 Log.v("Shazam", "Decriptors table byte : \n "+byteString);
-
+                Log.v("Shazam", "Descripors step : "+descriptors.step1());
                 dataString = mEncode(data);
 
                 // Display data encoded
@@ -75,15 +74,14 @@ public class Descriptors {
             }
 
             int i = 0;
-            for (i = 0; i < toEncode.length - 3; i += 3) {
+            for (i = 0; i+3 < toEncode.length; i += 3) {
                // String block = toEncode.substring(i, i + 3);
                 String encodedBlock = blockEncode(toEncode[i], toEncode[i+1], toEncode[i+2], toEncode[i+3]);
                 base64Str.append(encodedBlock);
-
             }
+
             if(toEncode.length<expectedSize){
-                //StringBuilder lastBlock = new StringBuilder();
-                byte[] lastBlock = new byte[expectedSize-toEncode.length];
+                byte[] lastBlock = new byte[4];
                 Log.v("Shazam", "LastBlock : "+lastBlock.length);
                 int k = 0;
                 for (int j = i; j < expectedSize; j++) {
