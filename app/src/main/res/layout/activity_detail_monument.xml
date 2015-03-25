@@ -1,4 +1,4 @@
-<fr.isen.shazamphoto.ui.ADMScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<fr.isen.shazamphoto.ui.ScrollView.ADMScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/adm_scrollview"
     android:layout_width="fill_parent"
@@ -263,4 +263,4 @@
         </android.support.v7.widget.CardView>
     </LinearLayout>
 
-</fr.isen.shazamphoto.ui.ADMScrollView>
+</fr.isen.shazamphoto.ui.ScrollView.ADMScrollView>

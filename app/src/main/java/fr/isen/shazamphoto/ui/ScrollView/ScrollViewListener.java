@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.ui;
+package fr.isen.shazamphoto.ui.ScrollView;
 
 public interface ScrollViewListener {
 

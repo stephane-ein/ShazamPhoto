@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 
-import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.RequestLocalization;
 import fr.isen.shazamphoto.events.RequestNearestFromMonument;

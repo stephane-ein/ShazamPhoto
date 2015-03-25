@@ -1,17 +1,12 @@
 package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,18 +35,19 @@ import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.NearestMonumentsDAO;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
-import fr.isen.shazamphoto.events.RequestNearestFromMonument;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.CustomAdapter.GridFavrouriteAdapter;
-import fr.isen.shazamphoto.ui.CustomAdapter.GridViewAdapter;
 import fr.isen.shazamphoto.ui.Dialogs.DeleteDialog;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 import fr.isen.shazamphoto.ui.NetworkHandler.HandleNetwork;
+import fr.isen.shazamphoto.ui.ScrollView.ADMScrollView;
+import fr.isen.shazamphoto.ui.ScrollView.ScrollViewListener;
 import fr.isen.shazamphoto.utils.AddLikeTask;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
 import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.FunctionsLayout;
+import fr.isen.shazamphoto.utils.GetImageURLTask;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentSearch;
 
@@ -104,7 +100,9 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         setTitle("");
 
         //Set the picture
-        FunctionsLayout.setPicture(monument, photoView);
+        //FunctionsLayout.setPicture(monument, photoView);
+        GetImageURLTask getImageURLTask = new GetImageURLTask(photoView, null);
+        getImageURLTask.execute(monument.getPhotoPath());
 
         //Set the monument information
         nbLike.setText(monument.getName());

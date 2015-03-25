@@ -2,21 +2,7 @@ package fr.isen.shazamphoto.utils.ApiTask;
 
 import android.os.AsyncTask;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreProtocolPNames;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.util.ArrayList;
-
-import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
-import fr.isen.shazamphoto.utils.ConfigurationShazam;
 
 public class ApiTask extends AsyncTask<String, Void, JSONObject> {
     @Override

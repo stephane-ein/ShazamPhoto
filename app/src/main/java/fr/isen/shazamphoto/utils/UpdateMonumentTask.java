@@ -1,22 +1,16 @@
 package fr.isen.shazamphoto.utils;
 
-import android.content.Entity;
 import android.os.AsyncTask;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import fr.isen.shazamphoto.database.Descriptors;
-import fr.isen.shazamphoto.database.KeyPoints;
 import fr.isen.shazamphoto.database.Monument;
 
 /**

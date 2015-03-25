@@ -1,7 +1,6 @@
 package fr.isen.shazamphoto.utils;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;

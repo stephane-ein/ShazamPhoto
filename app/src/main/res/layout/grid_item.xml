@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fr.isen.shazamphoto.ui.SquareImageView
+    <fr.isen.shazamphoto.ui.CustomAdapter.SquareImageView
         android:id="@+id/picture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

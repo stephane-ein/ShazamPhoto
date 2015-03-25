@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.utils.FunctionsLayout;
+import fr.isen.shazamphoto.utils.GetImageURLTask;
 
 public class ResultListAdapter extends BaseAdapter {
 
@@ -59,7 +62,7 @@ public class ResultListAdapter extends BaseAdapter {
         TextView visitor = (TextView) convertView.findViewById(R.id.lrrs_nb_visitor);
         TextView like = (TextView) convertView.findViewById(R.id.lrrs_nb_like);
         TextView description = (TextView) convertView.findViewById(R.id.lrrs_description);
-
+        LinearLayout layoutProgressBar = (LinearLayout) convertView.findViewById(R.id.lrrs_progress_bar);
 
         // Getting movie data for the row
         Monument m = monumentItems.get(position);
@@ -70,7 +73,9 @@ public class ResultListAdapter extends BaseAdapter {
         //visitor.setText(m.getNbVisitors());
        // description.setText(m.getDescription());
         //like.setText(m.getNbLike());
-        FunctionsLayout.setPicture(m, image);
+        //FunctionsLayout.setPicture(m, image);
+        GetImageURLTask getImageURLTask = new GetImageURLTask(image, layoutProgressBar);
+        getImageURLTask.execute(m.getPhotoPath());
 
         return convertView;
     }

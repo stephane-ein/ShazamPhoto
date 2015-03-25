@@ -1,12 +1,7 @@
 package fr.isen.shazamphoto.utils;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.Settings;
 import android.widget.ImageView;
 
 import fr.isen.shazamphoto.database.Monument;
