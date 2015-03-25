@@ -122,7 +122,6 @@ public class Home extends ActionBarActivity implements SearchableItem {
                 GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
                 getMonumentSearch.execute(query);
 
-                Toast.makeText(home, "Request done", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });

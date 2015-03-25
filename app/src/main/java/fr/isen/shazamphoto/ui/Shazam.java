@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.media.ExifInterface;
@@ -32,6 +33,7 @@ import fr.isen.shazamphoto.events.EventLocalizationFound;
 import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.CustomAdapter.CustomListAdapter;
+import fr.isen.shazamphoto.ui.CustomAdapter.ResultListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.utils.ImageProcessing;
 import fr.isen.shazamphoto.utils.ShazamProcessing;
@@ -103,6 +105,14 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     }
 
     @Override
+    public void foundLocalization(EventLocalizationFound eventLocalizationFound) {
+        // Retrieve the localization and stop the listener on the network
+        Localization localization = eventLocalizationFound.getLocalization();
+        this.shazamProcessing.setLocalization(localization);
+        this.locateManager.stopListening();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK) {
             try {
@@ -119,12 +129,16 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                             new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
                 }
 
+                ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setMessage("Generating the descriptors");
+                dialog.show();
+
                 // Generate the descriptors and the key points and descriptors of the picture
                 ImageProcessing imageProcessing =
                         new ImageProcessing(this.getActivity(), shazamProcessing, photoPath);
                 imageProcessing.recognise();
 
-
+                dialog.dismiss();
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "Error: " + e.getClass().getName(), Toast.LENGTH_LONG).show();
             }
@@ -169,7 +183,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         if (!monuments.isEmpty() && listView != null) {
 
             this.monuments = monuments;
-            CustomListAdapter adapter = new CustomListAdapter(activity, monuments);
+            ResultListAdapter adapter = new ResultListAdapter(activity, monuments);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
@@ -193,28 +207,14 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         this.locateManager = locateManager;
     }
 
-    public ModelNavigation getModelNavigation() {
-        return modelNavigation;
-    }
-
     public void setModelNavigation(ModelNavigation modelNavigation) {
         this.modelNavigation = modelNavigation;
-    }
-
-    public ShazamProcessing getShazamProcessing() {
-        return shazamProcessing;
     }
 
     public void setShazamProcessing(ShazamProcessing shazamProcessing) {
         this.shazamProcessing = shazamProcessing;
     }
 
-    @Override
-    public void foundLocalization(EventLocalizationFound eventLocalizationFound) {
-        // Retrieve the localization and stop the listener on the network
-        Localization localization = eventLocalizationFound.getLocalization();
-        this.shazamProcessing.setLocalization(localization);
-        this.locateManager.stopListening();
-    }
+
 }
 

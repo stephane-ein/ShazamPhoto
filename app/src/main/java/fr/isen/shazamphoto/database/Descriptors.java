@@ -45,9 +45,26 @@ public class Descriptors {
                     byteString.append(Integer.valueOf(data[i]).toString()+",");
                 }
 
+                // Write into a file the value of the data
+                String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+                File file = new File(path + "/byteOriginal.txt");
+                FileOutputStream stream = new FileOutputStream(file);
+                try {
+                    stream.write(byteString.toString().getBytes());
+                } finally {
+                    stream.close();
+                }
                 Log.v("Shazam", "Decriptors table byte : \n "+byteString);
                 Log.v("Shazam", "Descripors step : "+descriptors.step1());
                 dataString = mEncode(data);
+
+                file = new File(path + "/byteEncode.txt");
+                stream = new FileOutputStream(file);
+                try {
+                    stream.write(dataString.toString().getBytes());
+                } finally {
+                    stream.close();
+                }
 
                 // Display data encoded
                 objDesciprtor.put("data", dataString);

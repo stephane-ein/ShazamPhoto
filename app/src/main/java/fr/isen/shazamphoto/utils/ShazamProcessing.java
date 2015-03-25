@@ -3,6 +3,7 @@ package fr.isen.shazamphoto.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -45,6 +46,7 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
     private HttpPost httppost =
             new HttpPost("http://"+ConfigurationShazam.IP_SERVER+"/shazam/identify.php");
     private HttpResponse response;
+    private ProgressDialog dialog;
 
     // Arguments to send to the server
     private Localization localization;
@@ -72,7 +74,8 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
         this.keyPoints = null;
         this.modelNavigation = modelNavigation;
         this.activity = activity;
-        isSend = false;
+        this.isSend = false;
+        this.dialog= new ProgressDialog(activity);
     }
 
     public void setLocalization(Localization localization) {
@@ -125,7 +128,11 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
         return localization != null && descriptors != null && keyPoints != null;
     }
 
-
+    @Override
+    protected void onPreExecute() {
+        this.dialog.setMessage("Sending the descriptors to the server");
+        this.dialog.show();
+    }
 
     @Override
     protected JSONObject doInBackground(String... params) {
@@ -194,6 +201,10 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
             }
         } catch (Exception e) {
             Toast.makeText(activity, "Error : "+e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        if (dialog.isShowing()) {
+            dialog.dismiss();
         }
     }
 

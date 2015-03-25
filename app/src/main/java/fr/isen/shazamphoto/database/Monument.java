@@ -234,7 +234,7 @@ public class Monument implements Serializable {
     }
 
     public String toString(){
-        return getName() +" "+Long.valueOf(getId()).toString();
+        return getName() +" "+Long.valueOf(getId()).toString()+" "+getDescription();
     }
 
     public int getIdNearest() {
