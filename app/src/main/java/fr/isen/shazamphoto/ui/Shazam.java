@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -32,11 +33,12 @@ import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
 import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
 import fr.isen.shazamphoto.model.ModelNavigation;
-import fr.isen.shazamphoto.ui.CustomAdapter.CustomListAdapter;
 import fr.isen.shazamphoto.ui.CustomAdapter.ResultListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
+import fr.isen.shazamphoto.ui.NetworkHandler.HandleNetwork;
+import fr.isen.shazamphoto.ui.NetworkHandler.HandleNetworkItem;
 import fr.isen.shazamphoto.utils.ImageProcessing;
-import fr.isen.shazamphoto.utils.ShazamProcessing;
+import fr.isen.shazamphoto.utils.ShazamProcessingTask;
 
 public class Shazam extends Fragment implements SearchLocalizationItem {
 
@@ -51,7 +53,8 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     private static ListView listView;
     private LocateManager locateManager;
     private ModelNavigation modelNavigation;
-    private ShazamProcessing shazamProcessing;
+    private ShazamProcessingTask shazamProcessingTask;
+    private TextView noInternet;
 
     public static Shazam newInstance(LocationManager locationManager,
                                      ModelNavigation modelNavigation, Activity activity) {
@@ -61,7 +64,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         shazam.setLocateManager(new LocateManager(locationManager, shazam));
         shazam.setArguments(args);
         shazam.setModelNavigation(modelNavigation);
-        shazam.setShazamProcessing(new ShazamProcessing(modelNavigation, activity));
+        shazam.setShazamProcessingTask(new ShazamProcessingTask(modelNavigation, activity));
         return shazam;
     }
 
@@ -85,15 +88,20 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         button = (Button) view.findViewById(R.id.but_takePicture);
 /*
         this.modelNavigation = (ModelNavigation) getArguments().getSerializable(ModelNavigation.KEY);
-        this.shazamProcessing = new ShazamProcessing(modelNavigation, getActivity());*/
+        this.shazamProcessingTask = new ShazamProcessingTask(modelNavigation, getActivity());*/
 
         //final Animation animRotate = AnimationUtils.loadAnimation(this.getActivity(), R.anim.anim_button_home);
+
+        final Shazam shazam = this;
+        noInternet = (TextView) getActivity().findViewById(R.id.home_no_internet);
 
         button.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-                dispatchTakePictureIntent();
+                if(HandleNetwork.checkNetwork(noInternet, getActivity())){
+                    dispatchTakePictureIntent();
+                }
             }
         });
 
@@ -108,7 +116,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     public void foundLocalization(EventLocalizationFound eventLocalizationFound) {
         // Retrieve the localization and stop the listener on the network
         Localization localization = eventLocalizationFound.getLocalization();
-        this.shazamProcessing.setLocalization(localization);
+        this.shazamProcessingTask.setLocalization(localization);
         this.locateManager.stopListening();
     }
 
@@ -119,10 +127,10 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                 ExifInterface exifInterface = new ExifInterface(photoPath);
                 float[] localisation = new float[2];
 
-                this.shazamProcessing = new ShazamProcessing(modelNavigation, getActivity());
+                this.shazamProcessingTask = new ShazamProcessingTask(modelNavigation, getActivity());
                 // Set the localization of the monument to the request to identify the monument
                 if (exifInterface.getLatLong(localisation)) {
-                    this.shazamProcessing.setLocalization(new Localization(-1,
+                    this.shazamProcessingTask.setLocalization(new Localization(-1,
                             Double.valueOf(localisation[0]), Double.valueOf(localisation[1])));
                 } else {
                     locateManager.startListening(
@@ -135,7 +143,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
                 // Generate the descriptors and the key points and descriptors of the picture
                 ImageProcessing imageProcessing =
-                        new ImageProcessing(this.getActivity(), shazamProcessing, photoPath);
+                        new ImageProcessing(this.getActivity(), shazamProcessingTask, photoPath);
                 imageProcessing.recognise();
 
                 dialog.dismiss();
@@ -211,10 +219,8 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         this.modelNavigation = modelNavigation;
     }
 
-    public void setShazamProcessing(ShazamProcessing shazamProcessing) {
-        this.shazamProcessing = shazamProcessing;
+    public void setShazamProcessingTask(ShazamProcessingTask shazamProcessingTask) {
+        this.shazamProcessingTask = shazamProcessingTask;
     }
-
-
 }
 

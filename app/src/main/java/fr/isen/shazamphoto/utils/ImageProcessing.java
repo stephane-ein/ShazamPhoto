@@ -1,6 +1,5 @@
 package fr.isen.shazamphoto.utils;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,7 +26,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
 
 public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
 
@@ -46,15 +44,15 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
     private String photoPath;
 
     // Add the several information about the picture to the request to identify the monument
-    private ShazamProcessing shazamProcessing;
+    private ShazamProcessingTask shazamProcessingTask;
 
     private Context activityContext = null;
 
 
-    public ImageProcessing(Context activityContext, ShazamProcessing shazamProcessing,
+    public ImageProcessing(Context activityContext, ShazamProcessingTask shazamProcessingTask,
                            String photoPath) {
         setActivityContext(activityContext);
-        this.shazamProcessing = shazamProcessing;
+        this.shazamProcessingTask = shazamProcessingTask;
         this.photoPath = photoPath;
     }
 
@@ -240,8 +238,8 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
 
                         keyPointArray = keypoints.toArray();
 
-                        shazamProcessing.setDescriptorsKeyKeyPoints(descriptors, keyPointArray);
-                        shazamProcessing.setPhotoPath(path);
+                        shazamProcessingTask.setDescriptorsKeyKeyPoints(descriptors, keyPointArray);
+                        shazamProcessingTask.setPhotoPath(path);
 
                     } else {
                         Toast.makeText(activityContext, "Error : image null or doesn't exist", Toast.LENGTH_LONG).show();

@@ -39,7 +39,7 @@ import fr.isen.shazamphoto.events.EventUnidentifiedMonument;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.Dialogs.NetworkDialog;
 
-public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
+public class ShazamProcessingTask extends AsyncTask<String, Void, JSONObject> {
 
     // Attributes to contact thr server
     private HttpClient httpclient = new DefaultHttpClient();
@@ -68,7 +68,7 @@ public class ShazamProcessing  extends AsyncTask<String, Void, JSONObject> {
     // Path of the picture of the monument
     private String photoPath;
 
-    public ShazamProcessing(ModelNavigation modelNavigation, Activity activity) {
+    public ShazamProcessingTask(ModelNavigation modelNavigation, Activity activity) {
         this.localization = null;
         this.descriptors = null;
         this.keyPoints = null;

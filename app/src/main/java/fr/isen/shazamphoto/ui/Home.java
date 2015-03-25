@@ -3,8 +3,10 @@ package fr.isen.shazamphoto.ui;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,6 +25,8 @@ import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventSearchMonumentByName;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
+import fr.isen.shazamphoto.ui.NetworkHandler.HandleNetwork;
+import fr.isen.shazamphoto.ui.NetworkHandler.HandleNetworkItem;
 import fr.isen.shazamphoto.ui.SlidingTab.SlidingTabLayout;
 import fr.isen.shazamphoto.utils.GetMonumentSearch;
 import fr.isen.shazamphoto.views.ViewDetailMonument;
@@ -38,9 +43,11 @@ public class Home extends ActionBarActivity implements SearchableItem {
     private ModelNavigation modelNavigation;
 
     private ListView listView;
+    private TextView tvNoInternet;
 
     //handle the keyboard
     private InputMethodManager imm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +74,7 @@ public class Home extends ActionBarActivity implements SearchableItem {
         mSlidingTabLayout.setViewPager(mViewPager);
         // END_INCLUDE (setup_slidingtablayout)
 
+        tvNoInternet = (TextView) findViewById(R.id.home_no_internet);
     }
 
     @Override
@@ -85,6 +93,33 @@ public class Home extends ActionBarActivity implements SearchableItem {
 
         //Close the view results
         listView = (ListView) findViewById(R.id.listview_result_monument);
+
+        setListenerSearchViewListener(searchView, this);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        // Set the  focus on the search bar
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                searchView.setFocusable(true);
+                searchView.setIconified(false);
+                searchView.requestFocusFromTouch();
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void setListenerSearchViewListener(final SearchView searchView, final Home home) {
 
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -113,40 +148,21 @@ public class Home extends ActionBarActivity implements SearchableItem {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                 // Close the keyboard
+                if (HandleNetwork.checkNetwork(tvNoInternet, home)) {
+                    //Make de search
+                    GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
+                    getMonumentSearch.execute(query);
+                }
+
+                // Close the keyboard
                 imm = (InputMethodManager) getSystemService(
                         Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-
-                //Make de search
-                GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
-                getMonumentSearch.execute(query);
 
                 return true;
             }
         });
 
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        // Set the  focus on the search bar
-        switch (item.getItemId()) {
-            case R.id.action_search:
-                searchView.setFocusable(true);
-                searchView.setIconified(false);
-                searchView.requestFocusFromTouch();
-
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -154,7 +170,7 @@ public class Home extends ActionBarActivity implements SearchableItem {
         Shazam shazam = (Shazam) getSectionsPagerAdapter().getItem(Shazam.POSITION);
         modelNavigation.changeAppView(new EventSearchMonumentByName(monuments, shazam, this));
 
-        Toast.makeText(getApplication(), "Monument found : "+monuments.size(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplication(), "Monument found : " + monuments.size(), Toast.LENGTH_SHORT).show();
 
         //Set the view on the shazam fragment
         mViewPager.setCurrentItem(Shazam.POSITION);
@@ -168,5 +184,4 @@ public class Home extends ActionBarActivity implements SearchableItem {
     public ModelNavigation getModelNavigation() {
         return modelNavigation;
     }
-
 }

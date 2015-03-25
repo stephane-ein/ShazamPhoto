@@ -4,4 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="fr.isen.shazamphoto.ui.UnidentifiedMonument"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/adm_no_internet"
+        android:layout_weight="0"
+        android:gravity="center"
+        android:background="@android:color/holo_red_light"
+        android:text="Internet is not available"/>
+
+    </FrameLayout>

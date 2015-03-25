@@ -23,15 +23,13 @@ public class GetMonumentSearch extends AsyncTask<String, Void, JSONObject> {
     private HttpClient client;
     private ArrayList<Monument> monuments;
     private JSONObject jsonResponse;
-    // private SearchMonument searchMonument;
     private SearchableItem searchableItem;
 
-    public GetMonumentSearch(/*SearchMonument event*/SearchableItem searchableItem) {
+    public GetMonumentSearch(SearchableItem searchableItem) {
         client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
                 "android");
         monuments = new ArrayList<>();
-        // this.searchMonument = event;
         this.searchableItem = searchableItem;
     }
 

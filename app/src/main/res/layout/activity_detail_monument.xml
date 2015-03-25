@@ -11,6 +11,15 @@
         android:orientation="vertical"
         tools:context="fr.isen.shazamphoto.ui.DetailMonument">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0"
+            android:id="@+id/adm_no_internet"
+            android:gravity="center"
+            android:background="@android:color/holo_red_light"
+            android:text="Internet is not available"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

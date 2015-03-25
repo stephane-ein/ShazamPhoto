@@ -30,7 +30,6 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
     private JSONObject jsonResponse;
     private String urlWithArguments;
     private RequestLocalization requestLocalization;
-    private Localization localization;
     public Home home;
     private SearchMonumentsByLocalization searchMonumentsByLocalization;
 
@@ -55,7 +54,6 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
 
         if (args.length == 3) {
             setArgument(args[0], args[1], args[2]);
-            localization = new Localization(-1, Double.valueOf(args[0]), Double.valueOf(args[1]));
             try {
                 HttpGet request = new HttpGet(urlWithArguments);
                 request.setHeader("Content-type", "application/json");
@@ -95,7 +93,6 @@ public class GetMonumentByLocalization extends AsyncTask<String, Void, JSONObjec
             }
 
             searchMonumentsByLocalization.monumentsFoundByLocalization(monuments);
-           // requestLocalization.doPostAction(monuments, localization);
         }
 
     }

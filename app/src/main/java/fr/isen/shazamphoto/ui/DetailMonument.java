@@ -2,6 +2,7 @@ package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -9,6 +10,8 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -35,19 +39,25 @@ import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.NearestMonumentsDAO;
+import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.RequestNearestFromMonument;
+import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.CustomAdapter.GridFavrouriteAdapter;
 import fr.isen.shazamphoto.ui.CustomAdapter.GridViewAdapter;
 import fr.isen.shazamphoto.ui.Dialogs.DeleteDialog;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
+import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
+import fr.isen.shazamphoto.ui.NetworkHandler.HandleNetwork;
 import fr.isen.shazamphoto.utils.AddLikeTask;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
 import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.FunctionsLayout;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
+import fr.isen.shazamphoto.utils.GetMonumentSearch;
 
 
-public class DetailMonument extends ActionBarActivity implements ScrollViewListener, SearchMonumentsByLocalization {
+public class DetailMonument extends ActionBarActivity implements ScrollViewListener,
+        SearchMonumentsByLocalization, SearchableItem {
 
     public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE = 4;
     public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_PORTRAIT = 3;
@@ -55,9 +65,13 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     public static final int GRIDVIEW_PADDING = 16;
 
     private Monument monument;
+
+    private ModelNavigation modelNavigation;
+
     private GridView gridView;
     private TextView nbVisitor;
     private TextView noNearestMonument;
+    private TextView tvNoInternet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +87,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         TextView nbLike = (TextView) findViewById(R.id.textView_nbLike);
         nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
         noNearestMonument = (TextView) findViewById(R.id.adm_textview_nonearestmonument);
+        tvNoInternet = (TextView) findViewById(R.id.adm_no_internet);
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
         Button buttonFavourite = (Button) findViewById(R.id.button_add_favorite);
         Button buttonLike = (Button) findViewById(R.id.button_like);
@@ -120,6 +135,10 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         ArrayList<Monument> monuments =
                 nearestMonumentsDAO.getNearestMonuments(this.monument.getId());
 
+        monuments.add(new Monument(-1, new Localization(0, 0.0, 0.0), "Monument 1"));
+        monuments.add(new Monument(-1, new Localization(0, 0.0, 0.0), "Monument 2"));
+        monuments.add(new Monument(-1, new Localization(0, 0.0, 0.0), "Monument 3"));
+
         // Set the nearest monuments in the gridView
         if (!monuments.isEmpty()) {
             setGridViewArrayList(monuments);
@@ -132,6 +151,10 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                     ConfigurationShazam.DELTA_LOCALIZATION);
         }
 
+    }
+
+    public void setModelNavigation(ModelNavigation modelNavigation) {
+        this.modelNavigation = modelNavigation;
     }
 
     private void setListenerShareTwitter(Button buttonTwitter) {
@@ -271,11 +294,25 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         gridView.setColumnWidth(columnWidth);
     }
 
-    public void setGridViewArrayList(ArrayList<Monument> m) {
+    public void setGridViewArrayList(final ArrayList<Monument> m) {
         // Set the grid view of the nearest monuments
-        GridViewAdapter gridViewAdapter = new GridViewAdapter(this, m);
+        GridFavrouriteAdapter gridViewAdapter = new GridFavrouriteAdapter(this, m);
         gridView.setAdapter(gridViewAdapter);
         gridViewAdapter.notifyDataSetChanged();
+
+        final DetailMonument detailMonument = this;
+
+        // Set the listener
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(HandleNetwork.checkNetwork(tvNoInternet, detailMonument)){
+                    Monument monument = m.get(position);
+                    GetMonumentSearch getMonumentSearch = new GetMonumentSearch(detailMonument);
+                    getMonumentSearch.execute(monument.getName());
+                }
+            }
+        });
     }
 
     @Override
@@ -388,5 +425,12 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         }
     }
 
-
+    @Override
+    public void onPostSearch(ArrayList<Monument> monuments) {
+        Monument monument = monuments.get(0);
+        // Display the detail about the monument and start a new activity
+        modelNavigation.changeAppView(new EventDisplayDetailMonument(this, monument));
+        // Close this activity
+        finish();
+    }
 }
