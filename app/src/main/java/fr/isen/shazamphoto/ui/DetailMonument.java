@@ -46,7 +46,6 @@ import fr.isen.shazamphoto.ui.ScrollView.ScrollViewListener;
 import fr.isen.shazamphoto.utils.AddLikeTask;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
 import fr.isen.shazamphoto.utils.FunctionsDB;
-import fr.isen.shazamphoto.utils.FunctionsLayout;
 import fr.isen.shazamphoto.utils.GetImageURLTask;
 import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentSearch;
@@ -100,7 +99,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         setTitle("");
 
         //Set the picture
-        //FunctionsLayout.setPicture(monument, photoView);
+        //LoadPicture.setPicture(monument, photoView);
         GetImageURLTask getImageURLTask = new GetImageURLTask(photoView, null);
         getImageURLTask.execute(monument.getPhotoPath());
 
@@ -151,10 +150,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     }
 
-    public void setModelNavigation(ModelNavigation modelNavigation) {
-        this.modelNavigation = modelNavigation;
-    }
-
     private void setListenerShareTwitter(Button buttonTwitter) {
         buttonTwitter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,7 +180,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                     startActivity(mapIntent);
                 } else {
                     Toast.makeText(getApplicationContext(),
-                            "This monument has not a localization, sorry", Toast.LENGTH_LONG).show();
+                            "This monument has not a localization", Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -204,7 +199,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                     startActivity(mapIntent);
                 } else {
                     Toast.makeText(getApplicationContext(),
-                            "This monument has not a localization, sorry", Toast.LENGTH_LONG).show();
+                            "This monument has not a localization", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -233,8 +228,11 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                 finish();
                 return true;
             case R.id.item_delete:
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Monument.NAME_SERIALIZABLE, monument);
                 DeleteDialog deleteDialog = new DeleteDialog();
-                deleteDialog.show(getFragmentManager(), "test");
+                deleteDialog.setArguments(bundle);
+                deleteDialog.show(getFragmentManager(), "Delete the monument tagged");
                 return true;
         }
         return super.onOptionsItemSelected(item);

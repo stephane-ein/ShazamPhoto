@@ -17,6 +17,7 @@ import fr.isen.shazamphoto.database.Monument;
  * Created by sylvain on 23/03/15.
  */
 public abstract class UpdateMonumentTask extends AsyncTask<Monument, Void, Boolean> {
+
     @Override
     protected Boolean doInBackground(Monument... params) {
         Monument monument = params[0];

@@ -19,7 +19,7 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.utils.AddMonument;
-import fr.isen.shazamphoto.utils.FunctionsLayout;
+import fr.isen.shazamphoto.utils.LoadPicture;
 
 
 public class AddMonumentFragment extends Fragment {
@@ -62,7 +62,7 @@ public class AddMonumentFragment extends Fragment {
 
         // Set the picture
         ImageView imageView = (ImageView) view.findViewById(R.id.fam_imageview_monument);
-        FunctionsLayout.setPicture(monument, imageView);
+        LoadPicture.setPictureFromFile(monument.getPhotoPath(), imageView, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
 
         //Set the listener for the ADD button
         Button button = (Button) view.findViewById(R.id.button_add);

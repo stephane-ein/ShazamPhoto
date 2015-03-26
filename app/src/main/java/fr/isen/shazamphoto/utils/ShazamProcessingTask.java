@@ -1,6 +1,5 @@
 package fr.isen.shazamphoto.utils;
 
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -30,7 +29,6 @@ import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.EventUnidentifiedMonument;
 import fr.isen.shazamphoto.model.ModelNavigation;
-import fr.isen.shazamphoto.ui.Dialogs.NetworkDialog;
 
 public class ShazamProcessingTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -68,7 +66,8 @@ public class ShazamProcessingTask extends AsyncTask<String, Void, JSONObject> {
         this.modelNavigation = modelNavigation;
         this.activity = activity;
         this.isSend = false;
-        this.dialog= new ProgressDialog(activity);
+        this.dialog = new ProgressDialog(activity);
+        this.localization = new Localization(-1, 0.0, 0.0);
     }
 
     public void setLocalization(Localization localization) {
@@ -174,26 +173,24 @@ public class ShazamProcessingTask extends AsyncTask<String, Void, JSONObject> {
         try {
 
             if(result != null){
-                System.out.println("SP : "+photoPath);
                 if (result.toString().equals("{}")) {
-                    localization = new Localization(-1, 0.0, 0.0);
                     Monument monument = new Monument(keyPoints, descriptors, localization, photoPath);
                     Toast.makeText(activity, " Monument not identify", Toast.LENGTH_LONG).show();
                     modelNavigation.changeAppView(
                             new EventUnidentifiedMonument(activity, monument));
                 } else{
-                    Toast.makeText(activity, "Monument identified", Toast.LENGTH_LONG).show();
                     Monument m = new Monument(result);
+                    // Add the monument to the monument tagged
+                    FunctionsDB.addMonumentToDB(m, activity);
+                    FunctionsDB.addMonumentToTaggedMonument(m, activity);
+                    // Display the monument identified
                     modelNavigation.changeAppView(new EventDisplayDetailMonument(activity, m));
                 }
             }else{
-                NetworkDialog networkDialog = new NetworkDialog();
-                networkDialog.setActivity(activity);
-                networkDialog.show(activity.getFragmentManager(), "Unable to connect");
-
+               Toast.makeText(activity, "The server is not avaible", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
-            Toast.makeText(activity, "Error : "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Error in ShazamProcessing : "+e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         if (dialog.isShowing()) {

@@ -3,6 +3,7 @@ package fr.isen.shazamphoto.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +22,30 @@ public class FavouriteMonumentDAO extends ListMonumentDAO{
     public void insert(Monument monument) {
         insert(monument.getId());
     }
-    public void delete(long filmId) {
-        mDb.delete(DatabaseHandler.FAVOURITE_MONUMENTS_TABLE_NAME, DatabaseHandler.FAVOURITE_MONUMENTS_KEY + " = ?", new String[] {Long.toString(filmId)});
+
+    public void delete(long id) {
+        // Delete the monument from the FavouriteMonumentTable
+        String[] selectionArgs = {Long.toString(id)};
+        mDb.delete(DatabaseHandler.FAVOURITE_MONUMENTS_TABLE_NAME, DatabaseHandler.FAVOURITE_MONUMENTS_KEY + " = ?", selectionArgs);
+        Log.v("Shazam", "FMDAO remove monument from favroutite");
+        // Check if the monument is still tagged
+        String selection = DatabaseHandler.VISITED_MONUMENTS_KEY + " = ?";
+        Cursor c2 = mDb.query(DatabaseHandler.VISITED_MONUMENTS_TABLE_NAME, DatabaseHandler.VISITED_MONUMENTS_ALL_COLUMNS, selection, selectionArgs, null, null, null);
+        // If the monument is not tagged, the monument will be removed from the table monument
+        if(!c2.moveToFirst()) {
+            selection = DatabaseHandler.MONUMENTS_KEY + " = ?";
+            Cursor c3 = mDb.query(DatabaseHandler.MONUMENTS_TABLE_NAME, DatabaseHandler.MONUMENTS_ALL_COLUMNS, selection, selectionArgs, null, null, null);
+            if(c3.moveToFirst()){
+                mDb.delete(DatabaseHandler.MONUMENTS_TABLE_NAME, DatabaseHandler.MONUMENTS_ALL_COLUMNS + " = ?", selectionArgs);
+                Log.v("Shazam", "FMDAO remove monument from monument table");
+            }
+        }
     }
+
     public void delete(Monument monument) {
         delete(monument.getId());
     }
+
     public Monument select(long id) {
         Monument monument = null;
         String selection = DatabaseHandler.FAVOURITE_MONUMENTS_KEY + " = ?";
@@ -41,6 +60,7 @@ public class FavouriteMonumentDAO extends ListMonumentDAO{
         }
         return monument;
     }
+
     @Override
     public List<Monument> getAllMonuments() {
         List<Monument> monuments = new ArrayList<Monument>();
@@ -56,7 +76,9 @@ public class FavouriteMonumentDAO extends ListMonumentDAO{
                 monuments.add(monument);
             }
         }
+
         c.close();
+
         return monuments;
     }
 }

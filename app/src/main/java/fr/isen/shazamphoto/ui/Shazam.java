@@ -54,7 +54,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     private LocateManager locateManager;
     private ModelNavigation modelNavigation;
     private ShazamProcessingTask shazamProcessingTask;
-    private TextView noInternet;
+    private ViewPagerOverlayFrame networkInfo;
 
     public static Shazam newInstance(LocationManager locationManager,
                                      ModelNavigation modelNavigation, Activity activity) {
@@ -86,22 +86,13 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
         listView = (ListView) view.findViewById(R.id.listview_result_monument);
         button = (Button) view.findViewById(R.id.but_takePicture);
-/*
-        this.modelNavigation = (ModelNavigation) getArguments().getSerializable(ModelNavigation.KEY);
-        this.shazamProcessingTask = new ShazamProcessingTask(modelNavigation, getActivity());*/
 
-        //final Animation animRotate = AnimationUtils.loadAnimation(this.getActivity(), R.anim.anim_button_home);
-
-        final Shazam shazam = this;
-        noInternet = (TextView) getActivity().findViewById(R.id.home_no_internet);
 
         button.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-                if(HandleNetwork.checkNetwork(noInternet, getActivity())){
                     dispatchTakePictureIntent();
-                }
             }
         });
 

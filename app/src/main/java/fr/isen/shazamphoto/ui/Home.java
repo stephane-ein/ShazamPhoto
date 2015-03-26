@@ -2,6 +2,7 @@ package fr.isen.shazamphoto.ui;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.drawable.Animatable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -11,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -43,7 +46,13 @@ public class Home extends ActionBarActivity implements SearchableItem {
     private ModelNavigation modelNavigation;
 
     private ListView listView;
-    private TextView tvNoInternet;
+    private ViewPagerOverlayFrame networkInfo;
+
+
+    private static Handler timerHandler = new Handler();
+    private static Runnable timerRunnable;
+    private static long startTime = 0;
+    private static boolean hiden2 = false;
 
     //handle the keyboard
     private InputMethodManager imm;
@@ -74,14 +83,41 @@ public class Home extends ActionBarActivity implements SearchableItem {
         mSlidingTabLayout.setViewPager(mViewPager);
         // END_INCLUDE (setup_slidingtablayout)
 
-        tvNoInternet = (TextView) findViewById(R.id.home_no_internet);
+        networkInfo = (ViewPagerOverlayFrame) findViewById(R.id.home_info_network);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.abc_fade_in);
+        animation.setDuration(2000);
+        networkInfo.setVisibility(View.VISIBLE);
+        networkInfo.startAnimation(animation);
+
+        timerRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                long millis = System.currentTimeMillis() - startTime;
+                int seconds = (int) (millis / 1000);
+                seconds = seconds % 60;
+                if (seconds >= 2 && hiden2 == false) {
+                    hiden2 = true;
+                    // Remove the timer
+                    timerHandler.removeCallbacks(timerRunnable);
+                    Log.v("Shazam", "Home network gone");
+                    // Hide the textview
+                    networkInfo.setVisibility(View.GONE);
+
+                }
+                timerHandler.postDelayed(this, 500);
+            }
+        };
+
+
+        // Start the timer
+        startTime = System.currentTimeMillis();
+        timerHandler.postDelayed(timerRunnable, 0);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
-
-        final Home home = this;
 
         searchMenuItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchMenuItem.getActionView();
@@ -148,11 +184,9 @@ public class Home extends ActionBarActivity implements SearchableItem {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (HandleNetwork.checkNetwork(tvNoInternet, home)) {
-                    //Make de search
-                    GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
-                    getMonumentSearch.execute(query);
-                }
+                //Make de search
+                GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
+                getMonumentSearch.execute(query);
 
                 // Close the keyboard
                 imm = (InputMethodManager) getSystemService(

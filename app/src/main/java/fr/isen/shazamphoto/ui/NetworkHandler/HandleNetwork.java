@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -48,6 +49,7 @@ public class HandleNetwork {
         textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2));
         textView.startAnimation(animation);
         textView.setVisibility(View.VISIBLE);
+        Log.v("Shazam", "HN visible");
         hiden = false;
 
         // Set the timer start eh animation after 5 seconds
@@ -93,9 +95,10 @@ public class HandleNetwork {
                     hiden2 = true;
                     // Remove the timer
                     timerHandler.removeCallbacks(timerRunnable);
+                    Log.v("Shazam", "HN invisible");
                     // Hide the textview
-                    textView.setVisibility(View.INVISIBLE);
-                    textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 0));
+                    textView.setVisibility(View.GONE);
+
                 }
                 timerHandler.postDelayed(this, 500);
             }

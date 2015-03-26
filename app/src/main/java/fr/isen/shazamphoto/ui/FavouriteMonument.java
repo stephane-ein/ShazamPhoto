@@ -28,6 +28,7 @@ public class FavouriteMonument extends MonumentList {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v("Shazam", "FM onCreate");
+        setRetainInstance(true);
     }
 
     @Override

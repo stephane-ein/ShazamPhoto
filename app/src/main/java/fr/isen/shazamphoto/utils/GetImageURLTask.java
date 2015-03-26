@@ -25,10 +25,7 @@ public class GetImageURLTask extends AsyncTask<String, Void, Bitmap>{
         String urldisplay = params[0];
         Bitmap result = null;
         try {
-            InputStream in = new java.net.URL(urldisplay).openStream();
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 4;
-            result = BitmapFactory.decodeStream(in, null, options);
+            LoadPicture.setPictureFromURL(urldisplay, imageView, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
             e.printStackTrace();

@@ -50,10 +50,6 @@ public abstract class MonumentList extends Fragment {
         this.adapter = adapter;
     }
 
-    public ModelNavigation getModelNavigation() {
-        return modelNavigation;
-    }
-
     public void setModelNavigation(ModelNavigation modelNavigation) {
         this.modelNavigation = modelNavigation;
     }
