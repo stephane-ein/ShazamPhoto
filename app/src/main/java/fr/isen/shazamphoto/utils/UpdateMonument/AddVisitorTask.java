@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.utils;
+package fr.isen.shazamphoto.utils.UpdateMonument;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;

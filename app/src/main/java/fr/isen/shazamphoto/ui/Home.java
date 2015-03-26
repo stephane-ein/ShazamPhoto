@@ -2,23 +2,18 @@ package fr.isen.shazamphoto.ui;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.graphics.drawable.Animatable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,10 +23,8 @@ import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventSearchMonumentByName;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
-import fr.isen.shazamphoto.ui.NetworkHandler.HandleNetwork;
-import fr.isen.shazamphoto.ui.NetworkHandler.HandleNetworkItem;
 import fr.isen.shazamphoto.ui.SlidingTab.SlidingTabLayout;
-import fr.isen.shazamphoto.utils.GetMonumentSearch;
+import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentSearch;
 import fr.isen.shazamphoto.views.ViewDetailMonument;
 import fr.isen.shazamphoto.views.ViewMonumentsResult;
 import fr.isen.shazamphoto.views.ViewUndentifiedMonument;
@@ -46,7 +39,7 @@ public class Home extends ActionBarActivity implements SearchableItem {
     private ModelNavigation modelNavigation;
 
     private ListView listView;
-    private ViewPagerOverlayFrame networkInfo;
+    private NetworkInfoArea networkInfo;
 
 
     private static Handler timerHandler = new Handler();
@@ -83,36 +76,7 @@ public class Home extends ActionBarActivity implements SearchableItem {
         mSlidingTabLayout.setViewPager(mViewPager);
         // END_INCLUDE (setup_slidingtablayout)
 
-        networkInfo = (ViewPagerOverlayFrame) findViewById(R.id.home_info_network);
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.abc_fade_in);
-        animation.setDuration(2000);
-        networkInfo.setVisibility(View.VISIBLE);
-        networkInfo.startAnimation(animation);
-
-        timerRunnable = new Runnable() {
-
-            @Override
-            public void run() {
-                long millis = System.currentTimeMillis() - startTime;
-                int seconds = (int) (millis / 1000);
-                seconds = seconds % 60;
-                if (seconds >= 2 && hiden2 == false) {
-                    hiden2 = true;
-                    // Remove the timer
-                    timerHandler.removeCallbacks(timerRunnable);
-                    Log.v("Shazam", "Home network gone");
-                    // Hide the textview
-                    networkInfo.setVisibility(View.GONE);
-
-                }
-                timerHandler.postDelayed(this, 500);
-            }
-        };
-
-
-        // Start the timer
-        startTime = System.currentTimeMillis();
-        timerHandler.postDelayed(timerRunnable, 0);
+        networkInfo = (NetworkInfoArea) findViewById(R.id.home_info_network);
     }
 
     @Override
@@ -185,8 +149,8 @@ public class Home extends ActionBarActivity implements SearchableItem {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //Make de search
-                GetMonumentSearch getMonumentSearch = new GetMonumentSearch(home);
-                getMonumentSearch.execute(query);
+                GetMonumentSearch getMonumentSearch = new GetMonumentSearch(networkInfo, home, home, query);
+                getMonumentSearch.execute();
 
                 // Close the keyboard
                 imm = (InputMethodManager) getSystemService(

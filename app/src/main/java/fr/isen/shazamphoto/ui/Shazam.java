@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -35,8 +34,6 @@ import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.CustomAdapter.ResultListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
-import fr.isen.shazamphoto.ui.NetworkHandler.HandleNetwork;
-import fr.isen.shazamphoto.ui.NetworkHandler.HandleNetworkItem;
 import fr.isen.shazamphoto.utils.ImageProcessing;
 import fr.isen.shazamphoto.utils.ShazamProcessingTask;
 
@@ -54,17 +51,18 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     private LocateManager locateManager;
     private ModelNavigation modelNavigation;
     private ShazamProcessingTask shazamProcessingTask;
-    private ViewPagerOverlayFrame networkInfo;
+    private NetworkInfoArea networkInfo;
 
-    public static Shazam newInstance(LocationManager locationManager,
-                                     ModelNavigation modelNavigation, Activity activity) {
+    public static Shazam newInstance(LocationManager locationManager,ModelNavigation modelNavigation,
+                                     Activity activity, NetworkInfoArea networkInfoArea) {
         Shazam shazam = new Shazam();
         Bundle args = new Bundle();
         args.putSerializable(ModelNavigation.KEY, modelNavigation);
         shazam.setLocateManager(new LocateManager(locationManager, shazam));
         shazam.setArguments(args);
         shazam.setModelNavigation(modelNavigation);
-        shazam.setShazamProcessingTask(new ShazamProcessingTask(modelNavigation, activity));
+        shazam.setShazamProcessingTask(new ShazamProcessingTask(networkInfoArea, modelNavigation, activity));
+        shazam.setNetworkInfo(networkInfoArea);
         return shazam;
     }
 
@@ -118,7 +116,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                 ExifInterface exifInterface = new ExifInterface(photoPath);
                 float[] localisation = new float[2];
 
-                this.shazamProcessingTask = new ShazamProcessingTask(modelNavigation, getActivity());
+                this.shazamProcessingTask = new ShazamProcessingTask(networkInfo, modelNavigation, getActivity());
                 // Set the localization of the monument to the request to identify the monument
                 if (exifInterface.getLatLong(localisation)) {
                     this.shazamProcessingTask.setLocalization(new Localization(-1,
@@ -212,6 +210,10 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
     public void setShazamProcessingTask(ShazamProcessingTask shazamProcessingTask) {
         this.shazamProcessingTask = shazamProcessingTask;
+    }
+
+    public void setNetworkInfo(NetworkInfoArea networkInfo) {
+        this.networkInfo = networkInfo;
     }
 }
 

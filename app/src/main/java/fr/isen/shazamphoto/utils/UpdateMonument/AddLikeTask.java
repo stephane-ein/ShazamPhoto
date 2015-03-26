@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.utils;
+package fr.isen.shazamphoto.utils.UpdateMonument;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -9,9 +9,6 @@ import java.util.List;
 
 import fr.isen.shazamphoto.database.Monument;
 
-/**
- * Created by sylvain on 23/03/15.
- */
 public class AddLikeTask extends UpdateMonumentTask {
     @Override
     public List<NameValuePair> createArguments(Monument monument) {

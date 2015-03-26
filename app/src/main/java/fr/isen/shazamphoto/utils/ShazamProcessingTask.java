@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -27,17 +28,18 @@ import fr.isen.shazamphoto.database.KeyPoints;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
+import fr.isen.shazamphoto.events.EventInternetTask;
 import fr.isen.shazamphoto.events.EventUnidentifiedMonument;
 import fr.isen.shazamphoto.model.ModelNavigation;
+import fr.isen.shazamphoto.ui.NetworkInfoArea;
 
-public class ShazamProcessingTask extends AsyncTask<String, Void, JSONObject> {
+public class ShazamProcessingTask extends InternetTask<String, Void, EventInternetTask> {
 
     // Attributes to contact thr server
     private HttpClient httpclient = new DefaultHttpClient();
     private HttpPost httppost =
             new HttpPost("http://"+ConfigurationShazam.IP_SERVER+"/shazam/identify.php");
     private HttpResponse response;
-    private ProgressDialog dialog;
 
     // Arguments to send to the server
     private Localization localization;
@@ -59,20 +61,24 @@ public class ShazamProcessingTask extends AsyncTask<String, Void, JSONObject> {
     // Path of the picture of the monument
     private String photoPath;
 
-    public ShazamProcessingTask(ModelNavigation modelNavigation, Activity activity) {
+    public ShazamProcessingTask(NetworkInfoArea networkInfoArea, ModelNavigation modelNavigation, Activity activity) {
+        super(networkInfoArea, activity);
         this.localization = null;
         this.descriptors = null;
         this.keyPoints = null;
         this.modelNavigation = modelNavigation;
         this.activity = activity;
         this.isSend = false;
-        this.dialog = new ProgressDialog(activity);
         this.localization = new Localization(-1, 0.0, 0.0);
     }
 
     public void setLocalization(Localization localization) {
         this.localization = localization;
         checkSendRequest();
+    }
+
+    public void setPhotoPath(String path) {
+        this.photoPath = path;
     }
 
     public void setDescriptorsKeyKeyPoints(Mat descriptors, KeyPoint[] keyPoints) {
@@ -98,9 +104,9 @@ public class ShazamProcessingTask extends AsyncTask<String, Void, JSONObject> {
                     timerHandler.removeCallbacks(timerRunnable);
 
                     if(checkSendRequest()){
-                        Toast.makeText(activity, "identify a monument with localization",Toast.LENGTH_SHORT).show();
+                        Log.v("Shazam", "identify a monument with localization");
                     }else if(seconds >= 5){
-                        Toast.makeText(activity, "identify a monument without localization",Toast.LENGTH_SHORT).show();
+                        Log.v("Shazam", "identify a monument without localization");
                     }
 
                 }
@@ -121,85 +127,73 @@ public class ShazamProcessingTask extends AsyncTask<String, Void, JSONObject> {
     }
 
     @Override
-    protected void onPreExecute() {
-        this.dialog.setMessage("Sending the descriptors to the server");
-        this.dialog.show();
-    }
-
-    @Override
-    protected JSONObject doInBackground(String... params) {
+    protected EventInternetTask doInBackground(String... params) {
 
         JSONObject jsonResponse = null;
         Descriptors.activity = activity;
-
+        boolean isInternetFound = false;
         try {
-            // Set the arguments in the POST request
-            List<NameValuePair> nameValuePairs = new ArrayList<>(3);
-            nameValuePairs.add(new BasicNameValuePair("listskeypoints", KeyPoints.toJson(keyPoints).toString()));
-            nameValuePairs.add(new BasicNameValuePair("descriptors", Descriptors.toJson(descriptors).toString()));
+            isInternetFound = checkNetwork();
+            if(isInternetFound){
+                // Set the arguments in the POST request
+                List<NameValuePair> nameValuePairs = new ArrayList<>(3);
+                nameValuePairs.add(new BasicNameValuePair("listskeypoints", KeyPoints.toJson(keyPoints).toString()));
+                nameValuePairs.add(new BasicNameValuePair("descriptors", Descriptors.toJson(descriptors).toString()));
 
-            if(localization != null) {
-                nameValuePairs.add(new BasicNameValuePair("localization", localization.toJson().toString()));
+                if(localization != null) {
+                    nameValuePairs.add(new BasicNameValuePair("localization", localization.toJson().toString()));
+                }
+
+                UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
+
+                entity.setContentType("application/x-www-form-urlencoded");
+                httppost.setEntity(entity);
+
+                // Executing HTTP Post Request
+                response = httpclient.execute(httppost);
+
+                // Retrieving the answer
+                BufferedReader rd = new BufferedReader(new InputStreamReader(
+                        response.getEntity().getContent()));
+                StringBuffer result = new StringBuffer();
+                String line = "";
+                while ((line = rd.readLine()) != null) {
+                    result.append(line);
+                }
+                jsonResponse = new JSONObject(result.toString());
             }
+        } catch (Exception e) {
+            Log.e("Shazam", "Exception in SPT : "+e.getMessage());
+        }
 
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-
-            entity.setContentType("application/x-www-form-urlencoded");
-            httppost.setEntity(entity);
-
-            // Executing HTTP Post Request
-            response = httpclient.execute(httppost);
-
-            // Retrieving the answer
-            BufferedReader rd = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent()));
-            StringBuffer result = new StringBuffer();
-            String line = "";
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
-            }
-            jsonResponse = new JSONObject(result.toString());
-
-            System.out.println("Result Identify : " + result.toString());
-
-        } catch (Exception e) {}
-
-        return jsonResponse;
+        return new EventInternetTask(isInternetFound, jsonResponse);
     }
 
     @Override
-    public void onPostExecute(JSONObject result) {
+    public void onPostExecute(EventInternetTask result) {
 
+        JSONObject jsonReponse = result.getJsonResponse();
+        updateUI(result.isInternetfound());
         try {
 
-            if(result != null){
+            if(jsonReponse != null){
                 if (result.toString().equals("{}")) {
                     Monument monument = new Monument(keyPoints, descriptors, localization, photoPath);
-                    Toast.makeText(activity, " Monument not identify", Toast.LENGTH_LONG).show();
                     modelNavigation.changeAppView(
                             new EventUnidentifiedMonument(activity, monument));
                 } else{
-                    Monument m = new Monument(result);
+                    Monument m = new Monument(jsonReponse);
                     // Add the monument to the monument tagged
                     FunctionsDB.addMonumentToDB(m, activity);
                     FunctionsDB.addMonumentToTaggedMonument(m, activity);
                     // Display the monument identified
                     modelNavigation.changeAppView(new EventDisplayDetailMonument(activity, m));
                 }
-            }else{
-               Toast.makeText(activity, "The server is not avaible", Toast.LENGTH_LONG).show();
+            }else if(jsonReponse == null && result.isInternetfound()) {
+               Log.e("Shazam", "The server is not available " +result.isInternetfound() );
             }
         } catch (Exception e) {
-            Toast.makeText(activity, "Error in ShazamProcessing : "+e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-        if (dialog.isShowing()) {
-            dialog.dismiss();
+            Log.e("Shazam", "Exception in SPT : "+e.getMessage());
         }
     }
-
-    public void setPhotoPath(String path) {
-        this.photoPath = path;
-    }
-
 }

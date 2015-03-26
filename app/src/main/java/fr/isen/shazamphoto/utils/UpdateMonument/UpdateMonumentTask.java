@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.utils;
+package fr.isen.shazamphoto.utils.UpdateMonument;
 
 import android.os.AsyncTask;
 
@@ -12,11 +12,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.util.List;
 
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.utils.ConfigurationShazam;
 
-/**
- * Created by sylvain on 23/03/15.
- */
 public abstract class UpdateMonumentTask extends AsyncTask<Monument, Void, Boolean> {
+
 
     @Override
     protected Boolean doInBackground(Monument... params) {
@@ -28,7 +27,7 @@ public abstract class UpdateMonumentTask extends AsyncTask<Monument, Void, Boole
             entity.setContentType("application/x-www-form-urlencoded");
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPut httpPut = new HttpPut("http://"+ConfigurationShazam.IP_SERVER+"/shazam/api.php");
+            HttpPut httpPut = new HttpPut("http://"+ ConfigurationShazam.IP_SERVER+"/shazam/api.php");
             httpPut.setEntity(entity);
 
             // Executing HTTP Post Request

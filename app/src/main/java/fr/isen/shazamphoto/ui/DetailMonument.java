@@ -40,15 +40,13 @@ import fr.isen.shazamphoto.ui.CustomAdapter.GridFavrouriteAdapter;
 import fr.isen.shazamphoto.ui.Dialogs.DeleteDialog;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
-import fr.isen.shazamphoto.ui.NetworkHandler.HandleNetwork;
 import fr.isen.shazamphoto.ui.ScrollView.ADMScrollView;
 import fr.isen.shazamphoto.ui.ScrollView.ScrollViewListener;
-import fr.isen.shazamphoto.utils.AddLikeTask;
-import fr.isen.shazamphoto.utils.ConfigurationShazam;
+import fr.isen.shazamphoto.utils.UpdateMonument.AddLikeTask;
 import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetImageURLTask;
-import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
-import fr.isen.shazamphoto.utils.GetMonumentSearch;
+import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
+import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentSearch;
 
 
 public class DetailMonument extends ActionBarActivity implements ScrollViewListener,
@@ -67,6 +65,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     private TextView nbVisitor;
     private TextView noNearestMonument;
     private TextView tvNoInternet;
+    private NetworkInfoArea networkInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +76,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(0, 0, 0, 0)));
 
         //Retrieve the several items
+        networkInfo = (NetworkInfoArea) findViewById(R.id.adm_info_network);
         ADMScrollView scrollView = (ADMScrollView) findViewById(R.id.adm_scrollview);
         gridView = (GridView) findViewById(R.id.gridView_nearestMonuments);
         TextView nbLike = (TextView) findViewById(R.id.textView_nbLike);
@@ -140,12 +140,14 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         if (!monuments.isEmpty()) {
             setGridViewArrayList(monuments);
         } else if (monument.getLocalization() != null) {
+            Localization l = monument.getLocalization();
             GetMonumentByLocalization getMonumentByLocalization =
-                    new GetMonumentByLocalization(null, this);
-            getMonumentByLocalization.execute(
+                    new GetMonumentByLocalization(this, networkInfo, this, l.getLatitude(), l.getLongitude());
+            /*getMonumentByLocalization.execute(
                     Double.valueOf(monument.getLocalization().getLatitude()).toString(),
                     Double.valueOf(monument.getLocalization().getLongitude()).toString(),
-                    ConfigurationShazam.DELTA_LOCALIZATION);
+                    ConfigurationShazam.DELTA_LOCALIZATION);*/
+            getMonumentByLocalization.execute();
         }
 
     }
@@ -302,11 +304,11 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(HandleNetwork.checkNetwork(tvNoInternet, detailMonument)){
-                    Monument monument = m.get(position);
-                    GetMonumentSearch getMonumentSearch = new GetMonumentSearch(detailMonument);
-                    getMonumentSearch.execute(monument.getName());
-                }
+                Monument monument = m.get(position);
+                GetMonumentSearch getMonumentSearch =
+                        new GetMonumentSearch(networkInfo, detailMonument, detailMonument, monument.getName());
+                getMonumentSearch.execute();
+
             }
         });
     }
@@ -368,16 +370,16 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     private void shareItTwitter() {
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
 
-        File toto =new File(path + "/test1.jpg"); // A content Uri to the image you would like to share.
-        share("twitter", toto.toString(),"waza");
+        File toto = new File(path + "/test1.jpg"); // A content Uri to the image you would like to share.
+        share("twitter", toto.toString(), "waza");
     }
 
-    public void shareItFacebook(){
+    public void shareItFacebook() {
 
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
 
-        File toto =new File(path + "/test1.jpg"); // A content Uri to the image you would like to share.
-        share("facebook", toto.toString(),"waza");
+        File toto = new File(path + "/test1.jpg"); // A content Uri to the image you would like to share.
+        share("facebook", toto.toString(), "waza");
 
 
     }
@@ -411,7 +413,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                 Intent chooserIntent = Intent.createChooser(
                         targetedShareIntents.remove(0), "Select app to share");
                 chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
-                        targetedShareIntents.toArray(new Parcelable[] {}));
+                        targetedShareIntents.toArray(new Parcelable[]{}));
                 startActivity(chooserIntent);
             }
         } catch (Exception e) {

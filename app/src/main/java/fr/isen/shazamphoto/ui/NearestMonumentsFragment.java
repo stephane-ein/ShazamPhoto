@@ -1,7 +1,6 @@
 package fr.isen.shazamphoto.ui;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +26,7 @@ import fr.isen.shazamphoto.events.RequestNearestMonuments;
 import fr.isen.shazamphoto.ui.CustomAdapter.NearestListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
-import fr.isen.shazamphoto.utils.ConfigurationShazam;
-import fr.isen.shazamphoto.utils.GetMonumentByLocalization;
+import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.little.Little;
 import fr.isen.shazamphoto.utils.little.Point;
 
@@ -61,6 +58,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     private Button buttonModeCircuit;
     private Button buttonBack;
     private LinearLayout linearLayoutActionsCircuit;
+    private NetworkInfoArea networkInfo;
 
     public static NearestMonumentsFragment newInstance(LocationManager locationManager) {
         NearestMonumentsFragment fragment = new NearestMonumentsFragment();
@@ -99,7 +97,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         buttonModeCircuit = (Button) view.findViewById(R.id.fnm_button_modecircuit);
         textViewInformation = (TextView) view.findViewById(R.id.fnm_textview_informationfdm);
         linearLayoutActionsCircuit = (LinearLayout) view.findViewById(R.id.fnm_linearlayout_actionscircuit);
-
+        networkInfo = (NetworkInfoArea) getActivity().findViewById(R.id.home_info_network);
         // Set the several listeners
         setListenerListView(listView);
         setListenerNearestMonuments(buttonNearestMonuments, this);
@@ -144,12 +142,12 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     public void executeGetMonumentByLocalization() {
         // Retrieve the nearest monuments with the localization of the user
         GetMonumentByLocalization getMonumentByLocalization =
-                new GetMonumentByLocalization(new RequestNearestMonuments(this),
-                        this);
-        getMonumentByLocalization.execute(
+                new GetMonumentByLocalization(this, networkInfo, getActivity(),localization.getLatitude(), localization.getLongitude());
+       /* getMonumentByLocalization.execute(
                 Double.valueOf(localization.getLatitude()).toString(),
                 Double.valueOf(localization.getLongitude()).toString(),
-                ConfigurationShazam.DELTA_LOCALIZATION);
+                ConfigurationShazam.DELTA_LOCALIZATION);*/
+        getMonumentByLocalization.execute();
     }
 
     public void setListNearestMonuments(ArrayList<Monument> monuments) {

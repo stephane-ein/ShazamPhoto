@@ -36,7 +36,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 if (fragments.get(Shazam.POSITION) == null) {
                     fragments.add(Shazam.POSITION, Shazam.newInstance(
                             (LocationManager) home.getSystemService(Context.LOCATION_SERVICE),
-                            home.getModelNavigation(), home));
+                            home.getModelNavigation(), home, (NetworkInfoArea)home.findViewById(R.id.home_info_network)));
                 }
                 result = fragments.get(Shazam.POSITION);
                 break;
