@@ -60,19 +60,16 @@ public class ResultListAdapter extends BaseAdapter {
         TextView visitor = (TextView) convertView.findViewById(R.id.lrrs_nb_visitor);
         TextView like = (TextView) convertView.findViewById(R.id.lrrs_nb_like);
         TextView description = (TextView) convertView.findViewById(R.id.lrrs_description);
-        LinearLayout layoutProgressBar = (LinearLayout) convertView.findViewById(R.id.lrrs_progress_bar);
 
         // Getting movie data for the row
         Monument m = monumentItems.get(position);
 
-        Log.v("Shazam", "RLA : "+ m.toString());
         // Set the several about the monument
         title.setText(m.getName());
         //visitor.setText(m.getNbVisitors());
-       // description.setText(m.getDescription());
+        //description.setText(m.getDescription());
         //like.setText(m.getNbLike());
-        //LoadPicture.setPicture(m, image);
-        GetImageURLTask getImageURLTask = new GetImageURLTask(image, layoutProgressBar);
+        GetImageURLTask getImageURLTask = new GetImageURLTask(image);
         getImageURLTask.execute(m.getPhotoPath());
 
         return convertView;

@@ -44,9 +44,9 @@ public class FavouriteMonument extends MonumentList {
         // The the monuments in the grid view
         setListMonuments(getFavouriteMonuments(), getAdapter(), getAbsListView());
 
-        Log.v("Shazam", "FM onCreateView");
         return view;
     }
+
     public ArrayList<Monument> getFavouriteMonuments() {
         FavouriteMonumentDAO favouriteMonumentDAO = new FavouriteMonumentDAO(getActivity());
         favouriteMonumentDAO.open();

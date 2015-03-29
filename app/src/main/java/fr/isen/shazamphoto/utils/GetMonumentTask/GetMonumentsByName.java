@@ -12,13 +12,14 @@ import fr.isen.shazamphoto.events.EventInternetTask;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 import fr.isen.shazamphoto.ui.NetworkInfoArea;
 
-public class GetMonumentSearch extends GetMonumentTask {
+public class GetMonumentsByName extends GetMonumentTask {
     private SearchableItem searchableItem;
 
-    public GetMonumentSearch(NetworkInfoArea networkInfoArea, Activity activity,
-                             SearchableItem searchableItem, String searchName) {
+    public GetMonumentsByName(NetworkInfoArea networkInfoArea, Activity activity,
+                              SearchableItem searchableItem, String searchName) {
         super(networkInfoArea, activity);
         this.searchableItem = searchableItem;
+        searchName = searchName.replace(" ", "+");
         setUrlWithArguments("n="+searchName);
     }
 

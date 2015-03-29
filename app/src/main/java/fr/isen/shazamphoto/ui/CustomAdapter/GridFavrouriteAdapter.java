@@ -56,9 +56,7 @@ public class GridFavrouriteAdapter extends BaseAdapter {
 
         Monument m = getItem(i);
 
-        System.out.println("GFA : size "+mItems.size()+" m: "+m);
         if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
-            Log.v("Shazam", "GFA : photoPath found");
            /* GetMonumentImage getMonumentImage = new GetMonumentImage(picture);
             getMonumentImage.execute(m.getPhotoPath());
             BitmapFactory.Options options = new BitmapFactory.Options();

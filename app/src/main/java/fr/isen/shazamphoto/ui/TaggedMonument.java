@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ public class TaggedMonument extends MonumentList {
         if (getActivity() != null) {
             setListMonuments(getTaggedMonuments(), getAdapter(), getAbsListView());
             setRetainInstance(true);
+            Log.v("Shazam", "TM onResume()");
         }
     }
 

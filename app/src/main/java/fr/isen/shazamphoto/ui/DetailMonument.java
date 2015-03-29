@@ -25,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,22 +37,24 @@ import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.NearestMonumentsDAO;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
+import fr.isen.shazamphoto.events.EventMonumentUpdated;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.CustomAdapter.GridFavrouriteAdapter;
 import fr.isen.shazamphoto.ui.Dialogs.DeleteDialog;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
+import fr.isen.shazamphoto.ui.ItemUtils.UpdateMonumentItem;
 import fr.isen.shazamphoto.ui.ScrollView.ADMScrollView;
 import fr.isen.shazamphoto.ui.ScrollView.ScrollViewListener;
+import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
 import fr.isen.shazamphoto.utils.UpdateMonument.AddLikeTask;
 import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetImageURLTask;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
-import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentSearch;
 
 
 public class DetailMonument extends ActionBarActivity implements ScrollViewListener,
-        SearchMonumentsByLocalization, SearchableItem {
+        SearchMonumentsByLocalization, SearchableItem, UpdateMonumentItem {
 
     public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE = 4;
     public static final int NBMAX_MONUMENT_NEAREST_TO_DISPLAY_PORTRAIT = 3;
@@ -62,9 +66,10 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     private ModelNavigation modelNavigation;
 
     private GridView gridView;
-    private TextView nbVisitor;
+    private TextView nbVisitors;
+    private TextView nbLikes;
     private TextView noNearestMonument;
-    private TextView tvNoInternet;
+    private Button buttonLike;
     private NetworkInfoArea networkInfo;
 
     @Override
@@ -79,13 +84,13 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         networkInfo = (NetworkInfoArea) findViewById(R.id.adm_info_network);
         ADMScrollView scrollView = (ADMScrollView) findViewById(R.id.adm_scrollview);
         gridView = (GridView) findViewById(R.id.gridView_nearestMonuments);
-        TextView nbLike = (TextView) findViewById(R.id.textView_nbLike);
-        nbVisitor = (TextView) findViewById(R.id.textView_nbVisitor);
+        TextView title = (TextView) findViewById(R.id.adm_title);
+        nbVisitors = (TextView) findViewById(R.id.adm_nb_visitor);
+        nbLikes = (TextView) findViewById(R.id.adm_nb_likes);
         noNearestMonument = (TextView) findViewById(R.id.adm_textview_nonearestmonument);
-        tvNoInternet = (TextView) findViewById(R.id.adm_no_internet);
         final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
         Button buttonFavourite = (Button) findViewById(R.id.button_add_favorite);
-        Button buttonLike = (Button) findViewById(R.id.button_like);
+        buttonLike = (Button) findViewById(R.id.button_like);
         Button buttonPlace = (Button) findViewById(R.id.adm_button_place);
         Button buttonNavigation = (Button) findViewById(R.id.adm_button_navigation);
         Button buttonFacebook = (Button) findViewById(R.id.adm_button_sharefacebook);
@@ -99,13 +104,12 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         setTitle("");
 
         //Set the picture
-        //LoadPicture.setPicture(monument, photoView);
-        GetImageURLTask getImageURLTask = new GetImageURLTask(photoView, null);
+        GetImageURLTask getImageURLTask = new GetImageURLTask(photoView);
         getImageURLTask.execute(monument.getPhotoPath());
 
         //Set the monument information
-        nbLike.setText(monument.getName());
-        nbVisitor.setText("More than " + monument.getNbLike() + " likes and " + monument.getNbVisitors() + " visitors");
+        title.setText(monument.getName());
+        upDateMonument();
 
         // Set the several listeners
         setListenerFavorite(buttonFavourite);
@@ -150,6 +154,16 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             getMonumentByLocalization.execute();
         }
 
+    }
+
+    private void updateButtonLike() {
+        if(monument.getNbLike() == 1){
+            buttonLike.setEnabled(false);
+            buttonLike.setBackgroundResource(R.drawable.button_selected);
+        }else{
+            buttonLike.setEnabled(true);
+            buttonLike.setBackgroundResource(R.drawable.button_unselected);
+        }
     }
 
     private void setListenerShareTwitter(Button buttonTwitter) {
@@ -241,6 +255,12 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     }
 
+    public void upDateMonument(){
+        GetMonumentsByName getMonumentsByName =
+                new GetMonumentsByName(networkInfo, this, this, monument.getName());
+        getMonumentsByName.execute();
+    }
+
     public void setListNearestMonuments(ArrayList<Monument> monuments) {
 
         if (!monuments.isEmpty()) {
@@ -305,9 +325,9 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Monument monument = m.get(position);
-                GetMonumentSearch getMonumentSearch =
-                        new GetMonumentSearch(networkInfo, detailMonument, detailMonument, monument.getName());
-                getMonumentSearch.execute();
+                GetMonumentsByName getMonumentsByName =
+                        new GetMonumentsByName(networkInfo, detailMonument, detailMonument, monument.getName());
+                getMonumentsByName.execute();
 
             }
         });
@@ -358,13 +378,57 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     }
 
     public void setListenerLike(Button button) {
+        final DetailMonument detailMonument = this;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddLikeTask task = new AddLikeTask();
+                AddLikeTask task = new AddLikeTask(networkInfo, detailMonument, detailMonument);
                 task.execute(monument);
             }
         });
+    }
+
+    @Override
+    public void onPostSearch(ArrayList<Monument> monuments) {
+        Monument m = monuments.get(0);
+
+        if(m.getName().equals(monument.getName())){
+            // Update the number of like and visitor; because the user clicked on the like button
+            /*monument.setNbLike(m.getNbLike());
+            monument.setNbVisitors(m.getNbVisitors());
+            nbVisitors.setText("More than " + monument.getNbLike() + " likes and " + monument.getNbVisitors() + " visitors");*/
+            upDateStatisticsMonument(m);
+            updateButtonLike();
+        }else{
+            // User click a the monument near the current monument (In the grid view)
+            // Display the detail about the monument and start a new activity
+            modelNavigation.changeAppView(new EventDisplayDetailMonument(this, m));
+            // Close this activity
+            finish();
+        }
+
+    }
+
+    @Override
+    public void monumentUpdated(EventMonumentUpdated eventLocalizationFound) {
+        if(eventLocalizationFound != null){
+            Monument m = eventLocalizationFound.getMonument();
+            /*monument.setNbLike(m.getNbLike());
+            monument.setNbVisitors(m.getNbVisitors());
+            nbVisitors.setText("More than " + monument.getNbLike() + " likes and " + monument.getNbVisitors() + " visitors");*/
+            upDateStatisticsMonument(m);
+            updateButtonLike();
+        }
+    }
+
+    public void upDateStatisticsMonument(Monument m){
+        int nbLike = m.getNbLike();
+        int nbVisitor = m.getNbVisitors();
+        monument.setNbLike(nbLike);
+        monument.setNbVisitors(nbVisitor);
+        FunctionsDB.editMonument(monument, this);
+        nbLikes.setText(Integer.valueOf(monument.getNbLike()).toString());
+        nbVisitors.setText(Integer.valueOf(monument.getNbVisitors()).toString());
     }
 
     private void shareItTwitter() {
@@ -417,18 +481,9 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                 startActivity(chooserIntent);
             }
         } catch (Exception e) {
-            Log.v("VM",
-                    "Exception while sending image on" + nameApp + " "
+            Log.v("Shazam",
+                    "DM Exception while sending image on" + nameApp + " "
                             + e.getMessage());
         }
-    }
-
-    @Override
-    public void onPostSearch(ArrayList<Monument> monuments) {
-        Monument monument = monuments.get(0);
-        // Display the detail about the monument and start a new activity
-        modelNavigation.changeAppView(new EventDisplayDetailMonument(this, monument));
-        // Close this activity
-        finish();
     }
 }

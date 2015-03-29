@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.utils;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -19,7 +20,7 @@ import fr.isen.shazamphoto.ui.UnidentifiedMonument;
 
 public class AddMonument extends AsyncTask<Monument, Void, Boolean> {
 
-    public AddMonument(UnidentifiedMonument home) {
+    public AddMonument() {
     }
 
     public Boolean doInBackground(Monument... monuments) {
@@ -46,7 +47,7 @@ public class AddMonument extends AsyncTask<Monument, Void, Boolean> {
             }
         }
         catch (Exception e) {
-            System.out.println("Exception in AddMonument: "+e.getMessage());
+            Log.e("Shazam", "Exception in AddMonument: " + e.getMessage());
         }
 
         return returnValue;

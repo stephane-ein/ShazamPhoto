@@ -163,7 +163,7 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
                 jsonResponse = new JSONObject(result.toString());
             }
         } catch (Exception e) {
-            Log.e("Shazam", "Exception in SPT : "+e.getMessage());
+            Log.e("Shazam", "Exception in SPT DIB: "+e.getMessage());
         }
 
         return new EventInternetTask(isInternetFound, jsonResponse);
@@ -177,7 +177,7 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
         try {
 
             if(jsonReponse != null){
-                if (result.toString().equals("{}")) {
+                if (jsonReponse.toString().equals("{}")) {
                     Monument monument = new Monument(keyPoints, descriptors, localization, photoPath);
                     modelNavigation.changeAppView(
                             new EventUnidentifiedMonument(activity, monument));
@@ -190,10 +190,10 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
                     modelNavigation.changeAppView(new EventDisplayDetailMonument(activity, m));
                 }
             }else if(jsonReponse == null && result.isInternetfound()) {
-               Log.e("Shazam", "The server is not available " +result.isInternetfound() );
+               Toast.makeText(activity, "The server is not available ", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
-            Log.e("Shazam", "Exception in SPT : "+e.getMessage());
+            Log.e("Shazam", "Exception in SPT OPR: "+e.getMessage());
         }
     }
 }

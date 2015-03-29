@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 public abstract class DAOBase {
-    protected final static int VERSION = 2;
+    protected final static int VERSION = 3;
     protected final static String NOM = "shazamPhoto.db";
 
     protected SQLiteDatabase mDb = null;

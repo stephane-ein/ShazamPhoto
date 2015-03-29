@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -45,6 +48,10 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
 
     private Button button;
+    private static LinearLayout linearLayoutResult;
+    private LinearLayout progressBar;
+    private TextView noMonumentFound;
+
     private String photoPath;
     private ArrayList<Monument> monuments;
     private static ListView listView;
@@ -82,9 +89,11 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
         View view = inflater.inflate(R.layout.fragment_shazam, container, false);
 
-        listView = (ListView) view.findViewById(R.id.listview_result_monument);
+        listView = (ListView) view.findViewById(R.id.fs_listview_result_monument);
         button = (Button) view.findViewById(R.id.but_takePicture);
-
+        linearLayoutResult = (LinearLayout) view.findViewById(R.id.fs_linearlayout_result);
+        progressBar = (LinearLayout) view.findViewById(R.id.fs_progress_bar);
+        noMonumentFound = (TextView) view.findViewById(R.id.fs_textview_no_monument_found);
 
         button.setOnClickListener(new Button.OnClickListener() {
 
@@ -126,18 +135,13 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                             new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
                 }
 
-                ProgressDialog dialog = new ProgressDialog(getActivity());
-                dialog.setMessage("Generating the descriptors");
-                dialog.show();
-
                 // Generate the descriptors and the key points and descriptors of the picture
                 ImageProcessing imageProcessing =
                         new ImageProcessing(this.getActivity(), shazamProcessingTask, photoPath);
                 imageProcessing.recognise();
 
-                dialog.dismiss();
             } catch (Exception e) {
-                Toast.makeText(getActivity(), "Error: " + e.getClass().getName(), Toast.LENGTH_LONG).show();
+               Log.e("Shazam", "Exception in Shazam : "+e.getMessage());
             }
         }
     }
@@ -177,13 +181,16 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     }
 
     public void setListResult(final ArrayList<Monument> monuments, final Activity activity) {
-        if (!monuments.isEmpty() && listView != null) {
+        listView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+        noMonumentFound.setVisibility(View.GONE);
+        listView.setVisibility(View.GONE);
 
+        if (!monuments.isEmpty() && listView != null) {
             this.monuments = monuments;
             ResultListAdapter adapter = new ResultListAdapter(activity, monuments);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-            listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 2));
             listView.setVisibility(View.VISIBLE);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -193,6 +200,8 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                             monuments.get(position)));
                 }
             });
+        }else if(monuments.isEmpty()){
+            noMonumentFound.setVisibility(View.VISIBLE);
         }
     }
 
@@ -214,6 +223,18 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
     public void setNetworkInfo(NetworkInfoArea networkInfo) {
         this.networkInfo = networkInfo;
+    }
+
+    public void displayLoading() {
+        linearLayoutResult.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideUIResult() {
+        noMonumentFound.setVisibility(View.GONE);
+        listView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        linearLayoutResult.setVisibility(View.GONE);
     }
 }
 

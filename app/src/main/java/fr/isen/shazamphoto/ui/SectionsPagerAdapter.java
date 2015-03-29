@@ -36,20 +36,20 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 if (fragments.get(Shazam.POSITION) == null) {
                     fragments.add(Shazam.POSITION, Shazam.newInstance(
                             (LocationManager) home.getSystemService(Context.LOCATION_SERVICE),
-                            home.getModelNavigation(), home, (NetworkInfoArea)home.findViewById(R.id.home_info_network)));
+                            home.getModelNavigation(), home, (NetworkInfoArea) home.findViewById(R.id.home_info_network)));
                 }
                 result = fragments.get(Shazam.POSITION);
                 break;
             case 1:
+                result = TaggedMonument.newInstance(home.getModelNavigation());
+                break;
+            case 2:
                 if (fragments.get(NearestMonumentsFragment.POSITION) == null) {
                     fragments.add(NearestMonumentsFragment.POSITION,
                             NearestMonumentsFragment.newInstance((LocationManager)
                                     home.getSystemService(Context.LOCATION_SERVICE)));
                 }
                 result = fragments.get(NearestMonumentsFragment.POSITION);
-                break;
-            case 2:
-                result = TaggedMonument.newInstance(home.getModelNavigation());
                 break;
             case 3:
                 result = FavouriteMonument.newInstance(home.getModelNavigation());

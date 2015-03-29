@@ -27,19 +27,6 @@ public class TaggedMonumentDAO extends ListMonumentDAO{
         String[] selectionArgs = {Long.toString(id)};
         // Delete the monument from the TaggedMoumumentTable
         mDb.delete(DatabaseHandler.VISITED_MONUMENTS_TABLE_NAME, DatabaseHandler.VISITED_MONUMENTS_KEY + " = ?", new String[] {Long.toString(id)});
-        Log.v("Shazam", "TMDAO remove monument from tagged");
-        // Check if the monument is still in the favourite monument
-        String selection = DatabaseHandler.FAVOURITE_MONUMENTS_KEY + " = ?";
-        Cursor c2 = mDb.query(DatabaseHandler.FAVOURITE_MONUMENTS_TABLE_NAME, DatabaseHandler.VISITED_MONUMENTS_ALL_COLUMNS, selection, selectionArgs, null, null, null);
-        // If the monument is not in the favoruite list, the monument will be removed from the table monument
-        if(!c2.moveToFirst()) {
-            selection = DatabaseHandler.MONUMENTS_KEY + " = ?";
-            Cursor c3 = mDb.query(DatabaseHandler.MONUMENTS_TABLE_NAME, DatabaseHandler.MONUMENTS_ALL_COLUMNS, selection, selectionArgs, null, null, null);
-            if(c3.moveToFirst()){
-                mDb.delete(DatabaseHandler.MONUMENTS_TABLE_NAME, DatabaseHandler.MONUMENTS_ALL_COLUMNS + " = ?", selectionArgs);
-                Log.v("Shazam", "TMDAO remove monument from monument table");
-            }
-        }
     }
 
     public void delete(Monument film) {

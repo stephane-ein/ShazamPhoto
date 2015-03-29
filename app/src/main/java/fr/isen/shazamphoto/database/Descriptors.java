@@ -39,34 +39,7 @@ public class Descriptors {
 
                 // We cannot set binary data to a json object, so:
                 // Encoding data byte array to Base64.
-                StringBuilder byteString = new StringBuilder();
-                Log.v("Shazam", "Descriptors table byte\n");
-                for(int i = 0; i < data.length; i++){
-                    byteString.append(Integer.valueOf(data[i]).toString()+",");
-                }
-
-                // Write into a file the value of the data
-                String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-                File file = new File(path + "/byteOriginal.txt");
-                FileOutputStream stream = new FileOutputStream(file);
-                try {
-                    stream.write(byteString.toString().getBytes());
-                } finally {
-                    stream.close();
-                }
-                Log.v("Shazam", "Decriptors table byte : \n "+byteString);
-                Log.v("Shazam", "Descripors step : "+descriptors.step1());
                 dataString = mEncode(data);
-
-                file = new File(path + "/byteEncode.txt");
-                stream = new FileOutputStream(file);
-                try {
-                    stream.write(dataString.toString().getBytes());
-                } finally {
-                    stream.close();
-                }
-
-                // Display data encoded
                 objDesciprtor.put("data", dataString);
             }
 
@@ -99,7 +72,6 @@ public class Descriptors {
 
             if(toEncode.length<expectedSize){
                 byte[] lastBlock = new byte[4];
-                Log.v("Shazam", "LastBlock : "+lastBlock.length);
                 int k = 0;
                 for (int j = i; j < expectedSize; j++) {
                     if (j < toEncode.length) {
@@ -115,7 +87,6 @@ public class Descriptors {
             }
         }
 
-        Log.v("Shazam", "Final descriptors : \n"+base64Str.toString());
         return base64Str.toString();
     }
 

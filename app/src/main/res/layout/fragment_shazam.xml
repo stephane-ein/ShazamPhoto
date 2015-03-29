@@ -7,14 +7,45 @@
     android:paddingRight="16dp">
 
 
-    <ListView
-        android:id="@+id/listview_result_monument"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/fs_linearlayout_result"
+        android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0"
-        android:divider="@android:color/transparent"
-        android:listSelector="@drawable/list_row_selector"
-        android:visibility="invisible" />
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/fs_progress_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ProgressBar style="@style/GenericProgressIndicator" />
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/fs_listview_result_monument"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:listSelector="@drawable/list_row_selector"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fs_textview_no_monument_found"
+            android:fontFamily="sans-serif-thin"
+            android:textSize="@dimen/abc_text_size_body_2_material"
+            android:text="No monuments found"
+            android:gravity="center"
+            android:visibility="gone"/>
+    </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

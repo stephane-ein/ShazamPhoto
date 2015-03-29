@@ -33,7 +33,7 @@ import fr.isen.shazamphoto.utils.little.Point;
 public class NearestMonumentsFragment extends Fragment implements SearchLocalizationItem,
         SearchMonumentsByLocalization {
 
-    public static final int POSITION = 1;
+    public static final int POSITION = 2;
     public static final String NMF_NEATREST_MONUMENT_LIST =
             "fr.sein.shazamphoto.ui.nearestmonumentsfragment";
 

@@ -81,6 +81,7 @@ public class MonumentDAO extends DAOBase {
         value.put(DatabaseHandler.MONUMENTS_NAME, monument.getName());
         value.put(DatabaseHandler.MONUMENTS_NB_VISITORS, monument.getNbVisitors());
         value.put(DatabaseHandler.MONUMENTS_NB_VISITED, monument.getNbLike());
+        value.put(DatabaseHandler.MONUMENTS_LIKED, monument.getLiked());
         value.put(DatabaseHandler.MONUMENTS_LOCALISATION_KEY, monument.getLocalization().getId());
 
         return value;

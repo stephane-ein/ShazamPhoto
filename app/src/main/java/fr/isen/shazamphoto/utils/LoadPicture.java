@@ -36,7 +36,9 @@ public class LoadPicture {
     public static void setPictureFromURL(String url, ImageView imageView, int reqWidth, int reqHeight){
         // Retrieve the bitmap sampled and set the image view ith the bitmap
         Bitmap bitmap = getPictureFromURL(url, reqWidth, reqHeight);
-        imageView.setImageBitmap(bitmap);
+        if(bitmap != null){
+            imageView.setImageBitmap(bitmap);
+        }
     }
 
     public static Bitmap getPictureFromFile(String photoPath, int reqWidth, int reqHeight){

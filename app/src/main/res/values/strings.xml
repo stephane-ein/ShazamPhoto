@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Shazam Photo</string>
+    <string name="app_name">aves</string>
     <string name="action_settings">Settings</string>
     <string name="about">An application under development</string>
     <string name="search_hint">Search a monument...</string>
     <string name="search_label">Search a monument</string>
     <string name="search_global_description">Search a monument</string>
     <string name="title_section1">Shazam</string>
-    <string name="title_section2">Map</string>
-    <string name="title_section3">My Tag</string>
-    <string name="title_section4">Favorite monument</string>
+    <string name="title_section2">Tag</string>
+    <string name="title_section3">Map</string>
+    <string name="title_section4">Favourites monuments</string>
     <string name="image_text">Monument picture</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_detail_monument">DetailMonument</string>
     <string name="hello_world">Hello world!</string>
     <string name="detail_monument">Detail monument</string>

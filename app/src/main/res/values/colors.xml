@@ -8,4 +8,7 @@
     <color name="list_row_hover_start_color">#ebeef0</color>
     <color name="list_row_hover_end_color">#ebeef0</color>
     <color name="white">#FFFFFF</color>
+    <color name="primary">#B29F59</color>
+    <color name="primary_dark">#FFEEB2</color>
+    <color name="accent">#ffee58</color>
 </resources>

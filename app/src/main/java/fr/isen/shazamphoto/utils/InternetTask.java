@@ -57,7 +57,7 @@ public abstract class InternetTask<Params, Progress, Result> extends AsyncTask<P
     public void displayUINoNetwork() {
         // Set the animation to display the network info
         Animation animation = AnimationUtils.loadAnimation(activity, R.anim.abc_fade_in);
-        animation.setDuration(2000);
+        animation.setDuration(1000);
         networkInfo.setVisibility(View.VISIBLE);
         networkInfo.startAnimation(animation);
 
@@ -72,7 +72,7 @@ public abstract class InternetTask<Params, Progress, Result> extends AsyncTask<P
                 long millis = System.currentTimeMillis() - startTime;
                 int seconds = (int) (millis / 1000);
                 seconds = seconds % 60;
-                if (seconds >= 5 && sendHideAnimation == false) {
+                if (seconds >= 4 && sendHideAnimation == false) {
                     sendHideAnimation = true;
                     // Remove the timer
                     timerHandler.removeCallbacks(timerRunnable);

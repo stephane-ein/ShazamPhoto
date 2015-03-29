@@ -1,5 +1,7 @@
 package fr.isen.shazamphoto.database;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +25,7 @@ public class Monument implements Serializable {
     private Mat descriptors;
     private int idNearest;
     private int databaseId;
+    private int liked;
 
     public static final String NAME_SERIALIZABLE = "fr.isen.shazamphoto.database.monument_serializable";
 
@@ -70,11 +73,11 @@ public class Monument implements Serializable {
         this.address = address;
         this.keyPoints = keyPoints;
         this.descriptors = descriptors;
+        this.liked = 0;
     }
 
     public Monument(JSONObject jsonMonument) {
         try {
-            //id = Long.valueOf(jsonMonument.getString("id")).longValue();
             id = -1;
             year = jsonMonument.getInt("year");
             photoPath = jsonMonument.getString("photopath");
@@ -94,6 +97,7 @@ public class Monument implements Serializable {
             }
 
         } catch (Exception e) {
+            Log.e("Shazam", "Exception in Monument : " + e.getMessage());
         }
 
     }
@@ -251,6 +255,14 @@ public class Monument implements Serializable {
 
     public void setDatabaseId(int databaseId) {
         this.databaseId = databaseId;
+    }
+
+    public int getLiked() {
+        return liked;
+    }
+
+    public void setLiked(int liked) {
+        this.liked = liked;
     }
 }
 

@@ -13,11 +13,9 @@ import java.io.InputStream;
 public class GetImageURLTask extends AsyncTask<String, Void, Bitmap>{
 
     private ImageView imageView;
-    private LinearLayout progressBar;
 
-    public GetImageURLTask(ImageView imageView, LinearLayout progressBar) {
+    public GetImageURLTask(ImageView imageView) {
         this.imageView = imageView;
-        this.progressBar = progressBar;
     }
 
     @Override
@@ -36,9 +34,8 @@ public class GetImageURLTask extends AsyncTask<String, Void, Bitmap>{
     @Override
     protected void onPostExecute(Bitmap bitmap){
         if(bitmap != null){
-            imageView.setImageBitmap(bitmap);
+            //imageView.setImageBitmap(bitmap);
             imageView.setVisibility(View.VISIBLE);
-            if(progressBar != null) progressBar.setVisibility(View.GONE);
         }
     }
 }

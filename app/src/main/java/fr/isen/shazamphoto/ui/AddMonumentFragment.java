@@ -4,6 +4,7 @@ package fr.isen.shazamphoto.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,27 +67,29 @@ public class AddMonumentFragment extends Fragment {
 
         //Set the listener for the ADD button
         Button button = (Button) view.findViewById(R.id.button_add);
-        final AddMonumentFragment ref = this;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddMonument addMonument = new AddMonument((UnidentifiedMonument) getActivity());
-                ref.monument.setName(editTextName.getText().toString());
-                ref.monument.setDescription(editTextDescription.getText().toString());
+                AddMonument addMonument = new AddMonument();
+                monument.setName(editTextName.getText().toString());
+                monument.setDescription(editTextDescription.getText().toString());
 
                 //TOMODIFY
                 String year = editTextDate.getText().toString();
                 if(isInteger(year)){
-                    ref.monument.setYear(Integer.valueOf(year));
+                    monument.setYear(Integer.valueOf(year));
                 }else{
-                    ref.monument.setYear(0);
+                    monument.setYear(0);
                 }
 
-                ref.monument.setNbLike(0);
-                ref.monument.setNbVisitors(1);
-                ref.monument.setLocalization(new Localization(0, 0.0, 0.0));
+                monument.setNbLike(0);
+                monument.setNbVisitors(1);
+                if(monument.getLocalization() == null){
+                    monument.setLocalization(new Localization(0, 0.0, 0.0));
+                    Log.v("Shazam", "AMF Localization was null");
+                }
                 addMonument.execute(monument);
-                ref.getActivity().finish();
+                getActivity().finish();
             }
         });
         return view;

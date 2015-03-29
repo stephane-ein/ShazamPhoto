@@ -27,10 +27,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String MONUMENTS_YEAR = "year";
     public static final String MONUMENTS_NB_VISITORS = "nbVisitors";
     public static final String MONUMENTS_NB_VISITED = "nbVisited";
+    public static final String MONUMENTS_LIKED = "liked";
     public static final String MONUMENTS_LOCALISATION_KEY = "localisationKey";
 
     //tableau content toutes les colomnes de la table
-    public static final String MONUMENTS_ALL_COLUMNS[] = {MONUMENTS_KEY, MONUMENTS_NAME, MONUMENTS_PHOTO_PATH, MONUMENTS_DESCRIPTION, MONUMENTS_YEAR, MONUMENTS_NB_VISITORS, MONUMENTS_NB_VISITED, MONUMENTS_LOCALISATION_KEY};
+    public static final String MONUMENTS_ALL_COLUMNS[] = {MONUMENTS_KEY, MONUMENTS_NAME, MONUMENTS_PHOTO_PATH, MONUMENTS_DESCRIPTION, MONUMENTS_YEAR, MONUMENTS_NB_VISITORS, MONUMENTS_NB_VISITED, MONUMENTS_LIKED, MONUMENTS_LOCALISATION_KEY};
     public static final String MONUMENTS_TABLE_NAME = "monuments";
     //script de création de la table
     public static final String MONUMENTS_TABLE_CREATE =
@@ -42,6 +43,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     MONUMENTS_YEAR + " INTEGER, " +
                     MONUMENTS_NB_VISITORS + " INTEGER, " +
                     MONUMENTS_NB_VISITED + " INTEGER, " +
+                    MONUMENTS_LIKED  + " INTEGER, " +
                     MONUMENTS_LOCALISATION_KEY + " INTEGER, " +
                     "FOREIGN KEY(" + MONUMENTS_LOCALISATION_KEY + ") REFERENCES " + LOCALIZATION_TABLE_NAME + "(" + LOCALIZATION_KEY + "));";
 

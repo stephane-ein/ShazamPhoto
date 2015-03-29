@@ -25,17 +25,6 @@
             android:layout_marginRight="30dp"
             android:orientation="vertical">
 
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:id="@+id/lrrs_progress_bar"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
-                <ProgressBar
-                    style="@style/GenericProgressIndicator" />
-            </LinearLayout>
-
             <ImageView
                 android:id="@+id/lrrs_imageView"
                 android:layout_width="90dp"
