@@ -92,7 +92,7 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        writeToFile(outputFile, "%YAML:1.0\nscaleFactor: 1.2\nnLevels: 8\nfirstLevel: 0 "+"\nedgeThreshold: 31\npatchSize: 31\nWTA_K: 2\nscoreType: 0\nnFeatures: 4000\n");
+                        writeToFile(outputFile, "%YAML:1.0\nscaleFactor: 1.0\nnLevels: 8\nfirstLevel: 0 "+"\nedgeThreshold: 31\npatchSize: 31\nWTA_K: 2\nscoreType: 0\nnFeatures: 30000\n");
                         detector.read(outputFile.getPath());
 
                         Mat img1 = new Mat();
@@ -103,7 +103,7 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
                         Utils.bitmapToMat(myBitmap, img1);
 
                         Imgproc.resize(img1, resized, size);
-                        Imgproc.cvtColor(resized, resized, Imgproc.COLOR_BGR2GRAY, 7);
+
 
                         detector.detect(resized, keypoints);
 
