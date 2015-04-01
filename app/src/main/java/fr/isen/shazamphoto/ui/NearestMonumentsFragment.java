@@ -27,8 +27,8 @@ import fr.isen.shazamphoto.ui.CustomAdapter.NearestListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
-import fr.isen.shazamphoto.utils.little.Little;
-import fr.isen.shazamphoto.utils.little.Point;
+import fr.isen.shazamphoto.utils.Little.Little;
+import fr.isen.shazamphoto.utils.Little.Point;
 
 public class NearestMonumentsFragment extends Fragment implements SearchLocalizationItem,
         SearchMonumentsByLocalization {

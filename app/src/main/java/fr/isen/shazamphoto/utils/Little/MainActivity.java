@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.utils.little;
+package fr.isen.shazamphoto.utils.Little;
 
 import android.os.Bundle;
 

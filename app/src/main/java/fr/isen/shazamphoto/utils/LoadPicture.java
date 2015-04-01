@@ -37,6 +37,7 @@ public class LoadPicture {
         // Retrieve the bitmap sampled and set the image view ith the bitmap
         Bitmap bitmap = getPictureFromURL(url, reqWidth, reqHeight);
         if(bitmap != null){
+            Log.v("Shazam", "LP setPictureFromURL : "+bitmap);
             imageView.setImageBitmap(bitmap);
         }
     }
@@ -71,6 +72,8 @@ public class LoadPicture {
             options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
             // Decode bitmap with inSampleSize set
+            in.close();
+            in = new java.net.URL(url).openStream();
             options.inJustDecodeBounds = false;
             bitmap = BitmapFactory.decodeStream(in, null, options);
 

@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.utils.little;
+package fr.isen.shazamphoto.utils.Little;
 
 import java.util.ArrayList;
 import java.util.List;

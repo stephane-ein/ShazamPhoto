@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.utils.little;
+package fr.isen.shazamphoto.utils.Little;
 
 public class Point {
     protected long to;

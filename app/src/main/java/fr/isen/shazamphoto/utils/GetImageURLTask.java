@@ -23,9 +23,10 @@ public class GetImageURLTask extends AsyncTask<String, Void, Bitmap>{
         String urldisplay = params[0];
         Bitmap result = null;
         try {
-            LoadPicture.setPictureFromURL(urldisplay, imageView, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
+            result = LoadPicture.getPictureFromURL(urldisplay, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
+            //LoadPicture.setPictureFromURL(urldisplay, imageView, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
         } catch (Exception e) {
-            Log.e("Error", e.getMessage());
+            Log.e("Exception in GetImageURLTask", e.getMessage());
             e.printStackTrace();
         }
         return result;
@@ -33,9 +34,7 @@ public class GetImageURLTask extends AsyncTask<String, Void, Bitmap>{
 
     @Override
     protected void onPostExecute(Bitmap bitmap){
-        if(bitmap != null){
-            //imageView.setImageBitmap(bitmap);
-            imageView.setVisibility(View.VISIBLE);
-        }
+        imageView.setImageBitmap(bitmap);
     }
+
 }
