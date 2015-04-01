@@ -218,7 +218,7 @@
                     android:fontFamily="sans-serif-thin"
                     android:text="@string/no_nearest_monument"
                     android:textSize="@dimen/abc_text_size_body_2_material"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 

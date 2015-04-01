@@ -135,11 +135,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         nearestMonumentsDAO.open();
         ArrayList<Monument> monuments =
                 nearestMonumentsDAO.getNearestMonuments(this.monument.getId());
-
-        monuments.add(new Monument(-1, new Localization(0, 0.0, 0.0), "Monument 1"));
-        monuments.add(new Monument(-1, new Localization(0, 0.0, 0.0), "Monument 2"));
-        monuments.add(new Monument(-1, new Localization(0, 0.0, 0.0), "Monument 3"));
-
         // Set the nearest monuments in the gridView
         if (!monuments.isEmpty()) {
             setGridViewArrayList(monuments);
@@ -286,7 +281,12 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     @Override
     public void monumentsFoundByLocalization(ArrayList<Monument> monuments) {
-
+        if(!monuments.isEmpty()){
+            noNearestMonument.setVisibility(View.GONE);
+            setListNearestMonuments(monuments);
+        }else{
+            noNearestMonument.setVisibility(View.VISIBLE);
+        }
     }
 
     public void setListenerFavorite(final Button button) {

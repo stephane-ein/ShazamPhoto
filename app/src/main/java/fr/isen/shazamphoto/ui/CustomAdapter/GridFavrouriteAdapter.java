@@ -14,6 +14,7 @@ import java.util.List;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.utils.GetImageURLTask;
 
 public class GridFavrouriteAdapter extends BaseAdapter {
     private final List<Monument> mItems;
@@ -57,14 +58,8 @@ public class GridFavrouriteAdapter extends BaseAdapter {
         Monument m = getItem(i);
 
         if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
-           /* GetMonumentImage getMonumentImage = new GetMonumentImage(picture);
-            getMonumentImage.execute(m.getPhotoPath());
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 16;
-            Bitmap bitmap = BitmapFactory.decodeFile(m.getPhotoPath(), options);
-            picture.setImageBitmap(bitmap);*/
-
-            picture.setImageResource(R.drawable.monument_1);
+            GetImageURLTask getImageURLTask = new GetImageURLTask(picture);
+            getImageURLTask.execute(m.getPhotoPath());
         }else{
             picture.setImageResource(R.drawable.monument_1);
         }

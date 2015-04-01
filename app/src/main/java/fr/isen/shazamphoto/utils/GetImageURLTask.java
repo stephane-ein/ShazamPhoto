@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 
 import java.io.InputStream;
 
-public class GetImageURLTask extends AsyncTask<String, Void, Bitmap>{
+public class GetImageURLTask extends AsyncTask<String, Void, Bitmap> {
 
     private ImageView imageView;
 
@@ -24,17 +24,19 @@ public class GetImageURLTask extends AsyncTask<String, Void, Bitmap>{
         Bitmap result = null;
         try {
             result = LoadPicture.getPictureFromURL(urldisplay, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
-            //LoadPicture.setPictureFromURL(urldisplay, imageView, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
         } catch (Exception e) {
-            Log.e("Exception in GetImageURLTask", e.getMessage());
             e.printStackTrace();
+            Log.e("Exception in GetImageURLTask", e.getMessage());
         }
         return result;
     }
 
     @Override
-    protected void onPostExecute(Bitmap bitmap){
-        imageView.setImageBitmap(bitmap);
+    protected void onPostExecute(Bitmap bitmap) {
+
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+        }
     }
 
 }
