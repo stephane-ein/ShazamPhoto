@@ -32,5 +32,6 @@
     <string name="cancelcircuit">CANCEL</string>
     <string name="modecircuit">CREATE CIRCUIT</string>
     <string name="back">BACK</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

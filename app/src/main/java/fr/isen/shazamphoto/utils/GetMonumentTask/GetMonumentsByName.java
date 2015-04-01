@@ -9,18 +9,21 @@ import java.util.ArrayList;
 
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventInternetTask;
+import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 import fr.isen.shazamphoto.ui.NetworkInfoArea;
 
 public class GetMonumentsByName extends GetMonumentTask {
     private SearchableItem searchableItem;
+    private String searchName;
 
     public GetMonumentsByName(NetworkInfoArea networkInfoArea, Activity activity,
-                              SearchableItem searchableItem, String searchName) {
+                              SearchableItem searchableItem, String searchName, ModelNavigation modelNavigation) {
         super(networkInfoArea, activity);
         this.searchableItem = searchableItem;
         searchName = searchName.replace(" ", "+");
         setUrlWithArguments("n="+searchName);
+        this.searchName = searchName;
     }
 
     public void onPostExecute(EventInternetTask result) {
@@ -40,7 +43,7 @@ public class GetMonumentsByName extends GetMonumentTask {
             } catch (Exception e) {
             }
 
-            this.searchableItem.onPostSearch(monuments);
+            this.searchableItem.onPostSearch(monuments, searchName);
         }
     }
 }

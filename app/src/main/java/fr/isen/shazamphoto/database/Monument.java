@@ -97,7 +97,7 @@ public class Monument implements Serializable {
             }
 
         } catch (Exception e) {
-            Log.e("Shazam", "Exception in Monument : " + e.getMessage());
+            Log.e("Shazam", "Exception in Monument Monument(JSON): " + e.getMessage());
         }
 
     }

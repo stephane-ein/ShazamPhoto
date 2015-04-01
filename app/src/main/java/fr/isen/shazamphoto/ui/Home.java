@@ -25,12 +25,16 @@ import java.util.ArrayList;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.events.EventLoadingSearchMonument;
+import fr.isen.shazamphoto.events.EventResultSearchMonument;
 import fr.isen.shazamphoto.events.EventSearchMonumentByName;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 import fr.isen.shazamphoto.ui.SlidingTab.SlidingTabLayout;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
 import fr.isen.shazamphoto.views.ViewDetailMonument;
+import fr.isen.shazamphoto.views.ViewDisplaySearchResult;
+import fr.isen.shazamphoto.views.ViewLoadingSearchMonument;
 import fr.isen.shazamphoto.views.ViewMonumentsResult;
 import fr.isen.shazamphoto.views.ViewUndentifiedMonument;
 
@@ -52,9 +56,11 @@ public class Home extends ActionBarActivity implements SearchableItem {
 
         // Set the Model of the navigation with his views
         this.modelNavigation = new ModelNavigation();
-        this.modelNavigation.addView(new ViewMonumentsResult());
         this.modelNavigation.addView(new ViewDetailMonument());
         this.modelNavigation.addView(new ViewUndentifiedMonument());
+        this.modelNavigation.addView(new ViewDisplaySearchResult());
+        this.modelNavigation.addView(new ViewLoadingSearchMonument());
+
 
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -72,7 +78,6 @@ public class Home extends ActionBarActivity implements SearchableItem {
         View v = inflator.inflate(R.layout.actionbar_title, null);
 
         TextView title = (TextView) v.findViewById(R.id.title);
-
         title.setText(this.getTitle());
 
         this.getSupportActionBar().setCustomView(v);
@@ -93,7 +98,6 @@ public class Home extends ActionBarActivity implements SearchableItem {
         setListenerSearchViewListener(searchView, this);
 
         // Hide the keyboard
-
         InputMethodManager imm = (InputMethodManager) getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
@@ -102,13 +106,6 @@ public class Home extends ActionBarActivity implements SearchableItem {
 
         return super.onCreateOptionsMenu(menu);
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Hide the keyboard
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -135,12 +132,6 @@ public class Home extends ActionBarActivity implements SearchableItem {
                     InputMethodManager imm = (InputMethodManager) getSystemService(
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-
-
-                    // Hide the list view of the result
-                    /*Shazam shazam = (Shazam) getSectionsPagerAdapter().getItem(Shazam.POSITION);
-                    shazam.hideUIResult();
-                    shazam.clearMonuments();*/
                 }
             }
         });
@@ -153,32 +144,35 @@ public class Home extends ActionBarActivity implements SearchableItem {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Shazam shazam = (Shazam) getSectionsPagerAdapter().getItem(Shazam.POSITION);
-                shazam.displayLoading();
-
                 // Make the search
-                GetMonumentsByName getMonumentsByName = new GetMonumentsByName(networkInfo, home, home, query);
+                GetMonumentsByName getMonumentsByName = new GetMonumentsByName(networkInfo, home, home, query, modelNavigation);
                 getMonumentsByName.execute();
+
+                // Display the loading UI in Shazam fragment
+                Shazam shazam = (Shazam) getSectionsPagerAdapter().getItem(Shazam.POSITION);
+                modelNavigation.changeAppView(new EventLoadingSearchMonument(shazam));
+
                 // Hide the keyboard
                 InputMethodManager imm = (InputMethodManager) getSystemService(
                         Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+
                 // Hide the searchview
                 searchView.setIconified(true);
                 searchView.clearFocus();
-
                 if (menu != null) {
                     (menu.findItem(R.id.action_search)).collapseActionView();
                 }
+
                 return true;
             }
         });
     }
 
     @Override
-    public void onPostSearch(ArrayList<Monument> monuments) {
+    public void onPostSearch(ArrayList<Monument> monuments, String searchName) {
         Shazam shazam = (Shazam) getSectionsPagerAdapter().getItem(Shazam.POSITION);
-        modelNavigation.changeAppView(new EventSearchMonumentByName(monuments, shazam, this));
+        modelNavigation.changeAppView(new EventResultSearchMonument(shazam, monuments, searchName, this));
 
         //Set the view on the shazam fragment
         mViewPager.setCurrentItem(Shazam.POSITION);

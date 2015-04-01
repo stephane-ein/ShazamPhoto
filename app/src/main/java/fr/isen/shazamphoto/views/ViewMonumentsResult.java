@@ -1,8 +1,6 @@
 package fr.isen.shazamphoto.views;
 
 
-import android.widget.Toast;
-
 import fr.isen.shazamphoto.events.Event;
 import fr.isen.shazamphoto.events.EventSearchMonumentByName;
 import fr.isen.shazamphoto.ui.Shazam;

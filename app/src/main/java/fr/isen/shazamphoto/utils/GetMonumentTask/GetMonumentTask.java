@@ -15,7 +15,11 @@ import java.io.InputStreamReader;
 import java.net.URI;
 
 import fr.isen.shazamphoto.events.EventInternetTask;
+import fr.isen.shazamphoto.events.EventLoadingSearchMonument;
+import fr.isen.shazamphoto.model.ModelNavigation;
+import fr.isen.shazamphoto.ui.Home;
 import fr.isen.shazamphoto.ui.NetworkInfoArea;
+import fr.isen.shazamphoto.ui.Shazam;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
 import fr.isen.shazamphoto.utils.InternetTask;
 
@@ -58,6 +62,7 @@ public abstract class GetMonumentTask extends InternetTask<String, Void, EventIn
                 jsonResponse = new JSONObject(result.toString());
             }
         } catch (Exception e) {
+            e.printStackTrace();
             Log.e("Shazam", "Exception in GetMonumentTask : "+e.getMessage());
         }
         return new EventInternetTask(network, jsonResponse);

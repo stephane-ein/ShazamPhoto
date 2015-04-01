@@ -1,7 +1,6 @@
 package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.media.ExifInterface;
@@ -18,25 +17,26 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.database.MonumentSearchDAO;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
 import fr.isen.shazamphoto.events.RequestIdentifyByLocalization;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.CustomAdapter.ResultListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
+import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.ImageProcessing;
 import fr.isen.shazamphoto.utils.ShazamProcessingTask;
 
@@ -47,20 +47,25 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
 
 
-    private Button button;
-    private static LinearLayout linearLayoutResult;
-    private LinearLayout progressBar;
-    private TextView noMonumentFound;
+    private Button butTakePicture;
+    private static LinearLayout llActionSearch;
+    private static LinearLayout progressBar;
+    private static TextView noMonumentFound;
+    private static TextView descriptionTakePicture;
+    private static TextView spaceButton;
+    private static Button butRemoveResult;
+    private static TextView tvDescriptionResult;
+    private static LinearLayout llMonumentSearch;
 
     private String photoPath;
-    private ArrayList<Monument> monuments;
+    // private ArrayList<Monument> monuments;
     private static ListView listView;
     private LocateManager locateManager;
     private ModelNavigation modelNavigation;
     private ShazamProcessingTask shazamProcessingTask;
     private NetworkInfoArea networkInfo;
 
-    public static Shazam newInstance(LocationManager locationManager,ModelNavigation modelNavigation,
+    public static Shazam newInstance(LocationManager locationManager, ModelNavigation modelNavigation,
                                      Activity activity, NetworkInfoArea networkInfoArea) {
         Shazam shazam = new Shazam();
         Bundle args = new Bundle();
@@ -75,7 +80,6 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
     //Require empty constructor
     public Shazam() {
-        this.monuments = new ArrayList<>();
     }
 
     @Override
@@ -89,20 +93,29 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
         View view = inflater.inflate(R.layout.fragment_shazam, container, false);
 
-        listView = (ListView) view.findViewById(R.id.fs_listview_result_monument);
-        button = (Button) view.findViewById(R.id.but_takePicture);
-        linearLayoutResult = (LinearLayout) view.findViewById(R.id.fs_linearlayout_result);
+        butTakePicture = (Button) view.findViewById(R.id.but_takePicture);
+        llActionSearch = (LinearLayout) view.findViewById(R.id.fs_ll_action_search);
         progressBar = (LinearLayout) view.findViewById(R.id.fs_progress_bar);
         noMonumentFound = (TextView) view.findViewById(R.id.fs_textview_no_monument_found);
+        descriptionTakePicture = (TextView) view.findViewById(R.id.fs_tv_title_button);
+        spaceButton = (TextView) view.findViewById(R.id.fs_tv_space_button);
+        butRemoveResult = (Button) view.findViewById(R.id.fs_button_remove_result);
+        listView = (ListView) view.findViewById(R.id.fs_listview_result_monument);
+        tvDescriptionResult = (TextView) view.findViewById(R.id.fs_tv_description_result);
+        llMonumentSearch = (LinearLayout) view.findViewById(R.id.fs_ll_monuments_search);
 
-        button.setOnClickListener(new Button.OnClickListener() {
+        butTakePicture.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-                    dispatchTakePictureIntent();
+                dispatchTakePictureIntent();
             }
         });
 
+        setListenerRemoveResult(butRemoveResult);
+
+        // Retrieve the monument found
+        ArrayList<Monument> monuments = getMonumentSearch();
         if (!monuments.isEmpty()) setListResult(monuments, getActivity());
 
         setRetainInstance(true);
@@ -141,7 +154,8 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                 imageProcessing.recognise();
 
             } catch (Exception e) {
-               Log.e("Shazam", "Exception in Shazam : "+e.getMessage());
+                e.printStackTrace();
+                Log.e("Shazam", "Exception in Shazam : " + e.getMessage());
             }
         }
     }
@@ -181,32 +195,88 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     }
 
     public void setListResult(final ArrayList<Monument> monuments, final Activity activity) {
-        listView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
-        noMonumentFound.setVisibility(View.GONE);
-        listView.setVisibility(View.GONE);
+        // Remove all the monument previously found
+        Log.v("Shazam", "In Shazam activity : "+getActivity());
+        FunctionsDB.removeAllMonumentSearch(getActivity());
 
-        if (!monuments.isEmpty() && listView != null) {
-            this.monuments = monuments;
-            ResultListAdapter adapter = new ResultListAdapter(activity, monuments);
-            listView.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-            listView.setVisibility(View.VISIBLE);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> arg0, View arg1,
-                                        int position, long arg3) {
-                    modelNavigation.changeAppView(new EventDisplayDetailMonument(activity,
-                            monuments.get(position)));
-                }
-            });
-        }else if(monuments.isEmpty()){
-            noMonumentFound.setVisibility(View.VISIBLE);
+        // Retrieve the monument and store them in the db
+        for (Monument m : monuments) {
+            FunctionsDB.addMonumentToDB(m, getActivity());
+            FunctionsDB.addMonumentToMonumentSearch(m, getActivity());
         }
+
+        // Display the monuments found
+        ArrayList<Monument> monumentsDB = FunctionsDB.getAllMonumentSearch(getActivity());
+        ResultListAdapter adapter = new ResultListAdapter(activity, monumentsDB);
+        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        // Set the listener on the monuments
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int position, long arg3) {
+                MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(getActivity());
+                monumentSearchDAO.open();
+                Monument mDB = monumentSearchDAO.select(monuments.get(position).getId());
+                // Change the view by displaying the detail about monument retrieved in the db
+                modelNavigation.changeAppView(new EventDisplayDetailMonument(activity,
+                        mDB));
+                monumentSearchDAO.close();
+            }
+        });
     }
 
-    public void clearMonuments() {
-        if (this.monuments != null) this.monuments.clear();
+    public void displayDefaultUI(){
+        spaceButton.setVisibility(View.VISIBLE);
+        descriptionTakePicture.setVisibility(View.VISIBLE);
+        llActionSearch.setVisibility(View.GONE);
+    }
+
+    public void displayMonumentFound(ArrayList<Monument> monuments, Activity activity, String query) {
+        hideLoading();
+        hideNoMonumentFound();
+        setListResult(monuments, activity);
+        tvDescriptionResult.setText("Results for " + query);
+        llMonumentSearch.setVisibility(View.VISIBLE);
+    }
+
+    public void displayLoading() {
+        hideDescriptionButton();
+        llActionSearch.setVisibility(View.VISIBLE);
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void displayNoMonumentFound() {
+        hideLoading();
+        llMonumentSearch.setVisibility(View.GONE);
+        noMonumentFound.setVisibility(View.VISIBLE);
+    }
+
+
+    private void hideNoMonumentFound(){
+        noMonumentFound.setVisibility(View.GONE);
+    }
+
+    private void hideDescriptionButton() {
+        descriptionTakePicture.setVisibility(View.GONE);
+        spaceButton.setVisibility(View.GONE);
+    }
+
+    private void hideLoading() {
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
+    }
+
+    private void setListenerRemoveResult(Button button){
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Clear the DB
+                FunctionsDB.removeAllMonumentSearch(getActivity());
+                llActionSearch.setVisibility(View.GONE);
+                displayDefaultUI();
+            }
+        });
     }
 
     public void setLocateManager(LocateManager locateManager) {
@@ -225,16 +295,18 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         this.networkInfo = networkInfo;
     }
 
-    public void displayLoading() {
-        linearLayoutResult.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
+    public ArrayList<Monument> getMonumentSearch() {
+        MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(getActivity());
+        monumentSearchDAO.open();
+        List<Monument> monumentsList = monumentSearchDAO.getAllMonuments();
+        monumentSearchDAO.close();
+        ArrayList<Monument> monuments = new ArrayList<>();
+        for (Monument monument : monumentsList) {
+            monuments.add(monument);
+        }
+
+        return monuments;
     }
 
-    public void hideUIResult() {
-        noMonumentFound.setVisibility(View.GONE);
-        listView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.GONE);
-        linearLayoutResult.setVisibility(View.GONE);
-    }
 }
 

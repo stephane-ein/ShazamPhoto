@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:paddingRight="16dp"
+    android:id="@+id/fragment_shazam">
 
 
     <LinearLayout
-        android:id="@+id/fs_linearlayout_result"
+        android:id="@+id/fs_ll_action_search"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
@@ -21,48 +23,99 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
-
+            android:orientation="vertical">
             <ProgressBar style="@style/GenericProgressIndicator" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fs_ll_monuments_search"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:id="@+id/fs_ll_description_result">
+
+                <TextView
+                    android:id="@+id/fs_tv_description_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="16dp"
+                    android:fontFamily="sans-serif-thin"
+                    android:layout_weight="1"/>
+
+                <Button
+                    android:background="@drawable/buttonremoveresult"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:id="@+id/fs_button_remove_result"/>
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/fs_listview_result_monument"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@android:color/transparent"
+                android:listSelector="@drawable/list_row_selector"/>
 
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/fs_listview_result_monument"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@android:color/transparent"
-            android:listSelector="@drawable/list_row_selector"
-            android:visibility="gone" />
-
         <TextView
+            android:id="@+id/fs_textview_no_monument_found"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/fs_textview_no_monument_found"
             android:fontFamily="sans-serif-thin"
-            android:textSize="@dimen/abc_text_size_body_2_material"
-            android:text="No monuments found"
             android:gravity="center"
-            android:visibility="gone"/>
+            android:text="No monuments found"
+            android:textSize="@dimen/abc_text_size_body_2_material" />
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingRight="16dp"
+        android:visibility="visible"
+        android:id="@+id/fs_ll_take_picture">
 
+        <TextView
+            android:id="@+id/fs_tv_title_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="center"
+            android:text="Identify a monument by taking a picture"
+            android:textSize="42dp"/>
 
         <Button
             android:id="@+id/but_takePicture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Take a picture"
-            android:textColor="@color/white" />
+            android:background="@drawable/button"
+            android:fontFamily="sans-serif-thin"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="TAKE A PICTURE"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/material_blue_grey_800"
+            android:textSize="@dimen/abc_text_size_body_2_material" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/fs_tv_space_button"/>
 
 
     </LinearLayout>

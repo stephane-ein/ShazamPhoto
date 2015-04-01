@@ -9,5 +9,5 @@ public interface SearchableItem {
 
     // If an activity or a fragment use the GetMonumentsByName, he has to implements this interface
     // and handle the result of the search
-    public void onPostSearch(ArrayList<Monument> monuments);
+    public void onPostSearch(ArrayList<Monument> monuments, String searchName);
 }

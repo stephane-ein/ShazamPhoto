@@ -118,8 +118,6 @@
                     android:layout_weight="1"
                     android:background="@drawable/button"
                     android:fontFamily="sans-serif-thin"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
                     android:text="ADD A LIKE"
                     android:textColor="@color/material_blue_grey_800"
                     android:textSize="@dimen/abc_text_size_body_2_material" />
@@ -247,7 +245,7 @@
                     android:layout_marginTop="@dimen/abc_text_size_body_2_material"
                     android:fontFamily="sans-serif-thin"
                     android:gravity="center"
-                    android:text="Share and navigiation"
+                    android:text="Share and navigation"
                     android:textSize="@dimen/abc_text_size_medium_material"
                     android:textStyle="bold" />
 

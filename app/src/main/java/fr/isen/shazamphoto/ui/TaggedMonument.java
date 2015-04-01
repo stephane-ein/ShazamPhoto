@@ -53,7 +53,6 @@ public class TaggedMonument extends MonumentList {
         if (getActivity() != null) {
             setListMonuments(getTaggedMonuments(), getAdapter(), getAbsListView());
             setRetainInstance(true);
-            Log.v("Shazam", "TM onResume()");
         }
     }
 

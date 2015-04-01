@@ -1,10 +1,16 @@
 package fr.isen.shazamphoto.utils;
 
 import android.content.Context;
+import android.util.Log;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.database.MonumentDAO;
+import fr.isen.shazamphoto.database.MonumentSearchDAO;
 import fr.isen.shazamphoto.database.TaggedMonumentDAO;
 
 public class FunctionsDB {
@@ -15,6 +21,7 @@ public class FunctionsDB {
             dao.open();
             long id = dao.getMonumentId(monument);
             if (id == -1) {
+                Log.v("Shazam", "FunctionDB monument added to monuments");
                 id = dao.insert(monument);
             }
             monument.setId(id);
@@ -29,6 +36,40 @@ public class FunctionsDB {
             taggedMonumentDAO.insert(monument);
         }
         taggedMonumentDAO.close();
+    }
+
+    public static void addMonumentToMonumentSearch(Monument monument, Context context) {
+        MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(context);
+        monumentSearchDAO.open();
+        if (monumentSearchDAO.select(monument.getId()) == null) {
+            monumentSearchDAO.insert(monument);
+        }
+        monumentSearchDAO.close();
+    }
+
+    public static ArrayList<Monument> getAllMonumentSearch(Context context){
+        MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(context);
+        monumentSearchDAO.open();
+        List<Monument> monumentList = monumentSearchDAO.getAllMonuments();
+        monumentSearchDAO.close();
+
+        ArrayList<Monument> monumentsArrayList = new ArrayList<>();
+        for(Monument m : monumentList) monumentsArrayList.add(m);
+
+        return monumentsArrayList;
+
+    }
+
+    public static void removeAllMonumentSearch(Context context){
+        MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(context);
+        monumentSearchDAO.open();
+        List<Monument> monuments = monumentSearchDAO.getAllMonuments();
+
+        for(Monument m : monuments){
+            monumentSearchDAO.delete(m);
+        }
+
+        monumentSearchDAO.close();
     }
 
     public static void removeMonumentFromTaggedMonument(Monument monument, Context context) {
@@ -57,4 +98,6 @@ public class FunctionsDB {
             dao.close();
         }
     }
+
+
 }

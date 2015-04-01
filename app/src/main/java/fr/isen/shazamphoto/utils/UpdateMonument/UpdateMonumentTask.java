@@ -53,6 +53,7 @@ public abstract class UpdateMonumentTask extends InternetTask<Monument, Void, Ev
                 // Executing HTTP Post Request
                 HttpResponse response = httpclient.execute(httpPut);
 
+
                 if(response.getStatusLine().getStatusCode() == 200) {
                     // Retrieve the monument
                     BufferedReader rd = new BufferedReader(new InputStreamReader(
@@ -62,12 +63,19 @@ public abstract class UpdateMonumentTask extends InternetTask<Monument, Void, Ev
                     while ((line = rd.readLine()) != null) {
                         result.append(line);
                     }
+
+                    Log.v("Shazam", "UMT result : "+result.toString());
+
                     jsonResponse = new JSONObject(result.toString());
+
                 }
             }
 
         }
-        catch(Exception e) {}
+        catch(Exception e) {
+            e.printStackTrace();
+            Log.e("Shazam", "Expction in UMT : "+e.getMessage());
+        }
 
         return new EventInternetTask(isNetworkFound, jsonResponse);
     }

@@ -108,6 +108,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
+
+    //		****************table SEARCH_MONUMENT*******************
+    public static final String SEARCH_MONUMENTS_KEY = "id";
+    public static final String SEARCH_MONUMENTS_MONUMENT_KEY = "monumentId";
+    public static final String SEARCH_MONUMENTS_SEARCH_MONUMENT_KEY = "searchMonumentId";
+    public static final String SEARCH_MONUMENTS_ALL_COLUMNS[] = {SEARCH_MONUMENTS_KEY, SEARCH_MONUMENTS_MONUMENT_KEY, SEARCH_MONUMENTS_SEARCH_MONUMENT_KEY};
+    public static final String SEARCH_MONUMENTS_TABLE_NAME = "searchMonuments";
+    public static final String SEARCH_MONUMENTS_TABLE_CREATE =
+            "CREATE TABLE " + SEARCH_MONUMENTS_TABLE_NAME + " (" +
+                    SEARCH_MONUMENTS_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SEARCH_MONUMENTS_MONUMENT_KEY + " INTEGER, " +
+                    SEARCH_MONUMENTS_SEARCH_MONUMENT_KEY + " INTEGER, " +
+                    "FOREIGN KEY(" + SEARCH_MONUMENTS_MONUMENT_KEY + ") REFERENCES " + MONUMENTS_TABLE_NAME + "(" + MONUMENTS_KEY + "));";
+    public static final String SEARCH_MONUMENTS_TABLE_DROP = "DROP TABLE IF EXISTS " + SEARCH_MONUMENTS_TABLE_NAME + ";";
+
     //création de tables : exécution des différents scripts correspondant à chaque table
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -117,6 +132,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TO_IDENTIFY_MONUMENTS_TABLE_CREATE);
         db.execSQL(LOCALIZATION_TABLE_CREATE);
         db.execSQL(NEAREST_MONUMENTS_TABLE_CREATE);
+        db.execSQL(SEARCH_MONUMENTS_TABLE_CREATE);
     }
 
     //mise à jour des tables : suppression des tables en executant les scripts correspondant
@@ -129,6 +145,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TO_IDENTIFY_MONUMENTS_TABLE_DROP);
         db.execSQL(LOCALIZATION_TABLE_DROP);
         db.execSQL(NEAREST_MONUMENTS_TABLE_DROP);
+        db.execSQL(SEARCH_MONUMENTS_TABLE_DROP);
         onCreate(db);
     }
 }

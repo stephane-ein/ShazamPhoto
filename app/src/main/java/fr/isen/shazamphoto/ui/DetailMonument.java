@@ -147,79 +147,10 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             Localization l = monument.getLocalization();
             GetMonumentByLocalization getMonumentByLocalization =
                     new GetMonumentByLocalization(this, networkInfo, this, l.getLatitude(), l.getLongitude());
-            /*getMonumentByLocalization.execute(
-                    Double.valueOf(monument.getLocalization().getLatitude()).toString(),
-                    Double.valueOf(monument.getLocalization().getLongitude()).toString(),
-                    ConfigurationShazam.DELTA_LOCALIZATION);*/
             getMonumentByLocalization.execute();
         }
 
-    }
-
-    private void updateButtonLike() {
-        if(monument.getNbLike() == 1){
-            buttonLike.setEnabled(false);
-            buttonLike.setBackgroundResource(R.drawable.button_selected);
-        }else{
-            buttonLike.setEnabled(true);
-            buttonLike.setBackgroundResource(R.drawable.button_unselected);
-        }
-    }
-
-    private void setListenerShareTwitter(Button buttonTwitter) {
-        buttonTwitter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                shareItTwitter();
-            }
-        });
-    }
-
-    private void setListenerShareFacebook(Button buttonFacebook) {
-        buttonFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                shareItFacebook();
-            }
-        });
-    }
-
-    private void setListenerNavigation(Button buttonNavigation) {
-        buttonNavigation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Localization l = monument.getLocalization();
-                if (l != null) {
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + l.getLatitude() + "," + l.getLongitude() + "&mode=w");
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-                    startActivity(mapIntent);
-                } else {
-                    Toast.makeText(getApplicationContext(),
-                            "This monument has not a localization", Toast.LENGTH_LONG).show();
-
-                }
-            }
-        });
-    }
-
-    private void setListenerPlace(Button buttonPlace) {
-        buttonPlace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Localization l = monument.getLocalization();
-                if (l != null) {
-                    Uri gmmIntentUri = Uri.parse("geo:" + l.getLatitude() + "," + l.getLongitude());
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-                    startActivity(mapIntent);
-                } else {
-                    Toast.makeText(getApplicationContext(),
-                            "This monument has not a localization", Toast.LENGTH_LONG).show();
-                }
-
-            }
-        });
+        updateButtonLike();
     }
 
     @Override
@@ -257,7 +188,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     public void upDateMonument(){
         GetMonumentsByName getMonumentsByName =
-                new GetMonumentsByName(networkInfo, this, this, monument.getName());
+                new GetMonumentsByName(networkInfo, this, this, monument.getName(), null);
         getMonumentsByName.execute();
     }
 
@@ -326,7 +257,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Monument monument = m.get(position);
                 GetMonumentsByName getMonumentsByName =
-                        new GetMonumentsByName(networkInfo, detailMonument, detailMonument, monument.getName());
+                        new GetMonumentsByName(networkInfo, detailMonument, detailMonument, monument.getName(), null);
                 getMonumentsByName.execute();
 
             }
@@ -382,6 +313,9 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                monument.setLiked(1);
+                FunctionsDB.editMonument(monument, getApplication());
+                updateButtonLike();
                 AddLikeTask task = new AddLikeTask(networkInfo, detailMonument, detailMonument);
                 task.execute(monument);
             }
@@ -389,35 +323,40 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     }
 
     @Override
-    public void onPostSearch(ArrayList<Monument> monuments) {
-        Monument m = monuments.get(0);
+    public void onPostSearch(ArrayList<Monument> monuments, String query) {
+        if(!monuments.isEmpty()){
+            Monument m = monuments.get(0);
 
-        if(m.getName().equals(monument.getName())){
-            // Update the number of like and visitor; because the user clicked on the like button
-            /*monument.setNbLike(m.getNbLike());
-            monument.setNbVisitors(m.getNbVisitors());
-            nbVisitors.setText("More than " + monument.getNbLike() + " likes and " + monument.getNbVisitors() + " visitors");*/
-            upDateStatisticsMonument(m);
-            updateButtonLike();
-        }else{
-            // User click a the monument near the current monument (In the grid view)
-            // Display the detail about the monument and start a new activity
-            modelNavigation.changeAppView(new EventDisplayDetailMonument(this, m));
-            // Close this activity
-            finish();
+            if(m.getName().equals(monument.getName())){
+                // Update the number of like and visitor; because the user clicked on the like button
+                upDateStatisticsMonument(m);
+                updateButtonLike();
+            }else{
+                // User click a the monument near the current monument (In the grid view)
+                // Display the detail about the monument and start a new activity
+                modelNavigation.changeAppView(new EventDisplayDetailMonument(this, m));
+                // Close this activity
+                finish();
+            }
         }
-
     }
 
     @Override
     public void monumentUpdated(EventMonumentUpdated eventLocalizationFound) {
         if(eventLocalizationFound != null){
             Monument m = eventLocalizationFound.getMonument();
-            /*monument.setNbLike(m.getNbLike());
-            monument.setNbVisitors(m.getNbVisitors());
-            nbVisitors.setText("More than " + monument.getNbLike() + " likes and " + monument.getNbVisitors() + " visitors");*/
             upDateStatisticsMonument(m);
             updateButtonLike();
+        }
+    }
+
+    private void updateButtonLike() {
+        if(monument.getLiked() == 1){
+            buttonLike.setEnabled(false);
+            buttonLike.setBackgroundResource(R.drawable.button_selected);
+        }else{
+            buttonLike.setEnabled(true);
+            buttonLike.setBackgroundResource(R.drawable.button_unselected);
         }
     }
 
@@ -429,6 +368,63 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         FunctionsDB.editMonument(monument, this);
         nbLikes.setText(Integer.valueOf(monument.getNbLike()).toString());
         nbVisitors.setText(Integer.valueOf(monument.getNbVisitors()).toString());
+    }
+
+
+    private void setListenerShareTwitter(Button buttonTwitter) {
+        buttonTwitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareItTwitter();
+            }
+        });
+    }
+
+    private void setListenerShareFacebook(Button buttonFacebook) {
+        buttonFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareItFacebook();
+            }
+        });
+    }
+
+    private void setListenerNavigation(Button buttonNavigation) {
+        buttonNavigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Localization l = monument.getLocalization();
+                if (l != null) {
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + l.getLatitude() + "," + l.getLongitude() + "&mode=w");
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "This monument has not a localization", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+    }
+
+    private void setListenerPlace(Button buttonPlace) {
+        buttonPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Localization l = monument.getLocalization();
+                if (l != null) {
+                    Uri gmmIntentUri = Uri.parse("geo:" + l.getLatitude() + "," + l.getLongitude());
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "This monument has not a localization", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
     }
 
     private void shareItTwitter() {
