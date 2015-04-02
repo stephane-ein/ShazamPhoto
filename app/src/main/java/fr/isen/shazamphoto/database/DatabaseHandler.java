@@ -21,6 +21,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //				****************table MONUMENTS*******************
     //listes des colomnes de la table monument
     public static final String MONUMENTS_KEY = "id";
+    public static final String MONUMENT_DATABASE_ID="idDataBase";
     public static final String MONUMENTS_NAME = "name";
     public static final String MONUMENTS_PHOTO_PATH = "photoPath";
     public static final String MONUMENTS_DESCRIPTION = "description";
@@ -31,12 +32,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String MONUMENTS_LOCALISATION_KEY = "localisationKey";
 
     //tableau content toutes les colomnes de la table
-    public static final String MONUMENTS_ALL_COLUMNS[] = {MONUMENTS_KEY, MONUMENTS_NAME, MONUMENTS_PHOTO_PATH, MONUMENTS_DESCRIPTION, MONUMENTS_YEAR, MONUMENTS_NB_VISITORS, MONUMENTS_NB_VISITED, MONUMENTS_LIKED, MONUMENTS_LOCALISATION_KEY};
+    public static final String MONUMENTS_ALL_COLUMNS[] = {MONUMENTS_KEY, MONUMENT_DATABASE_ID, MONUMENTS_NAME, MONUMENTS_PHOTO_PATH, MONUMENTS_DESCRIPTION, MONUMENTS_YEAR, MONUMENTS_NB_VISITORS, MONUMENTS_NB_VISITED, MONUMENTS_LIKED, MONUMENTS_LOCALISATION_KEY};
     public static final String MONUMENTS_TABLE_NAME = "monuments";
     //script de création de la table
     public static final String MONUMENTS_TABLE_CREATE =
             "CREATE TABLE " + MONUMENTS_TABLE_NAME + " (" +
                     MONUMENTS_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    MONUMENT_DATABASE_ID + " INTEGER, "+
                     MONUMENTS_NAME + " TEXT NOT NULL, " +
                     MONUMENTS_PHOTO_PATH + " TEXT, " +
                     MONUMENTS_DESCRIPTION + " TEXT, " +

@@ -56,11 +56,27 @@ public class Monument implements Serializable {
         this(id, name, photoPath, description, year, nbVisitors, nbLike, localization, new Address());
     }
 
+    public Monument(long id, int databaseId, String name, String photoPath, String description, int year, int nbVisitor, int nbLike, int liked, Address address) {
+        this(id, databaseId, name, photoPath, description, year, nbVisitor, nbLike, liked, null, address, null, null);
+    }
+
+    public Monument(long id, int databaseId, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization, Address address) {
+        this(id, databaseId, name, photoPath, description, year, nbVisitors, nbLike, localization, address, null, null);
+    }
+
     public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization, Address address) {
         this(id, name, photoPath, description, year, nbVisitors, nbLike, localization, address, null, null);
     }
 
     public Monument(long id, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization, Address address, KeyPoint[] keyPoints, Mat descriptors) {
+        this(id, 0, name, photoPath, description, year, nbVisitors, nbLike, localization, address, keyPoints, descriptors);
+    }
+
+    public Monument(long id, int databaseId, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization, Address address, KeyPoint[] keyPoints, Mat descriptors) {
+        this(id, databaseId, name, photoPath, description, year, nbVisitors, nbLike, 0, localization, address, keyPoints, descriptors);
+    }
+
+    public Monument(long id, int databaseId, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, int liked, Localization localization, Address address, KeyPoint[] keyPoints, Mat descriptors) {
         this.id = id;
         this.characteristics = new HashMap<>();
         Characteristic characteristic = new Characteristic(name, description, new Language(LanguageAvailable.DEFAULT_NAME, LanguageAvailable.DEFAULT_VALUE));
@@ -73,7 +89,8 @@ public class Monument implements Serializable {
         this.address = address;
         this.keyPoints = keyPoints;
         this.descriptors = descriptors;
-        this.liked = 0;
+        this.liked = liked;
+        this.databaseId = databaseId;
     }
 
     public Monument(JSONObject jsonMonument) {

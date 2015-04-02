@@ -21,7 +21,6 @@ public class FunctionsDB {
             dao.open();
             long id = dao.getMonumentId(monument);
             if (id == -1) {
-                Log.v("Shazam", "FunctionDB monument added to monuments");
                 id = dao.insert(monument);
             }
             monument.setId(id);
@@ -47,25 +46,25 @@ public class FunctionsDB {
         monumentSearchDAO.close();
     }
 
-    public static ArrayList<Monument> getAllMonumentSearch(Context context){
+    public static ArrayList<Monument> getAllMonumentSearch(Context context) {
         MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(context);
         monumentSearchDAO.open();
         List<Monument> monumentList = monumentSearchDAO.getAllMonuments();
         monumentSearchDAO.close();
 
         ArrayList<Monument> monumentsArrayList = new ArrayList<>();
-        for(Monument m : monumentList) monumentsArrayList.add(m);
+        for (Monument m : monumentList) monumentsArrayList.add(m);
 
         return monumentsArrayList;
 
     }
 
-    public static void removeAllMonumentSearch(Context context){
+    public static void removeAllMonumentSearch(Context context) {
         MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(context);
         monumentSearchDAO.open();
         List<Monument> monuments = monumentSearchDAO.getAllMonuments();
 
-        for(Monument m : monuments){
+        for (Monument m : monuments) {
             monumentSearchDAO.delete(m);
         }
 
@@ -91,12 +90,13 @@ public class FunctionsDB {
     }
 
     public static void editMonument(Monument monument, Context context) {
-        if (monument != null && monument.getId() == -1) {
-            MonumentDAO dao = new MonumentDAO(context);
-            dao.open();
-            dao.edit(monument);
-            dao.close();
-        }
+        Log.v("Shazam", "FunctionDB editMonument before if: " + monument.getLiked() + " monument id: " + monument.getId());
+        Log.v("Shazam", "FunctionDB editMonument in if: " + monument.getLiked());
+        MonumentDAO dao = new MonumentDAO(context);
+        dao.open();
+        dao.edit(monument);
+        dao.close();
+
     }
 
 

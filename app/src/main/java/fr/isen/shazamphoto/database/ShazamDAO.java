@@ -10,6 +10,6 @@ public abstract class ShazamDAO extends DAOBase {
     }
 
     protected Monument cursorToMonument(Cursor cursor) {
-        return new Monument(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4), cursor.getInt(5), cursor.getInt(6), new Localization(0,0.0,0.0));
+        return new Monument(cursor.getLong(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getInt(7), cursor.getInt(8), null);
     }
 }

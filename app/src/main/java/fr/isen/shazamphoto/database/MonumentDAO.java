@@ -3,13 +3,11 @@ package fr.isen.shazamphoto.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by .Sylvain on 22/01/2015.
- */
 public class MonumentDAO extends DAOBase {
     public MonumentDAO(Context pContext) {
         super(pContext);
@@ -32,6 +30,7 @@ public class MonumentDAO extends DAOBase {
     }
 
     public void edit(Monument monument) {
+        Log.v("Shazam", "MonumentDAO edit liked : "+monument.getLiked());
         ContentValues value = monumentToValues(monument);
         mDb.update(DatabaseHandler.MONUMENTS_TABLE_NAME, value, DatabaseHandler.MONUMENTS_KEY  + " = ?", new String[] {String.valueOf(monument.getId())});
     }
@@ -74,6 +73,7 @@ public class MonumentDAO extends DAOBase {
 
     private ContentValues monumentToValues(Monument monument) {
         ContentValues value = new ContentValues();
+        value.put(DatabaseHandler.MONUMENT_DATABASE_ID, monument.getDatabaseId());
         value.put(DatabaseHandler.MONUMENTS_NAME, monument.getName());
         value.put(DatabaseHandler.MONUMENTS_PHOTO_PATH, monument.getPhotoPath());
         value.put(DatabaseHandler.MONUMENTS_DESCRIPTION, monument.getDescription());
@@ -82,13 +82,13 @@ public class MonumentDAO extends DAOBase {
         value.put(DatabaseHandler.MONUMENTS_NB_VISITORS, monument.getNbVisitors());
         value.put(DatabaseHandler.MONUMENTS_NB_VISITED, monument.getNbLike());
         value.put(DatabaseHandler.MONUMENTS_LIKED, monument.getLiked());
-        value.put(DatabaseHandler.MONUMENTS_LOCALISATION_KEY, monument.getLocalization().getId());
+        if(monument.getLocalization() != null) value.put(DatabaseHandler.MONUMENTS_LOCALISATION_KEY, monument.getLocalization().getId());
 
         return value;
     }
 
     protected Monument cursorToMonument(Cursor cursor) {
-        return new Monument(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4), cursor.getInt(5), cursor.getInt(6), null);
+        return new Monument(cursor.getLong(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getInt(7), cursor.getInt(8), null);
     }
 
     public long getMonumentId(Monument film) {

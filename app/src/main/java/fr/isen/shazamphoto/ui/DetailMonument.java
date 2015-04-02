@@ -35,6 +35,8 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.database.MonumentDAO;
+import fr.isen.shazamphoto.database.MonumentSearchDAO;
 import fr.isen.shazamphoto.database.NearestMonumentsDAO;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.EventMonumentUpdated;
@@ -347,6 +349,12 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             Monument m = eventLocalizationFound.getMonument();
             upDateStatisticsMonument(m);
             updateButtonLike();
+
+            MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(getApplicationContext());
+            monumentSearchDAO.open();
+            Monument mon = monumentSearchDAO.select(monument.getId());
+            monumentSearchDAO.close();
+            Log.v("Shazam", "DM monumentUpdated : "+mon.getLiked());
         }
     }
 

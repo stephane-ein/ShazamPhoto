@@ -55,7 +55,6 @@ public class GetDistance extends AsyncTask<Localization, Void, JSONObject> {
     @Override
     public void onPostExecute(JSONObject result2) {
         try {
-           System.out.println("GD JSON response : "+result2.toString());
         } catch (Exception e) {
         }
 
