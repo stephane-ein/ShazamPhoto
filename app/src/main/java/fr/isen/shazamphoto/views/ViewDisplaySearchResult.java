@@ -22,7 +22,7 @@ public class ViewDisplaySearchResult extends View{
             if(monuments.isEmpty()){
                 shazam.displayNoMonumentFound();
             }else{
-                shazam.displayMonumentFound(monuments, src.getActivity(), src.getQuery());
+                shazam.displayMonumentFound(monuments, src.getQuery());
             }
         }
 

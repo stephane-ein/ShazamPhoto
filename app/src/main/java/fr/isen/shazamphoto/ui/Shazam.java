@@ -64,6 +64,8 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     private ShazamProcessingTask shazamProcessingTask;
     private NetworkInfoArea networkInfo;
 
+    private Activity activity;
+
     public static Shazam newInstance(LocationManager locationManager, ModelNavigation modelNavigation,
                                      Activity activity, NetworkInfoArea networkInfoArea) {
         Shazam shazam = new Shazam();
@@ -74,6 +76,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         shazam.setModelNavigation(modelNavigation);
         shazam.setShazamProcessingTask(new ShazamProcessingTask(networkInfoArea, modelNavigation, activity));
         shazam.setNetworkInfo(networkInfoArea);
+        shazam.setActivity(activity);
         return shazam;
     }
 
@@ -115,7 +118,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
         // Retrieve the monument found
         ArrayList<Monument> monuments = getMonumentSearch();
-        if (!monuments.isEmpty()) displayMonumentFound(monuments, getActivity(), "");
+        if (!monuments.isEmpty()) displayMonumentFound(monuments, "");
 
         setRetainInstance(true);
 
@@ -193,19 +196,18 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         }
     }
 
-    public void setListResult(final ArrayList<Monument> monuments, final Activity activity) {
+    public void setListResult(final ArrayList<Monument> monuments) {
         // Remove all the monument previously found
-        Log.v("Shazam", "In Shazam activity : "+getActivity());
-        FunctionsDB.removeAllMonumentSearch(getActivity());
+        FunctionsDB.removeAllMonumentSearch(activity);
 
         // Retrieve the monument and store them in the db
         for (Monument m : monuments) {
-            FunctionsDB.addMonumentToDB(m, getActivity());
-            FunctionsDB.addMonumentToMonumentSearch(m, getActivity());
+            FunctionsDB.addMonumentToDB(m, activity);
+            FunctionsDB.addMonumentToMonumentSearch(m, activity);
         }
 
         // Display the monuments found
-        ArrayList<Monument> monumentsDB = FunctionsDB.getAllMonumentSearch(getActivity());
+        ArrayList<Monument> monumentsDB = FunctionsDB.getAllMonumentSearch(activity);
         ResultListAdapter adapter = new ResultListAdapter(activity, monumentsDB);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -215,10 +217,11 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int position, long arg3) {
-                MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(getActivity());
+                MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(activity);
                 monumentSearchDAO.open();
                 Monument mDB = monumentSearchDAO.select(monuments.get(position).getId());
                 // Change the view by displaying the detail about monument retrieved in the db
+
                 modelNavigation.changeAppView(new EventDisplayDetailMonument(activity,
                         mDB, modelNavigation));
                 monumentSearchDAO.close();
@@ -232,12 +235,12 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         llActionSearch.setVisibility(View.GONE);
     }
 
-    public void displayMonumentFound(ArrayList<Monument> monuments, Activity activity, String query) {
+    public void displayMonumentFound(ArrayList<Monument> monuments, String query) {
         hideLoading();
         hideNoMonumentFound();
         hideDescriptionButton();
         llActionSearch.setVisibility(View.VISIBLE);
-        setListResult(monuments, activity);
+        setListResult(monuments);
         tvDescriptionResult.setText("Results for " + query);
         llMonumentSearch.setVisibility(View.VISIBLE);
     }
@@ -311,5 +314,8 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         return monuments;
     }
 
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 }
 

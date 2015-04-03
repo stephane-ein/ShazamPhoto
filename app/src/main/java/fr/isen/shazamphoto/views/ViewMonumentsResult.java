@@ -15,7 +15,7 @@ public class ViewMonumentsResult extends View {
 
             EventSearchMonumentByName evt = (EventSearchMonumentByName) event;
             Shazam shazam = evt.getShazam();
-            shazam.setListResult(evt.getMonuments(), evt.getActivity());
+            shazam.setListResult(evt.getMonuments());
 
         }
     }

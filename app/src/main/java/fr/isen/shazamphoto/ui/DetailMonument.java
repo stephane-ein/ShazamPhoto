@@ -138,15 +138,15 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                 nearestMonumentsDAO.getNearestMonuments(this.monument.getId());
         // Set the nearest monuments in the gridView
         if (!monuments.isEmpty()) {
-            Log.v("Shazam", "DM Monument nearest already found"+monument.getName()+" "+monument.getId());
+            Log.v("Shazam", "DM Monument nearest already found" + monument.getName() + " " + monument.getId());
             setGridViewArrayList(monuments);
         } else if (monument.getLocalization() != null) {
-            Log.v("Shazam", "DM search for nearest monument"+monument.getName()+" "+monument.getId());
+            Log.v("Shazam", "DM search for nearest monument" + monument.getName() + " " + monument.getId());
             Localization l = monument.getLocalization();
             GetMonumentByLocalization getMonumentByLocalization =
                     new GetMonumentByLocalization(this, networkInfo, this, l.getLatitude(), l.getLongitude());
             getMonumentByLocalization.execute();
-        }else {
+        } else {
             noNearestMonument.setVisibility(View.VISIBLE);
         }
 
@@ -186,7 +186,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     }
 
-    public void upDateMonument(){
+    public void upDateMonument() {
         GetMonumentsByName getMonumentsByName =
                 new GetMonumentsByName(networkInfo, this, this, monument.getName(), null);
         getMonumentsByName.execute();
@@ -215,7 +215,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
             nearestMonumentsDAO.close();
 
-            // After the list of monuments is filered, we check if
+            // After the list of monuments is filtered, we check if
             // there is some monument around the user
             if (!monumentsFiltered.isEmpty()) {
                 setGridViewArrayList(monumentsFiltered);
@@ -224,14 +224,15 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             }
         }
     }
+
     public void setGridViewArrayList(final ArrayList<Monument> m) {
         // Set the grid view of the nearest monuments
         GridFavrouriteAdapter gridViewAdapter = new GridFavrouriteAdapter(this, m);
         gridView.setAdapter(gridViewAdapter);
         gridViewAdapter.notifyDataSetChanged();
 
-        for(Monument mo : m){
-            Log.v("Shazam", "DM setGridViewArraList monument nearest : "+mo.getName());
+        for (Monument mo : m) {
+            Log.v("Shazam", "DM setGridViewArraList monument nearest : " + mo.getName());
         }
 
         // Set the listener
@@ -292,10 +293,10 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     @Override
     public void monumentsFoundByLocalization(ArrayList<Monument> monuments) {
-        if(!monuments.isEmpty()){
+        if (!monuments.isEmpty()) {
             noNearestMonument.setVisibility(View.GONE);
             setListNearestMonuments(monuments);
-        }else{
+        } else {
             noNearestMonument.setVisibility(View.VISIBLE);
         }
     }
@@ -325,8 +326,8 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             @Override
             public void onClick(View v) {
                 monument.setLiked(1);
-                FunctionsDB.addMonumentToDB(monument, getApplication());
                 FunctionsDB.editMonument(monument, getApplication());
+                Log.v("Shazam", " DM action like update : " + FunctionsDB.getMonument(monument, getApplication()).getLiked());
                 updateButtonLike();
                 AddLikeTask task = new AddLikeTask(networkInfo, detailMonument, detailMonument);
                 task.execute(monument);
@@ -336,29 +337,32 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     @Override
     public void onPostSearch(ArrayList<Monument> monuments, String query) {
-        if( monuments != null && !monuments.isEmpty()){
+        if (monuments != null && !monuments.isEmpty()) {
             // Add the monument in the DB in order to know if the user has liked the monument
             // and to retrieve the result of the search off line
             FunctionsDB.addMonumentToDB(monuments.get(0), getApplicationContext());
             Monument m = FunctionsDB.getMonument(monuments.get(0), getApplicationContext());
+            Log.v("Shazam", "DM onPOstSeRCH M : "+m+" "+monuments.get(0)+" monument: "+monument);
 
-            if(m.getName().equals(monument.getName())){
+            if (m.getName().equals(monument.getName())) {
                 // Update the number of like and visitor; because the user clicked on the like button
                 upDateStatisticsMonument(m);
                 updateButtonLike();
-            }else{
+            } else {
                 // User click a the monument near the current monument (In the grid view)
                 // Display the detail about the monument and start a new activity
                 modelNavigation.changeAppView(new EventDisplayDetailMonument(this, m, modelNavigation));
                 // Close this activity
                 finish();
             }
+
+
         }
     }
 
     @Override
     public void monumentUpdated(EventMonumentUpdated eventLocalizationFound) {
-        if(eventLocalizationFound != null){
+        if (eventLocalizationFound != null) {
             Monument m = eventLocalizationFound.getMonument();
             upDateStatisticsMonument(m);
             updateButtonLike();
@@ -366,16 +370,16 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     }
 
     private void updateButtonLike() {
-        if(monument.getLiked() == 1){
+        if (monument.getLiked() == 1) {
             buttonLike.setEnabled(false);
             buttonLike.setBackgroundResource(R.drawable.button_selected);
-        }else{
+        } else {
             buttonLike.setEnabled(true);
             buttonLike.setBackgroundResource(R.drawable.button_unselected);
         }
     }
 
-    public void upDateStatisticsMonument(Monument m){
+    public void upDateStatisticsMonument(Monument m) {
         int nbLike = m.getNbLike();
         int nbVisitor = m.getNbVisitors();
         monument.setNbLike(nbLike);

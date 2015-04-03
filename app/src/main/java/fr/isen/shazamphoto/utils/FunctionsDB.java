@@ -33,7 +33,7 @@ public class FunctionsDB {
         monumentDAO.open();
         Monument monument1 = monumentDAO.select(monument.getId());
         monumentDAO.close();
-        return monument;
+        return monument1;
     }
 
     public static void addMonumentToTaggedMonument(Monument monument, Context context) {
