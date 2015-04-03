@@ -108,6 +108,8 @@
             style="?android:attr/borderlessButtonStyle"
             android:text="TAKE A PICTURE"
             android:layout_gravity="center_horizontal"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
             android:textColor="@color/material_blue_grey_800"
             android:textSize="@dimen/abc_text_size_body_2_material" />
 

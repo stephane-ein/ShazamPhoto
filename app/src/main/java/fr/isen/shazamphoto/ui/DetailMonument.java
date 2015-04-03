@@ -25,8 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +33,6 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.FavouriteMonumentDAO;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.database.MonumentDAO;
-import fr.isen.shazamphoto.database.MonumentSearchDAO;
 import fr.isen.shazamphoto.database.NearestMonumentsDAO;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.EventMonumentUpdated;
@@ -48,11 +44,11 @@ import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 import fr.isen.shazamphoto.ui.ItemUtils.UpdateMonumentItem;
 import fr.isen.shazamphoto.ui.ScrollView.ADMScrollView;
 import fr.isen.shazamphoto.ui.ScrollView.ScrollViewListener;
-import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
-import fr.isen.shazamphoto.utils.UpdateMonument.AddLikeTask;
 import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetImageURLTask;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
+import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
+import fr.isen.shazamphoto.utils.UpdateMonument.AddLikeTask;
 
 
 public class DetailMonument extends ActionBarActivity implements ScrollViewListener,
@@ -188,7 +184,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     public void upDateMonument() {
         GetMonumentsByName getMonumentsByName =
-                new GetMonumentsByName(networkInfo, this, this, monument.getName(), null);
+                new GetMonumentsByName(networkInfo, this, this, monument.getName());
         getMonumentsByName.execute();
     }
 
@@ -246,7 +242,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                 FunctionsDB.addMonumentToDB(monument, getApplication());
                 Monument mDB = FunctionsDB.getMonument(monument, getApplication());
                 GetMonumentsByName getMonumentsByName =
-                        new GetMonumentsByName(networkInfo, detailMonument, detailMonument, mDB.getName(), null);
+                        new GetMonumentsByName(networkInfo, detailMonument, detailMonument, mDB.getName());
                 getMonumentsByName.execute();
 
             }

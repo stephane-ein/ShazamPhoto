@@ -1,25 +1,17 @@
 package fr.isen.shazamphoto.ui;
 
-import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -27,7 +19,6 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventLoadingSearchMonument;
 import fr.isen.shazamphoto.events.EventResultSearchMonument;
-import fr.isen.shazamphoto.events.EventSearchMonumentByName;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 import fr.isen.shazamphoto.ui.SlidingTab.SlidingTabLayout;
@@ -35,7 +26,6 @@ import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
 import fr.isen.shazamphoto.views.ViewDetailMonument;
 import fr.isen.shazamphoto.views.ViewDisplaySearchResult;
 import fr.isen.shazamphoto.views.ViewLoadingSearchMonument;
-import fr.isen.shazamphoto.views.ViewMonumentsResult;
 import fr.isen.shazamphoto.views.ViewUndentifiedMonument;
 
 public class Home extends ActionBarActivity implements SearchableItem {
@@ -146,7 +136,7 @@ public class Home extends ActionBarActivity implements SearchableItem {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // Make the search
-                GetMonumentsByName getMonumentsByName = new GetMonumentsByName(networkInfo, home, home, query, modelNavigation);
+                GetMonumentsByName getMonumentsByName = new GetMonumentsByName(networkInfo, home, home, query);
                 getMonumentsByName.execute();
 
                 // Display the loading UI in Shazam fragment

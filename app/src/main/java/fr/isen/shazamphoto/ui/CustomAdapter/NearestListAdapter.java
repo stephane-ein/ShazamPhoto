@@ -19,6 +19,7 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.utils.GetDistance;
+import fr.isen.shazamphoto.utils.GetImageURLTask;
 import fr.isen.shazamphoto.utils.GetMonumentImage;
 
 public class NearestListAdapter extends BaseAdapter {
@@ -81,12 +82,12 @@ public class NearestListAdapter extends BaseAdapter {
             // Case where the monument is not at the end of the circuit
             // Set the image of the monument
             if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
-                GetMonumentImage getMonumentImage = new GetMonumentImage(image);
-                getMonumentImage.execute(m.getPhotoPath());
+                GetImageURLTask getImageURLTask = new GetImageURLTask(image);
+                getImageURLTask.execute(m.getPhotoPath());
             }else{
                 // Default image
                 image.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(),
-                        R.drawable.monument_1));
+                        R.drawable.image_not_found));
             }
 
             // Set the button to display the navigation
@@ -104,14 +105,14 @@ public class NearestListAdapter extends BaseAdapter {
             // Set the number of visitor and the distance between the monument and the user
             visitor.setText(Integer.valueOf(m.getNbVisitors()).toString() + " visitors");
             Localization destionLocalization = m.getLocalization();
-            /*float[] result = new float[3];
+            float[] result = new float[3];
             Location.distanceBetween(
-                    startLocalization.getLatitude(), startLocalization.getLongitude(),
+                    destionLocalization.getLatitude(), destionLocalization.getLongitude(),
                     localizationUser.getLatitude(), localizationUser.getLongitude(),
                     result);
-            distance.setText("to "+Float.valueOf(result[0]).toString()+"m");*/
-            GetDistance getDistance = new GetDistance();
-            getDistance.execute(localizationUser, destionLocalization);
+            distance.setText("to "+Float.valueOf(result[0]).toString()+"m");
+           /* GetDistance getDistance = new GetDistance();
+            getDistance.execute(localizationUser, destionLocalization);*/
         }
 
         return convertView;

@@ -146,8 +146,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                     this.shazamProcessingTask.setLocalization(new Localization(-1,
                             Double.valueOf(localisation[0]), Double.valueOf(localisation[1])));
                 } else {
-                    locateManager.startListening(
-                            new RequestIdentifyByLocalization((Home) getActivity(), photoPath));
+                    locateManager.startListening();
                 }
 
                 // Generate the descriptors and the key points and descriptors of the picture

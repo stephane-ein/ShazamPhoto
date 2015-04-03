@@ -180,14 +180,14 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
                 if (jsonReponse.toString().equals("{}")) {
                     Monument monument = new Monument(keyPoints, descriptors, localization, photoPath);
                     modelNavigation.changeAppView(
-                            new EventUnidentifiedMonument(activity, monument));
+                            new EventUnidentifiedMonument(activity, monument, modelNavigation));
                 } else{
                     Monument m = new Monument(jsonReponse);
                     // Add the monument to the monument tagged
                     FunctionsDB.addMonumentToDB(m, activity);
                     FunctionsDB.addMonumentToTaggedMonument(m, activity);
                     // Display the monument identified
-                    modelNavigation.changeAppView(new EventDisplayDetailMonument(activity, m, modelNavigation));
+                    modelNavigation.changeAppView(new EventDisplayDetailMonument(activity, m, null));
                 }
             }else if(jsonReponse == null && result.isInternetfound()) {
                Toast.makeText(activity, "The server is not available ", Toast.LENGTH_LONG).show();

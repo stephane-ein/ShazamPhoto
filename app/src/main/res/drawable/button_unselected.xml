@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
+    <item
+        android:fontFamily="sans-serif-thin">
         <shape
             style="?android:attr/borderlessButtonStyle"
             android:fontFamily="sans-serif-thin"

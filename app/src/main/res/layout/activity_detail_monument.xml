@@ -120,6 +120,8 @@
                     android:fontFamily="sans-serif-thin"
                     android:text="ADD A LIKE"
                     android:textColor="@color/material_blue_grey_800"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
                     android:textSize="@dimen/abc_text_size_body_2_material" />
 
                 <Button
@@ -132,9 +134,9 @@
                     android:layout_weight="1"
                     android:background="@drawable/button"
                     android:fontFamily="sans-serif-thin"
+                    android:text="ADD TO FAVORITE"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:text="ADD TO FAVORITE"
                     android:textSize="@dimen/abc_text_size_body_2_material" />
             </LinearLayout>
 

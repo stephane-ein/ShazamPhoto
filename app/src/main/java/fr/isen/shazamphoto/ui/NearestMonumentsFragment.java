@@ -115,7 +115,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         return view;
     }
 
-    public void reset(){
+    private void reset(){
         // Restore the default value
         startedCircuitMode = false;
         startMonument = null;
@@ -276,13 +276,13 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         });
     }
 
-    public void setListenerNearestMonuments(Button button, final NearestMonumentsFragment fragment) {
+    private void setListenerNearestMonuments(Button button, final NearestMonumentsFragment fragment) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Search a localization if we don't have it
                 if (localization == null) {
-                    locateManager.startListening(new RequestNearestMonuments(fragment));
+                    locateManager.startListening();
                 } else {
                     executeGetMonumentByLocalization();
                 }

@@ -18,7 +18,7 @@ public class GetMonumentsByName extends GetMonumentTask {
     private String searchName;
 
     public GetMonumentsByName(NetworkInfoArea networkInfoArea, Activity activity,
-                              SearchableItem searchableItem, String searchName, ModelNavigation modelNavigation) {
+                              SearchableItem searchableItem, String searchName) {
         super(networkInfoArea, activity);
         this.searchableItem = searchableItem;
         searchName = searchName.replace(" ", "+");

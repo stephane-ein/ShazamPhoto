@@ -4,8 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ScrollView;
 
-import fr.isen.shazamphoto.ui.ScrollView.ScrollViewListener;
-
 public class ADMScrollView extends ScrollView {
 
     private ScrollViewListener scrollViewListener = null;

@@ -14,13 +14,13 @@ public class UnidentifiedMonument extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unidentified_monument);
-        AddMonumentFragment addMonumentFragment = new AddMonumentFragment();
+        PromptNameMonument promptNameMonument = new PromptNameMonument();
         Bundle args = new Bundle();
         args.putSerializable(Monument.NAME_SERIALIZABLE, getIntent().getExtras().getSerializable(Monument.NAME_SERIALIZABLE));
-        addMonumentFragment.setArguments(args);
+        promptNameMonument.setArguments(args);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, addMonumentFragment)
+                    .add(R.id.container, promptNameMonument)
                     .commit();
         }
     }

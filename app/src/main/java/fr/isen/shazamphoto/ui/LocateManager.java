@@ -4,7 +4,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
@@ -23,7 +22,7 @@ public class LocateManager {
         this.lm = lm;
     }
 
-    public void startListening(final RequestLocalization requestLocalization) {
+    public void startListening() {
 
         locationListener = new LocationListener() {
 

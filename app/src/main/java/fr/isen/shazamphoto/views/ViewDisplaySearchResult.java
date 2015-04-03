@@ -1,8 +1,6 @@
 package fr.isen.shazamphoto.views;
 
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 import fr.isen.shazamphoto.database.Monument;

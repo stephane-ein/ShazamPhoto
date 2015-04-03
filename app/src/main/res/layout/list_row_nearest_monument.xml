@@ -85,7 +85,6 @@
                             android:layout_marginTop="5dp"
                             android:fontFamily="sans-serif-thin"
                             android:text=""
-                            android:textColor="@color/genre"
                             android:textSize="@dimen/rating" />
                     </LinearLayout>
 
