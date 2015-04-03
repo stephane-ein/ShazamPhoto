@@ -78,7 +78,6 @@ public class LoadPicture {
             bitmap = BitmapFactory.decodeStream(in, null, options);
 
         }catch(Exception e){
-            Log.v("Shazam", "Exception in LP : "+e.getMessage());
         }
 
         return  bitmap;

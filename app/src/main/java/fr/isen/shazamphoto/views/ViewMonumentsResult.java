@@ -17,8 +17,6 @@ public class ViewMonumentsResult extends View {
             Shazam shazam = evt.getShazam();
             shazam.setListResult(evt.getMonuments(), evt.getActivity());
 
-            System.out.println("ViewMonumentResults : " + shazam.getActivity());
-
         }
     }
 }

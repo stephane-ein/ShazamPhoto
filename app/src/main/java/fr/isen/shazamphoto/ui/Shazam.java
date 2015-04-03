@@ -58,7 +58,6 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     private static LinearLayout llMonumentSearch;
 
     private String photoPath;
-    // private ArrayList<Monument> monuments;
     private static ListView listView;
     private LocateManager locateManager;
     private ModelNavigation modelNavigation;
@@ -116,7 +115,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
         // Retrieve the monument found
         ArrayList<Monument> monuments = getMonumentSearch();
-        if (!monuments.isEmpty()) setListResult(monuments, getActivity());
+        if (!monuments.isEmpty()) displayMonumentFound(monuments, getActivity(), "");
 
         setRetainInstance(true);
 
@@ -221,7 +220,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                 Monument mDB = monumentSearchDAO.select(monuments.get(position).getId());
                 // Change the view by displaying the detail about monument retrieved in the db
                 modelNavigation.changeAppView(new EventDisplayDetailMonument(activity,
-                        mDB));
+                        mDB, modelNavigation));
                 monumentSearchDAO.close();
             }
         });
@@ -236,6 +235,8 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     public void displayMonumentFound(ArrayList<Monument> monuments, Activity activity, String query) {
         hideLoading();
         hideNoMonumentFound();
+        hideDescriptionButton();
+        llActionSearch.setVisibility(View.VISIBLE);
         setListResult(monuments, activity);
         tvDescriptionResult.setText("Results for " + query);
         llMonumentSearch.setVisibility(View.VISIBLE);
@@ -249,6 +250,8 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
     public void displayNoMonumentFound() {
         hideLoading();
+        hideDescriptionButton();
+        llActionSearch.setVisibility(View.VISIBLE);
         llMonumentSearch.setVisibility(View.GONE);
         noMonumentFound.setVisibility(View.VISIBLE);
     }

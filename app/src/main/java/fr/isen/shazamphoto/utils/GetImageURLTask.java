@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 
 import java.io.InputStream;
 
+import fr.isen.shazamphoto.R;
+
 public class GetImageURLTask extends AsyncTask<String, Void, Bitmap> {
 
     private ImageView imageView;
@@ -36,6 +38,9 @@ public class GetImageURLTask extends AsyncTask<String, Void, Bitmap> {
 
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
+        }else{
+            imageView.setImageResource(R.drawable.image_not_found);
+
         }
     }
 

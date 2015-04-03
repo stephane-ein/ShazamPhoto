@@ -164,13 +164,10 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
         // Change the UI
         displayModeCircuit();
-
-        System.out.println("NMF onCreateView");
     }
 
     public void setListCircuitMonuments(ArrayList<Monument> monuments) {
         this.monuments = monuments;
-        System.out.println("NMF : "+toStringPath(monuments));
         NearestListAdapter adapter = new NearestListAdapter(getActivity(), monuments, localization);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -196,7 +193,6 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                     // Retrieve the first monument to visit
                     if (startMonument == null){
                         startMonument = m;
-                        //monumentsForCircuit.put(startMonument.getIdNearest(), startMonument);
                         background = R.drawable.list_row_nearest_monument_start;
                     }
 

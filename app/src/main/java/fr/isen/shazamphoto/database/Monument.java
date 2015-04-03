@@ -60,6 +60,10 @@ public class Monument implements Serializable {
         this(id, databaseId, name, photoPath, description, year, nbVisitor, nbLike, liked, null, address, null, null);
     }
 
+    public Monument(long id, int dataBaseId, String name, String photPath, String description, int year, int nbVisitor, int nbLike, int liked, Localization localization) {
+        this(id, dataBaseId, name, photPath, description, year, nbVisitor, nbLike, liked, localization, null, null, null);
+    }
+
     public Monument(long id, int databaseId, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, Localization localization, Address address) {
         this(id, databaseId, name, photoPath, description, year, nbVisitors, nbLike, localization, address, null, null);
     }
@@ -254,8 +258,9 @@ public class Monument implements Serializable {
         this.descriptors = descriptors;
     }
 
+    @Override
     public String toString(){
-        return getName() +" "+Long.valueOf(getId()).toString()+" "+getDescription();
+        return getName() +" "+Long.valueOf(getId()).toString();
     }
 
     public int getIdNearest() {

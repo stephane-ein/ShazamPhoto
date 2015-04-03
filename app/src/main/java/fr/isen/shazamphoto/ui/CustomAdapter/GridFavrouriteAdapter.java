@@ -61,7 +61,7 @@ public class GridFavrouriteAdapter extends BaseAdapter {
             GetImageURLTask getImageURLTask = new GetImageURLTask(picture);
             getImageURLTask.execute(m.getPhotoPath());
         }else{
-            picture.setImageResource(R.drawable.monument_1);
+            picture.setImageResource(R.drawable.image_not_found);
         }
         name.setText(m.getName());
 

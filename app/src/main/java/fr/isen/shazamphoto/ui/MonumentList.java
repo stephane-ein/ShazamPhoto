@@ -28,7 +28,7 @@ public abstract class MonumentList extends Fragment {
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int position, long arg3) {
                 modelNavigation.changeAppView(new EventDisplayDetailMonument(getActivity(),
-                        monuments.get(position)));
+                        monuments.get(position), modelNavigation));
             }
         });
     }

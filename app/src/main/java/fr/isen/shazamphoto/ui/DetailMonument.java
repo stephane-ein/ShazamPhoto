@@ -98,9 +98,8 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         Button buttonFacebook = (Button) findViewById(R.id.adm_button_sharefacebook);
         Button buttonTwitter = (Button) findViewById(R.id.adm_button_sharetwitter);
 
-        // retrieve the monument and some element of the monument detail activity
         monument = (Monument) getIntent().getSerializableExtra(Monument.NAME_SERIALIZABLE);
-
+        modelNavigation = (ModelNavigation) getIntent().getSerializableExtra(ModelNavigation.KEY);
         setColumnWidthView(getResources().getConfiguration().orientation);
 
         setTitle("");
@@ -139,12 +138,16 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                 nearestMonumentsDAO.getNearestMonuments(this.monument.getId());
         // Set the nearest monuments in the gridView
         if (!monuments.isEmpty()) {
+            Log.v("Shazam", "DM Monument nearest already found"+monument.getName()+" "+monument.getId());
             setGridViewArrayList(monuments);
         } else if (monument.getLocalization() != null) {
+            Log.v("Shazam", "DM search for nearest monument"+monument.getName()+" "+monument.getId());
             Localization l = monument.getLocalization();
             GetMonumentByLocalization getMonumentByLocalization =
                     new GetMonumentByLocalization(this, networkInfo, this, l.getLatitude(), l.getLongitude());
             getMonumentByLocalization.execute();
+        }else {
+            noNearestMonument.setVisibility(View.VISIBLE);
         }
 
         updateButtonLike();
@@ -193,7 +196,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
         if (!monuments.isEmpty()) {
 
-            noNearestMonument.setVisibility(View.INVISIBLE);
+            noNearestMonument.setVisibility(View.GONE);
 
             ArrayList<Monument> monumentsFiltered = new ArrayList<>();
             int size = (monuments.size() > 4) ? NBMAX_MONUMENT_NEAREST_TO_DISPLAY_LANDSCAPE : monuments.size();
@@ -221,6 +224,33 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             }
         }
     }
+    public void setGridViewArrayList(final ArrayList<Monument> m) {
+        // Set the grid view of the nearest monuments
+        GridFavrouriteAdapter gridViewAdapter = new GridFavrouriteAdapter(this, m);
+        gridView.setAdapter(gridViewAdapter);
+        gridViewAdapter.notifyDataSetChanged();
+
+        for(Monument mo : m){
+            Log.v("Shazam", "DM setGridViewArraList monument nearest : "+mo.getName());
+        }
+
+        // Set the listener
+        final DetailMonument detailMonument = this;
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Add the monument o the DB in order to know if the user has liked the monument
+                // and to retrieve the result of hte search off line
+                Monument monument = m.get(position);
+                FunctionsDB.addMonumentToDB(monument, getApplication());
+                Monument mDB = FunctionsDB.getMonument(monument, getApplication());
+                GetMonumentsByName getMonumentsByName =
+                        new GetMonumentsByName(networkInfo, detailMonument, detailMonument, mDB.getName(), null);
+                getMonumentsByName.execute();
+
+            }
+        });
+    }
 
     public void setColumnWidthView(int orientation) {
         Display display = getWindowManager().getDefaultDisplay();
@@ -238,27 +268,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         }
 
         gridView.setColumnWidth(columnWidth);
-    }
-
-    public void setGridViewArrayList(final ArrayList<Monument> m) {
-        // Set the grid view of the nearest monuments
-        GridFavrouriteAdapter gridViewAdapter = new GridFavrouriteAdapter(this, m);
-        gridView.setAdapter(gridViewAdapter);
-        gridViewAdapter.notifyDataSetChanged();
-
-        final DetailMonument detailMonument = this;
-
-        // Set the listener
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Monument monument = m.get(position);
-                GetMonumentsByName getMonumentsByName =
-                        new GetMonumentsByName(networkInfo, detailMonument, detailMonument, monument.getName(), null);
-                getMonumentsByName.execute();
-
-            }
-        });
     }
 
     @Override
@@ -316,6 +325,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             @Override
             public void onClick(View v) {
                 monument.setLiked(1);
+                FunctionsDB.addMonumentToDB(monument, getApplication());
                 FunctionsDB.editMonument(monument, getApplication());
                 updateButtonLike();
                 AddLikeTask task = new AddLikeTask(networkInfo, detailMonument, detailMonument);
@@ -326,8 +336,11 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     @Override
     public void onPostSearch(ArrayList<Monument> monuments, String query) {
-        if(!monuments.isEmpty()){
-            Monument m = monuments.get(0);
+        if( monuments != null && !monuments.isEmpty()){
+            // Add the monument in the DB in order to know if the user has liked the monument
+            // and to retrieve the result of the search off line
+            FunctionsDB.addMonumentToDB(monuments.get(0), getApplicationContext());
+            Monument m = FunctionsDB.getMonument(monuments.get(0), getApplicationContext());
 
             if(m.getName().equals(monument.getName())){
                 // Update the number of like and visitor; because the user clicked on the like button
@@ -336,7 +349,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             }else{
                 // User click a the monument near the current monument (In the grid view)
                 // Display the detail about the monument and start a new activity
-                modelNavigation.changeAppView(new EventDisplayDetailMonument(this, m));
+                modelNavigation.changeAppView(new EventDisplayDetailMonument(this, m, modelNavigation));
                 // Close this activity
                 finish();
             }
@@ -349,12 +362,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             Monument m = eventLocalizationFound.getMonument();
             upDateStatisticsMonument(m);
             updateButtonLike();
-
-            MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(getApplicationContext());
-            monumentSearchDAO.open();
-            Monument mon = monumentSearchDAO.select(monument.getId());
-            monumentSearchDAO.close();
-            Log.v("Shazam", "DM monumentUpdated : "+mon.getLiked());
         }
     }
 
@@ -377,7 +384,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         nbLikes.setText(Integer.valueOf(monument.getNbLike()).toString());
         nbVisitors.setText(Integer.valueOf(monument.getNbVisitors()).toString());
     }
-
 
     private void setListenerShareTwitter(Button buttonTwitter) {
         buttonTwitter.setOnClickListener(new View.OnClickListener() {

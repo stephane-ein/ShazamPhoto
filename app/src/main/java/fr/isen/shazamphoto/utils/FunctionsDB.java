@@ -28,6 +28,14 @@ public class FunctionsDB {
         }
     }
 
+    public static Monument getMonument(Monument monument, Context context){
+        MonumentDAO monumentDAO = new MonumentDAO(context);
+        monumentDAO.open();
+        Monument monument1 = monumentDAO.select(monument.getId());
+        monumentDAO.close();
+        return monument;
+    }
+
     public static void addMonumentToTaggedMonument(Monument monument, Context context) {
         TaggedMonumentDAO taggedMonumentDAO = new TaggedMonumentDAO(context);
         taggedMonumentDAO.open();
@@ -44,6 +52,14 @@ public class FunctionsDB {
             monumentSearchDAO.insert(monument);
         }
         monumentSearchDAO.close();
+    }
+
+    public static Monument getMonumentSearch(Monument monument, Context context){
+        MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(context);
+        monumentSearchDAO.open();
+        Monument monument1 = monumentSearchDAO.select(monument.getId());
+        monumentSearchDAO.close();
+        return monument1;
     }
 
     public static ArrayList<Monument> getAllMonumentSearch(Context context) {
@@ -90,8 +106,6 @@ public class FunctionsDB {
     }
 
     public static void editMonument(Monument monument, Context context) {
-        Log.v("Shazam", "FunctionDB editMonument before if: " + monument.getLiked() + " monument id: " + monument.getId());
-        Log.v("Shazam", "FunctionDB editMonument in if: " + monument.getLiked());
         MonumentDAO dao = new MonumentDAO(context);
         dao.open();
         dao.edit(monument);

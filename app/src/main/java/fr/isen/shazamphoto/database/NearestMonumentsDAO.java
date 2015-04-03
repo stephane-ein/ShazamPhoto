@@ -3,6 +3,7 @@ package fr.isen.shazamphoto.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,8 @@ public class NearestMonumentsDAO extends ShazamDAO{
     public ArrayList<Monument> getNearestMonuments(long id){
         ArrayList<Monument> monuments = new ArrayList<>();
 
+        Log.v("Shazam", "NMDAO monument id : "+id);
+
         String args[] = {String.valueOf(id)};
         Cursor c = mDb.query(DatabaseHandler.NEAREST_MONUMENTS_TABLE_NAME,
                 DatabaseHandler.NEAREST_MONUMENTS_ALL_COLUMNS,
@@ -35,24 +38,16 @@ public class NearestMonumentsDAO extends ShazamDAO{
 
         while(c.moveToNext()) {
             long idNearestMonument = c.getLong(2);
-
+            Log.v("Shazam", "NMDAO nearest monument id : "+idNearestMonument);
             String argsM[] = {String.valueOf(idNearestMonument)};
-            Monument monument = null;
             Cursor cM = mDb.query(DatabaseHandler.MONUMENTS_TABLE_NAME,
                     DatabaseHandler.MONUMENTS_ALL_COLUMNS, DatabaseHandler.MONUMENTS_KEY + " = ?",
                     argsM, "", "", "");
             if(cM.moveToFirst()) {
-                monument =  cursorToMonument(cM);
-                String args2[] = {String.valueOf(cM.getLong(7))};
-                cM = mDb.query(DatabaseHandler.LOCALIZATION_TABLE_NAME,
-                        DatabaseHandler.LOCALIZATION_ALL_COLUMNS,
-                        DatabaseHandler.LOCALIZATION_KEY + " = ?", args2, "", "", "");
-                if(cM.moveToFirst()) {
-                    monument.setLocalization(new Localization(cM.getLong(0), cM.getDouble(1),
-                            cM.getDouble(2)));
-                }
+                Monument monument =  cursorToMonument(cM);
+                Log.v("Shazam", "NMDAO monument nearest : "+monument);
+                monuments.add(monument);
             }
-            monuments.add(monument);
         }
 
         return monuments;

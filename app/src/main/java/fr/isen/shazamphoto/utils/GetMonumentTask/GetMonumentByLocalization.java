@@ -22,7 +22,7 @@ public class GetMonumentByLocalization extends GetMonumentTask {
                                      Activity activity, Double latitude, Double longitude) {
         super(networkInfoArea, activity);
         this.searchMonumentsByLocalization = item;
-        setUrlWithArguments( "la=" + latitude + "&lo=" + longitude + "&o=" + ConfigurationShazam.DELTA_LOCALIZATION);
+        setUrlWithArguments("la=" + latitude + "&lo=" + longitude + "&o=" + ConfigurationShazam.DELTA_LOCALIZATION);
     }
 
     public void onPostExecute(EventInternetTask result) {
@@ -30,20 +30,20 @@ public class GetMonumentByLocalization extends GetMonumentTask {
         JSONObject jsonResponse = result.getJsonResponse();
         // update the UI if there is not internet
         updateUI(result.isInternetfound());
-        if (result != null ) {
-            ArrayList<Monument> monuments = new ArrayList<>();
-            try {
-                JSONArray monumentsJSON = jsonResponse.getJSONArray("Search");
-                int nbMonuments = monumentsJSON.length();
-                for (int i = 0; i < nbMonuments; i++) {
-                    JSONObject monumentJSON = monumentsJSON.getJSONObject(i);
-                    monuments.add(new Monument(monumentJSON));
-                }
-            } catch (Exception e) {
-                Log.e("Shazam", "Exception in GetMonumentByLocalization : "+e.getMessage());
+        ArrayList<Monument> monuments = new ArrayList<>();
+        try {
+            JSONArray monumentsJSON = jsonResponse.getJSONArray("Search");
+            int nbMonuments = monumentsJSON.length();
+            for (int i = 0; i < nbMonuments; i++) {
+                JSONObject monumentJSON = monumentsJSON.getJSONObject(i);
+                monuments.add(new Monument(monumentJSON));
             }
-            searchMonumentsByLocalization.monumentsFoundByLocalization(monuments);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Shazam", "Exception in GetMonumentByLocalization : " + e.getMessage());
         }
+        searchMonumentsByLocalization.monumentsFoundByLocalization(monuments);
+
 
     }
 }
