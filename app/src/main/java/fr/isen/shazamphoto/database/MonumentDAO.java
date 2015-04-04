@@ -85,14 +85,9 @@ public class MonumentDAO extends ShazamDAO {
         value.put(DatabaseHandler.MONUMENTS_LATITUDE, monument.getLocalization().getLatitude());
         value.put(DatabaseHandler.MONUMENTS_LONGITUDE, monument.getLocalization().getLongitude());
         if(monument.getLocalization() != null) value.put(DatabaseHandler.MONUMENTS_LOCALISATION_KEY, monument.getLocalization().getId());
-
+        value.put(DatabaseHandler.MONUMENTS_PHOTO_PATH_LOCAL, monument.getPhotoPathLocal());
         return value;
     }
-
-    /*
-    protected Monument cursorToMonument(Cursor cursor) {
-        return new Monument(cursor.getLong(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getInt(7), cursor.getInt(8), null);
-    }*/
 
     public long getMonumentId(Monument film) {
         long id = -1;

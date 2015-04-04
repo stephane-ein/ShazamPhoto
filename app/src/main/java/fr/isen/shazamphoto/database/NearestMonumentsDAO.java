@@ -29,8 +29,6 @@ public class NearestMonumentsDAO extends ShazamDAO{
     public ArrayList<Monument> getNearestMonuments(long id){
         ArrayList<Monument> monuments = new ArrayList<>();
 
-        Log.v("Shazam", "NMDAO monument id : "+id);
-
         String args[] = {String.valueOf(id)};
         Cursor c = mDb.query(DatabaseHandler.NEAREST_MONUMENTS_TABLE_NAME,
                 DatabaseHandler.NEAREST_MONUMENTS_ALL_COLUMNS,
@@ -38,14 +36,12 @@ public class NearestMonumentsDAO extends ShazamDAO{
 
         while(c.moveToNext()) {
             long idNearestMonument = c.getLong(2);
-            Log.v("Shazam", "NMDAO nearest monument id : "+idNearestMonument);
             String argsM[] = {String.valueOf(idNearestMonument)};
             Cursor cM = mDb.query(DatabaseHandler.MONUMENTS_TABLE_NAME,
                     DatabaseHandler.MONUMENTS_ALL_COLUMNS, DatabaseHandler.MONUMENTS_KEY + " = ?",
                     argsM, "", "", "");
             if(cM.moveToFirst()) {
                 Monument monument =  cursorToMonument(cM);
-                Log.v("Shazam", "NMDAO monument nearest : "+monument);
                 monuments.add(monument);
             }
         }

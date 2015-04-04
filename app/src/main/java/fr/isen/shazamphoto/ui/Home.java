@@ -55,7 +55,6 @@ public class Home extends ActionBarActivity implements SearchableItem {
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(sectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(4);
 
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);

@@ -16,17 +16,6 @@ public class LoadPicture {
     public static final int IMAGE_PROCESS_WIDTH = 480;
     public static final int IMAGE_PROCESS_HEIGHT = 640;
 
-
-    public static void setPicture(Monument monument, ImageView imageView){
-        //Set the picture
-        if (monument.getPhotoPath() != null && !monument.getPhotoPath().isEmpty()) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 4;
-            Bitmap bitmap = BitmapFactory.decodeFile(monument.getPhotoPath(), options);
-            imageView.setImageBitmap(bitmap);
-        }
-    }
-
     public static void setPictureFromFile(String photoPath, ImageView imageView, int reqWidth, int reqHeight){
         // Retrieve the bitmap sampled and set the image view with the bitmap
         Bitmap bitmap = getPictureFromFile(photoPath, reqWidth, reqHeight);
@@ -40,6 +29,19 @@ public class LoadPicture {
             Log.v("Shazam", "LP setPictureFromURL : "+bitmap);
             imageView.setImageBitmap(bitmap);
         }
+    }
+
+    public static Bitmap setPicture(Monument monument, int reqWidth, int reqHeight, ImageView imageView){
+        Bitmap bitmap = null;
+        if(monument.getPhotoPathLocal() != null && !monument.getPhotoPathLocal().isEmpty()){
+            bitmap = getPictureFromFile(monument.getPhotoPathLocal(), reqWidth, reqHeight);
+            if(bitmap != null) imageView.setImageBitmap(bitmap);
+        }
+        if(bitmap == null && monument.getPhotoPath() != null && !monument.getPhotoPath().isEmpty()){
+            GetImageURLTask getImageURLTask = new GetImageURLTask(imageView);
+            getImageURLTask.execute(monument.getPhotoPath());
+        }
+        return bitmap;
     }
 
     public static Bitmap getPictureFromFile(String photoPath, int reqWidth, int reqHeight){

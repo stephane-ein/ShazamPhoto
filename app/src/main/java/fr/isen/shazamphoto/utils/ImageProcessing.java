@@ -27,15 +27,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
+public class ImageProcessing {
 
     public static final Size size = new Size(640, 480);
 
-    private HttpClient httpclient = new DefaultHttpClient();
-    private HttpPost httppost = new HttpPost("http://37.187.216.159/shazam/identify.php");
     private HttpResponse response;
-    private String keyPointToSend = null;
-    private String descriptorToSend = null;
     private File imgFile;
 
     // Information about the picture
@@ -43,11 +39,9 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
     private KeyPoint[] keyPointArray;
     private String photoPath;
 
-    // Add the several information about the picture to the request to identify the monument
     private ShazamProcessingTask shazamProcessingTask;
 
     private Context activityContext = null;
-
 
     public ImageProcessing(Context activityContext, ShazamProcessingTask shazamProcessingTask,
                            String photoPath) {
@@ -121,7 +115,7 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
                         shazamProcessingTask.setPhotoPath(path);
 
                     } else {
-                        Toast.makeText(activityContext, "Error : image null or doesn't exist", Toast.LENGTH_LONG).show();
+                        Toast.makeText(activityContext, "Error : The picture has been removed", Toast.LENGTH_LONG).show();
                     }
                 }
                 break;
@@ -135,8 +129,6 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
 
 
     private void writeToFile(File file, String data) {
-
-
         try {
             FileOutputStream stream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(stream);
@@ -148,87 +140,6 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
         }
 
     }
-/*
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
-    }
-
-    @Override
-    protected JSONObject doInBackground(String... params) {
-        JSONObject jsonResponse = null;
-        try {
-            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
-            nameValuePairs.add(new BasicNameValuePair("listskeypoints", KeyPoints.toJson(this.keyPointArray).toString()));
-            nameValuePairs.add(new BasicNameValuePair("descriptors", Descriptors.toJson(this.descriptors).toString()));
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-
-            entity.setContentType("application/x-www-form-urlencoded");
-            httppost.setEntity(entity);
-
-            // Execute HTTP Post Request
-            response = httpclient.execute(httppost);
-            BufferedReader rd = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent()));
-            StringBuffer result = new StringBuffer();
-            String line = "";
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
-            }
-            System.out.println("Result Identify : " + result.toString());
-            jsonResponse = new JSONObject(result.toString());
-        } catch (Exception e) {
-
-        }
-        return jsonResponse;
-    }
-
-    @Override
-    public void onPostExecute(JSONObject result) {
-        //monument doesn't exist
-        Monument monument1 = new Monument();
-        monument1.setDescriptors(this.descriptors);
-        monument1.setKeyPoints(this.keyPointArray);
-        Intent intent = new Intent(this.getActivityContext(), UnidentifiedMonument.class);
-        Bundle args = new Bundle();
-        args.putSerializable(Monument.NAME_SERIALIZABLE, monument1);
-        intent.putExtras(args);
-        getActivityContext().startActivity(intent);
-
-        try {
-
-            if(result != null){
-                if (result.toString().equals("{}")) {
-                    Toast.makeText(this.activityContext, " Monument not identify", Toast.LENGTH_LONG).show();
-                    Monument monument = new Monument();
-                    monument.setDescriptors(this.descriptors);
-                    monument.setKeyPoints(this.keyPointArray);
-                    Intent intent = new Intent(this.getActivityContext(), UnidentifiedMonument.class);
-                    Bundle args = new Bundle();
-                    args.putSerializable(Monument.NAME_SERIALIZABLE, monument);
-                    intent.putExtras(args);
-                    getActivityContext().startActivity(intent);
-                } else{
-                    Toast.makeText(this.activityContext, "Monument identified", Toast.LENGTH_LONG).show();
-                    Toast.makeText(this.activityContext, "Result : "+result.toString(), Toast.LENGTH_LONG).show();
-                }
-            }else{
-                Toast.makeText(this.activityContext, "Answser server NULL", Toast.LENGTH_LONG).show();
-            }
-        } catch (Exception e) {
-            Toast.makeText(this.activityContext, "Error : "+e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
-*/
-
-    public HttpPost getHttppost() {
-        return httppost;
-    }
-
-    public void setHttppost(HttpPost httppost) {
-        this.httppost = httppost;
-    }
 
     public HttpResponse getResponse() {
         return response;
@@ -237,34 +148,4 @@ public class ImageProcessing /*extends AsyncTask<String, Void, JSONObject>*/ {
     public void setResponse(HttpResponse response) {
         this.response = response;
     }
-
-    public HttpClient getHttpclient() {
-        return httpclient;
-    }
-
-    public void setHttpclient(HttpClient httpclient) {
-        this.httpclient = httpclient;
-    }
-
-    public String getKeyPointToSend() {
-        return keyPointToSend;
-    }
-
-    public void setKeyPointToSend(String keyPointToSend) {
-        this.keyPointToSend = keyPointToSend;
-    }
-
-    public String getDescriptorToSend() {
-        return descriptorToSend;
-    }
-
-    public void setDescriptorToSend(String descriptorToSend) {
-        this.descriptorToSend = descriptorToSend;
-    }
-
-    public void setKeyPointArray(KeyPoint[] keyPointArray) {
-        this.keyPointArray = keyPointArray;
-    }
-
-
 }

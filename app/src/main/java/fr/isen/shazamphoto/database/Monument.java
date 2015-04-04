@@ -16,6 +16,7 @@ public class Monument implements Serializable {
     private long id;
     private HashMap<String, Characteristic> characteristics; // Value of the langue is the key
     private String photoPath;
+    private String photoPathLocal;
     private int year;
     private int nbVisitors;
     private int nbLike;
@@ -81,6 +82,15 @@ public class Monument implements Serializable {
     }
 
     public Monument(long id, int databaseId, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, int liked, Localization localization, Address address, KeyPoint[] keyPoints, Mat descriptors) {
+       this(id, databaseId, name, photoPath, description, year, nbVisitors, nbLike, liked, localization, address, keyPoints, descriptors, null);
+    }
+
+    public Monument(long id, int dataBaseId, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, int liked, Localization localization, String photoPathLocal) {
+        this(id, dataBaseId, name, photoPath, description, year, nbVisitors, nbLike, liked, localization, null, null, null, photoPathLocal);
+    }
+
+    public Monument(long id, int databaseId, String name, String photoPath, String description, int year, int nbVisitors, int nbLike, int liked, Localization localization,
+                    Address address, KeyPoint[] keyPoints, Mat descriptors, String photoPathLocal) {
         this.id = id;
         this.characteristics = new HashMap<>();
         Characteristic characteristic = new Characteristic(name, description, new Language(LanguageAvailable.DEFAULT_NAME, LanguageAvailable.DEFAULT_VALUE));
@@ -95,6 +105,7 @@ public class Monument implements Serializable {
         this.descriptors = descriptors;
         this.liked = liked;
         this.databaseId = databaseId;
+        this.photoPathLocal = photoPathLocal;
     }
 
     public Monument(JSONObject jsonMonument) {
@@ -285,6 +296,14 @@ public class Monument implements Serializable {
 
     public void setLiked(int liked) {
         this.liked = liked;
+    }
+
+    public String getPhotoPathLocal() {
+        return photoPathLocal;
+    }
+
+    public void setPhotoPathLocal(String photoPathLocal) {
+        this.photoPathLocal = photoPathLocal;
     }
 }
 

@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 import fr.isen.shazamphoto.ui.ItemUtils.UpdateMonumentItem;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
+import fr.isen.shazamphoto.utils.LoadPicture;
 import fr.isen.shazamphoto.utils.UpdateMonument.AddDescriptorsKeyPointsTask;
 
 public class PromptNameMonument extends Fragment implements SearchableItem, SearchMonumentsByLocalization, SearchLocalizationItem,
@@ -60,6 +63,10 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
         listView = (ListView) rootView.findViewById(R.id.fpnm_lv_nearest_monument);
         buttonSend = (Button) rootView.findViewById(R.id.fpnm_but_send);
         llProgessBar = (LinearLayout) rootView.findViewById(R.id.fpnm_progress_bar);
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.fpnm_iv_monument);
+
+        // Display the picture taken
+        LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT, imageView);
 
         final PromptNameMonument promptNameMonument = this;
         final EditText editText = (EditText) rootView.findViewById(R.id.editText_prompname_monument);
@@ -67,7 +74,7 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
             @Override
             public void onClick(View view) {
 
-                // Ask the server if the monument already exist and disable the button to send the informations
+                // Ask the server if the monument already exist and disable the button to send the information
                 displayLoading();
                 buttonSend.setEnabled(false);
                 //buttonSend.setBackgroundResource(R.drawable.button_selected);

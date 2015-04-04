@@ -48,6 +48,7 @@ import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetImageURLTask;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
+import fr.isen.shazamphoto.utils.LoadPicture;
 import fr.isen.shazamphoto.utils.UpdateMonument.AddLikeTask;
 
 
@@ -101,8 +102,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         setTitle("");
 
         //Set the picture
-        GetImageURLTask getImageURLTask = new GetImageURLTask(photoView);
-        getImageURLTask.execute(monument.getPhotoPath());
+        LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT, photoView);
 
         //Set the monument information
         title.setText(monument.getName());
@@ -134,10 +134,8 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                 nearestMonumentsDAO.getNearestMonuments(this.monument.getId());
         // Set the nearest monuments in the gridView
         if (!monuments.isEmpty()) {
-            Log.v("Shazam", "DM Monument nearest already found" + monument.getName() + " " + monument.getId());
             setGridViewArrayList(monuments);
         } else if (monument.getLocalization() != null) {
-            Log.v("Shazam", "DM search for nearest monument" + monument.getName() + " " + monument.getId());
             Localization l = monument.getLocalization();
             GetMonumentByLocalization getMonumentByLocalization =
                     new GetMonumentByLocalization(this, networkInfo, this, l.getLatitude(), l.getLongitude());
@@ -226,10 +224,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         GridFavrouriteAdapter gridViewAdapter = new GridFavrouriteAdapter(this, m);
         gridView.setAdapter(gridViewAdapter);
         gridViewAdapter.notifyDataSetChanged();
-
-        for (Monument mo : m) {
-            Log.v("Shazam", "DM setGridViewArraList monument nearest : " + mo.getName());
-        }
 
         // Set the listener
         final DetailMonument detailMonument = this;
@@ -323,7 +317,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             public void onClick(View v) {
                 monument.setLiked(1);
                 FunctionsDB.editMonument(monument, getApplication());
-                Log.v("Shazam", " DM action like update : " + FunctionsDB.getMonument(monument, getApplication()).getLiked());
                 updateButtonLike();
                 AddLikeTask task = new AddLikeTask(networkInfo, detailMonument, detailMonument);
                 task.execute(monument);
@@ -338,7 +331,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
             // and to retrieve the result of the search off line
             FunctionsDB.addMonumentToDB(monuments.get(0), getApplicationContext());
             Monument m = FunctionsDB.getMonument(monuments.get(0), getApplicationContext());
-            Log.v("Shazam", "DM onPOstSeRCH M : "+m+" "+monuments.get(0)+" monument: "+monument);
 
             if (m.getName().equals(monument.getName())) {
                 // Update the number of like and visitor; because the user clicked on the like button

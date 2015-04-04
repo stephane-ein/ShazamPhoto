@@ -32,10 +32,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String MONUMENTS_LOCALISATION_KEY = "localisationKey";
     public static final String MONUMENTS_LATITUDE = "latitude";
     public static final String MONUMENTS_LONGITUDE = "longitude";
+    public static final String MONUMENTS_PHOTO_PATH_LOCAL = "photoPathLocal";
 
     //tableau content toutes les colomnes de la table
     public static final String MONUMENTS_ALL_COLUMNS[] = {MONUMENTS_KEY, MONUMENT_DATABASE_ID, MONUMENTS_NAME, MONUMENTS_PHOTO_PATH, MONUMENTS_DESCRIPTION, MONUMENTS_YEAR, MONUMENTS_NB_VISITORS,
-            MONUMENTS_NB_VISITED, MONUMENTS_LIKED, MONUMENTS_LATITUDE, MONUMENTS_LONGITUDE, MONUMENTS_LOCALISATION_KEY};
+            MONUMENTS_NB_VISITED, MONUMENTS_LIKED, MONUMENTS_LATITUDE, MONUMENTS_LONGITUDE, MONUMENTS_LOCALISATION_KEY, MONUMENTS_PHOTO_PATH_LOCAL};
     public static final String MONUMENTS_TABLE_NAME = "monuments";
     //script de création de la table
     public static final String MONUMENTS_TABLE_CREATE =
@@ -52,6 +53,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     MONUMENTS_LATITUDE + " REAL, "+
                     MONUMENTS_LONGITUDE + " REAL, "+
                     MONUMENTS_LOCALISATION_KEY + " INTEGER, " +
+                    MONUMENTS_PHOTO_PATH_LOCAL + " TEXT, "+
                     "FOREIGN KEY(" + MONUMENTS_LOCALISATION_KEY + ") REFERENCES " + LOCALIZATION_TABLE_NAME + "(" + LOCALIZATION_KEY + "));";
 
     //script de suppression
@@ -114,7 +116,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
-
 
     //		****************table SEARCH_MONUMENT*******************
     public static final String SEARCH_MONUMENTS_KEY = "id";

@@ -179,6 +179,7 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
             if(jsonReponse != null){
                 if (jsonReponse.toString().equals("{}")) {
                     Monument monument = new Monument(keyPoints, descriptors, localization, photoPath);
+                    monument.setPhotoPathLocal(photoPath);
                     modelNavigation.changeAppView(
                             new EventUnidentifiedMonument(activity, monument, modelNavigation));
                 } else{
