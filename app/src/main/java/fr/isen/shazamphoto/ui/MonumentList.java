@@ -33,7 +33,6 @@ public abstract class MonumentList extends Fragment {
         });
     }
 
-
     public AbsListView getAbsListView() {
         return absListView;
     }

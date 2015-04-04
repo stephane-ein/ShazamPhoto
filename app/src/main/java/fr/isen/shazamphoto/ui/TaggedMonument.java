@@ -46,12 +46,13 @@ public class TaggedMonument extends MonumentList {
         return view;
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
         if (getActivity() != null) {
+            setAdapter(new GridFavrouriteAdapter(getActivity(), getTaggedMonuments()));
             setListMonuments(getTaggedMonuments(), getAdapter(), getAbsListView());
-            setRetainInstance(true);
         }
     }
 

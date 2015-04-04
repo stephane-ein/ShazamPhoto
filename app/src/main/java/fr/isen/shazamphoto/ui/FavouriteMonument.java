@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,15 @@ public class FavouriteMonument extends MonumentList {
         setListMonuments(getFavouriteMonuments(), getAdapter(), getAbsListView());
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null) {
+            setAdapter(new GridFavrouriteAdapter(getActivity(), getFavouriteMonuments()));
+            setListMonuments(getFavouriteMonuments(), getAdapter(), getAbsListView());
+        }
     }
 
     public ArrayList<Monument> getFavouriteMonuments() {
