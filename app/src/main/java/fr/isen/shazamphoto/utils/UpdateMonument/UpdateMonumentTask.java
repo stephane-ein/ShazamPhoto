@@ -78,7 +78,7 @@ public abstract class UpdateMonumentTask extends InternetTask<Monument, Void, Ev
         }
         catch(Exception e) {
             e.printStackTrace();
-            Log.e("Shazam", "Expction in UMT : "+e.getMessage());
+            Log.e("Shazam", "Exception in UMT : "+e.getMessage());
         }
 
         return new EventInternetTask(isNetworkFound, jsonResponse);

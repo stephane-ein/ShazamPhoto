@@ -1,13 +1,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="fr.isen.shazamphoto.ui.UnidentifiedMonument$PlaceholderFragment">
 
     <LinearLayout
         android:id="@+id/linear_layout_root"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:orientation="vertical">
 
@@ -20,77 +20,98 @@
             android:src="@drawable/image_not_found" />
 
 
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/fpnm_cv_monument_name"
-            android:layout_width="fill_parent"
+        <TextView
+            android:id="@+id/textView_know_monument"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            card_view:cardCornerRadius="4dp">
+            android:layout_gravity="center"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="@dimen/abc_text_size_body_2_material"
+            android:fontFamily="sans-serif-medium"
+            android:text="Did you know this monument ?"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/abc_text_size_body_2_material" />
 
-            <TextView
-                android:id="@+id/textView_know_monument"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="@dimen/abc_text_size_body_2_material"
-                android:fontFamily="sans-serif-medium"
-                android:text="Did you know this monument ?"
-                android:textSize="@dimen/abc_text_size_body_2_material" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/abc_text_size_body_2_material"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="@dimen/abc_text_size_body_2_material"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/linear_layout_name_monument"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/abc_text_size_body_2_material"
-                android:layout_marginTop="@dimen/abc_text_size_body_2_material"
-                android:orientation="vertical">
+                android:layoutDirection="ltr"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editText_prompname_monument"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:fontFamily="sans-serif-thin"
+                    android:hint="Monument name..."
+                    android:imeOptions="actionGo"
+                    android:inputType="text"
+                    android:textSize="18dp" />
+
+                <Button
+                    android:id="@+id/fpnm_but_send"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button"
+                    android:fontFamily="sans-serif_thin"
+                    android:text="SEND"
+                    android:visibility="visible" />
 
                 <LinearLayout
-                    android:id="@+id/linear_layout_name_monument"
-                    android:layout_width="fill_parent"
+                    android:id="@+id/fpnm_progress_bar"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:layoutDirection="ltr"
-                    android:orientation="horizontal">
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                    <EditText
-                        android:id="@+id/editText_prompname_monument"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/abc_action_bar_icon_vertical_padding_material"
-                        android:fontFamily="sans-serif-thin"
-                        android:hint="Monument name..."
-                        android:imeOptions="actionGo"
-                        android:textSize="18dp"
-                        android:inputType="text" />
+                    <ProgressBar style="@style/GenericProgressIndicator" />
                 </LinearLayout>
 
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </LinearLayout>
 
         <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card_view_informations"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             card_view:cardCornerRadius="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/fpnm_tv_nearest_monument"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_marginTop="@dimen/abc_text_size_body_2_material"
                     android:fontFamily="sans-serif-medium"
-                    android:text="Nearest monuments"
+                    android:text="We found some monuments around you"
                     android:textSize="@dimen/abc_text_size_body_2_material" />
 
                 <ListView
                     android:id="@+id/fpnm_lv_nearest_monument"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="250dp"
                     android:layout_marginBottom="@dimen/abc_text_size_body_2_material"
                     android:layout_marginTop="@dimen/abc_text_size_body_2_material"
                     android:divider="@android:color/transparent"

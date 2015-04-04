@@ -21,7 +21,6 @@ public class AddLikeTask extends UpdateMonumentTask {
 
     @Override
     public List<NameValuePair> createArguments(Monument monument) {
-        UrlEncodedFormEntity entity = null;
 
         List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(monument.getDatabaseId())));

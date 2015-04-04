@@ -13,8 +13,10 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,20 +24,26 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
+import fr.isen.shazamphoto.events.EventMonumentUpdated;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.CustomAdapter.NearestListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
+import fr.isen.shazamphoto.ui.ItemUtils.UpdateMonumentItem;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
+import fr.isen.shazamphoto.utils.UpdateMonument.AddDescriptorsKeyPointsTask;
 
-public class PromptNameMonument extends Fragment implements SearchableItem, SearchMonumentsByLocalization, SearchLocalizationItem {
+public class PromptNameMonument extends Fragment implements SearchableItem, SearchMonumentsByLocalization, SearchLocalizationItem,
+        UpdateMonumentItem{
 
     private Monument monument;
     private String monumentName;
     private ListView listView;
     private LocateManager locateManager;
+    private Button buttonSend;
+    private LinearLayout llProgessBar;
 
     public PromptNameMonument() {
     }
@@ -45,34 +53,37 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
                              Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        getActivity().setTitle("Unidentified monument...");
+
         View rootView = inflater.inflate(R.layout.fragment_prompt_name_monument, container, false);
         monument = (Monument) getArguments().getSerializable(Monument.NAME_SERIALIZABLE);
         listView = (ListView) rootView.findViewById(R.id.fpnm_lv_nearest_monument);
+        buttonSend = (Button) rootView.findViewById(R.id.fpnm_but_send);
+        llProgessBar = (LinearLayout) rootView.findViewById(R.id.fpnm_progress_bar);
 
         final PromptNameMonument promptNameMonument = this;
         final EditText editText = (EditText) rootView.findViewById(R.id.editText_prompname_monument);
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_GO) {
-                    //Close the keyboard
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                            Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+            public void onClick(View view) {
 
-                    // Ask the server if the monument already exist
-                    // If yes, we add more information about the descriptor of the monument
-                    monumentName = v.getText().toString();
-                    GetMonumentsByName getMonumentsByName = new GetMonumentsByName(null, getActivity(),promptNameMonument,
-                            v.getText().toString());
-                    getMonumentsByName.execute();
+                // Ask the server if the monument already exist and disable the button to send the informations
+                displayLoading();
+                buttonSend.setEnabled(false);
+                //buttonSend.setBackgroundResource(R.drawable.button_selected);
+                monumentName = editText.getText().toString();
+                GetMonumentsByName getMonumentsByName = new GetMonumentsByName(null, getActivity(),promptNameMonument,
+                        editText.getText().toString());
+                getMonumentsByName.execute();
 
-                }
-                return false;
+                // Close the keyboard
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
             }
         });
 
-        // Check if the monument retrieve has a localization
+        // Check if the monument retrieve has a localization in order to retrieve the monument rear the user
         if(monument.getLocalization() != null){
             GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(this, null, getActivity(),
                     monument.getLocalization().getLatitude(), monument.getLocalization().getLongitude());
@@ -100,8 +111,10 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
         }else{
             // The monument has not been identified and
             // the picture took by the user will increase the descriptor for the monument
-
-            getActivity().finish();
+            Monument m = monuments.get(0);
+            monument.setDatabaseId(m.getDatabaseId());
+            AddDescriptorsKeyPointsTask addDescriptorsKeyPointsTask = new AddDescriptorsKeyPointsTask(null, getActivity(), this);
+            addDescriptorsKeyPointsTask.execute(monument);
         }
     }
 
@@ -120,5 +133,21 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
         GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(this, null, getActivity(),
                 localization1.getLatitude(),localization1.getLongitude());
         getMonumentByLocalization.execute();
+    }
+
+    @Override
+    public void monumentUpdated(EventMonumentUpdated eventLocalizationFound) {
+        Toast.makeText(getActivity(), "The monument descriptors has been added", Toast.LENGTH_LONG).show();
+        hideLoading();
+    }
+
+    public void displayLoading(){
+        llProgessBar.setVisibility(View.VISIBLE);
+        buttonSend.setVisibility(View.GONE);
+    }
+
+    public void hideLoading(){
+        llProgessBar.setVisibility(View.GONE);
+        buttonSend.setVisibility(View.VISIBLE);
     }
 }
