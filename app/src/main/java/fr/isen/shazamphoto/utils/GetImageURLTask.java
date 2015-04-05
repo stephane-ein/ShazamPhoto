@@ -2,6 +2,7 @@ package fr.isen.shazamphoto.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -37,8 +38,9 @@ public class GetImageURLTask extends AsyncTask<String, Void, Bitmap> {
     protected void onPostExecute(Bitmap bitmap) {
 
         if (bitmap != null) {
-            imageView.setImageBitmap(bitmap);
-        }else{
+            Bitmap bitmapFinal = LoadPicture.checkRotation(bitmap, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
+            imageView.setImageBitmap(bitmapFinal);
+        } else {
             imageView.setImageResource(R.drawable.image_not_found);
 
         }

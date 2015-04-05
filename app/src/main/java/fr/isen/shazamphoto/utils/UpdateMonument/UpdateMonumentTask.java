@@ -45,7 +45,7 @@ public abstract class UpdateMonumentTask extends InternetTask<Monument, Void, Ev
             if(isNetworkFound){
                 List<NameValuePair> args = createArguments(monument);
                 for (NameValuePair value : args){
-                    Log.v("Shazam", "UMT ListNamePairValue : "+value.getValue());
+                    Log.v("Shazam", "UMT ListNamePairValue key : "+value.getName()+" value :"+value.getValue());
                 }
                 UrlEncodedFormEntity entity = new UrlEncodedFormEntity(createArguments(monument));
                 entity.setContentType("application/x-www-form-urlencoded");

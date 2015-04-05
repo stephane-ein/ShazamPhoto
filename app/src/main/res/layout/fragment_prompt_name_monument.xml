@@ -1,20 +1,20 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     tools:context="fr.isen.shazamphoto.ui.UnidentifiedMonument$PlaceholderFragment">
 
     <LinearLayout
         android:id="@+id/linear_layout_root"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/fpnm_iv_monument"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginBottom="20dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/image_text"
@@ -87,40 +87,35 @@
             </LinearLayout>
         </LinearLayout>
 
-        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_view_informations"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            card_view:cardCornerRadius="4dp">
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fpnm_tv_nearest_monument"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="25dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Some monuments around you"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/abc_text_size_body_2_material" />
 
-                <TextView
-                    android:id="@+id/fpnm_tv_nearest_monument"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_marginTop="@dimen/abc_text_size_body_2_material"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="We found some monuments around you"
-                    android:textSize="@dimen/abc_text_size_body_2_material" />
+            <ListView
+                android:id="@+id/fpnm_lv_nearest_monument"
+                android:layout_width="fill_parent"
+                android:layout_height="250dp"
+                android:layout_marginBottom="@dimen/abc_text_size_body_2_material"
+                android:layout_marginTop="@dimen/abc_text_size_body_2_material"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="10.0sp"
+                android:listSelector="@drawable/list_row_selector" />
+        </LinearLayout>
 
-                <ListView
-                    android:id="@+id/fpnm_lv_nearest_monument"
-                    android:layout_width="fill_parent"
-                    android:layout_height="250dp"
-                    android:layout_marginBottom="@dimen/abc_text_size_body_2_material"
-                    android:layout_marginTop="@dimen/abc_text_size_body_2_material"
-                    android:divider="@android:color/transparent"
-                    android:dividerHeight="10.0sp"
-                    android:listSelector="@drawable/list_row_selector" />
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
     </LinearLayout>
 
 </ScrollView>

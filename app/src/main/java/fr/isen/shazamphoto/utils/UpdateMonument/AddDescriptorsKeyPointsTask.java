@@ -34,7 +34,7 @@ public class AddDescriptorsKeyPointsTask extends UpdateMonumentTask{
             JSONArray keyPointsArray = new JSONArray();
             JSONObject keyPointsObject = new JSONObject();
             keyPointsObject.put("listskeypoints", keyPoints);
-            keyPointsArray.put(keyPointsObject);
+            keyPointsArray.put(keyPoints);
             nameValuePairs.add(new BasicNameValuePair("listskeypoints", keyPointsArray.toString()));
         }catch (Exception e){
             e.printStackTrace();

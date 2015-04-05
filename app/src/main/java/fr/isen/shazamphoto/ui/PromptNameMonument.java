@@ -100,6 +100,9 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
             locateManager = new LocateManager( (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE), this);
             locateManager.startListening();
         }
+
+        setRetainInstance(true);
+
         return rootView;
     }
 
