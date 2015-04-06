@@ -45,11 +45,11 @@ public class FunctionsDB {
         taggedMonumentDAO.close();
     }
 
-    public static void addMonumentToMonumentSearch(Monument monument, Context context) {
+    public static void addMonumentToMonumentSearch(Monument monument, Context context, String query) {
         MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(context);
         monumentSearchDAO.open();
         if (monumentSearchDAO.select(monument.getId()) == null) {
-            monumentSearchDAO.insert(monument);
+            monumentSearchDAO.insert(monument, query);
         }
         monumentSearchDAO.close();
     }

@@ -16,9 +16,13 @@ import fr.isen.shazamphoto.R;
 public class GetImageURLTask extends AsyncTask<String, Void, Bitmap> {
 
     private ImageView imageView;
+    private int reqWith;
+    private int reqHeight;
 
-    public GetImageURLTask(ImageView imageView) {
+    public GetImageURLTask(ImageView imageView, int reqWith, int reqHeight) {
         this.imageView = imageView;
+        this.reqWith = reqWith;
+        this.reqHeight = reqHeight;
     }
 
     @Override
@@ -26,7 +30,7 @@ public class GetImageURLTask extends AsyncTask<String, Void, Bitmap> {
         String urldisplay = params[0];
         Bitmap result = null;
         try {
-            result = LoadPicture.getPictureFromURL(urldisplay, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
+            result = LoadPicture.getPictureFromURL(urldisplay, reqWith, reqHeight);
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("Exception in GetImageURLTask", e.getMessage());
@@ -38,8 +42,7 @@ public class GetImageURLTask extends AsyncTask<String, Void, Bitmap> {
     protected void onPostExecute(Bitmap bitmap) {
 
         if (bitmap != null) {
-            Bitmap bitmapFinal = LoadPicture.checkRotation(bitmap, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
-            imageView.setImageBitmap(bitmapFinal);
+            imageView.setImageBitmap(bitmap);
         } else {
             imageView.setImageResource(R.drawable.image_not_found);
 

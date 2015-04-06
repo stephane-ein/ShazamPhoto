@@ -18,9 +18,8 @@ import java.util.List;
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.utils.GetDistance;
 import fr.isen.shazamphoto.utils.GetImageURLTask;
-import fr.isen.shazamphoto.utils.GetMonumentImage;
+import fr.isen.shazamphoto.utils.LoadPicture;
 
 public class NearestListAdapter extends BaseAdapter {
 
@@ -82,7 +81,7 @@ public class NearestListAdapter extends BaseAdapter {
             // Case where the monument is not at the end of the circuit
             // Set the image of the monument
             if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
-                GetImageURLTask getImageURLTask = new GetImageURLTask(image);
+                GetImageURLTask getImageURLTask = new GetImageURLTask(image, LoadPicture.HDPI_WIDTH_VERTICAL, LoadPicture.HDPI_HEIGHT_VERTICAL);
                 getImageURLTask.execute(m.getPhotoPath());
             }else{
                 // Default image

@@ -121,13 +121,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String SEARCH_MONUMENTS_KEY = "id";
     public static final String SEARCH_MONUMENTS_MONUMENT_KEY = "monumentId";
     public static final String SEARCH_MONUMENTS_SEARCH_MONUMENT_KEY = "searchMonumentId";
-    public static final String SEARCH_MONUMENTS_ALL_COLUMNS[] = {SEARCH_MONUMENTS_KEY, SEARCH_MONUMENTS_MONUMENT_KEY, SEARCH_MONUMENTS_SEARCH_MONUMENT_KEY};
+    public static final String SEARCH_MONUMENTS_QUERY = "query";
+    public static final String SEARCH_MONUMENTS_ALL_COLUMNS[] = {SEARCH_MONUMENTS_KEY, SEARCH_MONUMENTS_MONUMENT_KEY, SEARCH_MONUMENTS_SEARCH_MONUMENT_KEY, SEARCH_MONUMENTS_QUERY};
     public static final String SEARCH_MONUMENTS_TABLE_NAME = "searchMonuments";
     public static final String SEARCH_MONUMENTS_TABLE_CREATE =
             "CREATE TABLE " + SEARCH_MONUMENTS_TABLE_NAME + " (" +
                     SEARCH_MONUMENTS_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SEARCH_MONUMENTS_MONUMENT_KEY + " INTEGER, " +
                     SEARCH_MONUMENTS_SEARCH_MONUMENT_KEY + " INTEGER, " +
+                    SEARCH_MONUMENTS_QUERY + " TEXT, "+
                     "FOREIGN KEY(" + SEARCH_MONUMENTS_MONUMENT_KEY + ") REFERENCES " + MONUMENTS_TABLE_NAME + "(" + MONUMENTS_KEY + "));";
     public static final String SEARCH_MONUMENTS_TABLE_DROP = "DROP TABLE IF EXISTS " + SEARCH_MONUMENTS_TABLE_NAME + ";";
 

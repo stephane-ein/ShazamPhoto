@@ -63,7 +63,7 @@ public class AddMonumentFragment extends Fragment {
 
         // Set the picture
         ImageView imageView = (ImageView) view.findViewById(R.id.fam_imageview_monument);
-        LoadPicture.setPictureFromFile(monument.getPhotoPath(), imageView, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
+        LoadPicture.setPictureFromFile(monument.getPhotoPath(), imageView, LoadPicture.HDPI_WIDTH_VERTICAL, LoadPicture.HDPI_HEIGHT_VERTICAL);
 
         //Set the listener for the ADD button
         Button button = (Button) view.findViewById(R.id.button_add);

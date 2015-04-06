@@ -12,10 +12,12 @@ import fr.isen.shazamphoto.database.Monument;
 
 public class LoadPicture {
 
-    public static final int HDPI_WIDTH = 800;
-    public static final int HDPI_HEIGHT = 700;
-    public static final int IMAGE_PROCESS_WIDTH = 480;
-    public static final int IMAGE_PROCESS_HEIGHT = 640;
+    public static final int HDPI_WIDTH_VERTICAL = 800;
+    public static final int HDPI_HEIGHT_VERTICAL = 800;
+    public static final int HDPI_WIDTH_HORIZONTAL = 1300;
+    public static final int HDPI_HEIGHT_HORIZONTAL = 800;
+    public static final int IMAGE_PROCESS_WIDTH = 210;
+    public static final int IMAGE_PROCESS_HEIGHT = 260;
 
     public static void setPictureFromFile(String photoPath, ImageView imageView, int reqWidth, int reqHeight) {
         // Retrieve the bitmap sampled and set the image view with the bitmap
@@ -32,7 +34,7 @@ public class LoadPicture {
             }
         }
         if (bitmap == null && monument.getPhotoPath() != null && !monument.getPhotoPath().isEmpty()) {
-            GetImageURLTask getImageURLTask = new GetImageURLTask(imageView);
+            GetImageURLTask getImageURLTask = new GetImageURLTask(imageView, reqWidth, reqHeight);
             getImageURLTask.execute(monument.getPhotoPath());
         }
         return bitmap;
@@ -50,8 +52,7 @@ public class LoadPicture {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         Bitmap oldBitmap = BitmapFactory.decodeFile(photoPath, options);
-        Bitmap bitmap = truncateBitmap(oldBitmap);
-        Log.v("Shazam", "LP getFromFile : "+bitmap);
+        Bitmap bitmap = truncateBitmap(oldBitmap, reqWidth, reqHeight);
         return bitmap;
     }
 
@@ -74,7 +75,7 @@ public class LoadPicture {
             options.inJustDecodeBounds = false;
             Bitmap oldBitmap = BitmapFactory.decodeStream(in, null, options);
             // Truncate the bitmap
-            bitmap = truncateBitmap(oldBitmap);
+            bitmap = truncateBitmap(oldBitmap, reqWidth, reqHeight);
         } catch (Exception e) {
             e.printStackTrace();
             Log.v("Shazam", "Exception in LP : "+e.getMessage());
@@ -114,21 +115,36 @@ public class LoadPicture {
                 Matrix matrix = new Matrix();
                 matrix.postRotate(90);
                 Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, reqHeight, true);
-                //   bitmapFinal = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+                bitmapFinal = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
             }
         }
 
         return bitmapFinal;
     }
 
-    public static Bitmap truncateBitmap(Bitmap bitmap){
+    public static Bitmap truncateBitmap(Bitmap bitmap, int widthWanted, int heightWanted){
         Bitmap result = null;
+
         if(bitmap != null){
-            int x = (int)(bitmap.getWidth()*0.3);
-            int y =(int)(bitmap.getHeight()*0.3);
-            Log.v("Shazam", "LP truncate x: "+x+" width : "+bitmap.getWidth());
-            Log.v("Shazam", "LP truncate y: "+y+" width : "+bitmap.getHeight());
-            result = Bitmap.createBitmap(bitmap, x, y, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT);
+            int widthValidate, heightValidate, x=0, y=0;
+
+            if(bitmap.getWidth() < widthWanted){
+                widthValidate = bitmap.getWidth();
+            }else{
+                widthValidate = widthWanted;
+                int diffWidth = bitmap.getWidth() - widthValidate;
+                x = diffWidth/2;
+            }
+
+            if(bitmap.getHeight() < heightWanted){
+                heightValidate = bitmap.getHeight();
+            }else{
+                heightValidate = heightWanted;
+                int diffHeigt = bitmap.getHeight() -  heightValidate;
+                y = diffHeigt/2;
+            }
+
+            result = Bitmap.createBitmap(bitmap, x, y, widthValidate, heightValidate);
         }
 
         return result;

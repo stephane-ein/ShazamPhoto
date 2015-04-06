@@ -45,7 +45,6 @@ import fr.isen.shazamphoto.ui.ItemUtils.UpdateMonumentItem;
 import fr.isen.shazamphoto.ui.ScrollView.ADMScrollView;
 import fr.isen.shazamphoto.ui.ScrollView.ScrollViewListener;
 import fr.isen.shazamphoto.utils.FunctionsDB;
-import fr.isen.shazamphoto.utils.GetImageURLTask;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
 import fr.isen.shazamphoto.utils.LoadPicture;
@@ -70,6 +69,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     private TextView noNearestMonument;
     private Button buttonLike;
     private NetworkInfoArea networkInfo;
+    private ImageView photoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         nbVisitors = (TextView) findViewById(R.id.adm_nb_visitor);
         nbLikes = (TextView) findViewById(R.id.adm_nb_likes);
         noNearestMonument = (TextView) findViewById(R.id.adm_textview_nonearestmonument);
-        final ImageView photoView = (ImageView) findViewById(R.id.imageView1);
+        photoView = (ImageView) findViewById(R.id.imageView1);
         Button buttonFavourite = (Button) findViewById(R.id.button_add_favorite);
         buttonLike = (Button) findViewById(R.id.button_like);
         Button buttonPlace = (Button) findViewById(R.id.adm_button_place);
@@ -102,7 +102,12 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         setTitle("");
 
         //Set the picture
-        LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT, photoView);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH_VERTICAL, LoadPicture.HDPI_HEIGHT_VERTICAL, photoView);
+        }else{
+            LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH_HORIZONTAL, LoadPicture.HDPI_HEIGHT_HORIZONTAL, photoView);
+        }
+
 
         //Set the monument information
         title.setText(monument.getName());
@@ -151,6 +156,14 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         setColumnWidthView(newConfig.orientation);
+
+        //Set the picture
+        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH_VERTICAL, LoadPicture.HDPI_HEIGHT_VERTICAL, photoView);
+        }else{
+            LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH_HORIZONTAL, LoadPicture.HDPI_HEIGHT_HORIZONTAL, photoView);
+        }
+
     }
 
     @Override

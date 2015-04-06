@@ -46,7 +46,6 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     public static final int REQUEST_TAKE_PHOTO = 1;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
 
-
     private Button butTakePicture;
     private static LinearLayout llActionSearch;
     private static LinearLayout progressBar;
@@ -63,6 +62,8 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     private ModelNavigation modelNavigation;
     private ShazamProcessingTask shazamProcessingTask;
     private NetworkInfoArea networkInfo;
+
+    private static String query;
 
     private Activity activity;
 
@@ -118,7 +119,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
         // Retrieve the monument found
         ArrayList<Monument> monuments = getMonumentSearch();
-        if (!monuments.isEmpty()) displayMonumentFound(monuments, "");
+        if (!monuments.isEmpty()) displayMonumentFound(monuments, query);
 
         setRetainInstance(true);
 
@@ -195,14 +196,14 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         }
     }
 
-    public void setListResult(final ArrayList<Monument> monuments) {
+    public void setListResult(final ArrayList<Monument> monuments, String query) {
         // Remove all the monument previously found
         FunctionsDB.removeAllMonumentSearch(activity);
 
         // Retrieve the monument and store them in the db
         for (Monument m : monuments) {
             FunctionsDB.addMonumentToDB(m, activity);
-            FunctionsDB.addMonumentToMonumentSearch(m, activity);
+            FunctionsDB.addMonumentToMonumentSearch(m, activity, query);
         }
 
         // Display the monuments found
@@ -239,7 +240,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         hideNoMonumentFound();
         hideDescriptionButton();
         llActionSearch.setVisibility(View.VISIBLE);
-        setListResult(monuments);
+        setListResult(monuments, query);
         tvDescriptionResult.setText("Results for " + query);
         llMonumentSearch.setVisibility(View.VISIBLE);
     }
@@ -304,6 +305,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(getActivity());
         monumentSearchDAO.open();
         List<Monument> monumentsList = monumentSearchDAO.getAllMonuments();
+        query = monumentSearchDAO.query;
         monumentSearchDAO.close();
         ArrayList<Monument> monuments = new ArrayList<>();
         for (Monument monument : monumentsList) {

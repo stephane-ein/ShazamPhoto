@@ -1,23 +1,19 @@
 package fr.isen.shazamphoto.ui;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,7 +23,6 @@ import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
 import fr.isen.shazamphoto.events.EventMonumentUpdated;
-import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.CustomAdapter.NearestListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
@@ -66,7 +61,7 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
         ImageView imageView = (ImageView) rootView.findViewById(R.id.fpnm_iv_monument);
 
         // Display the picture taken
-        LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH, LoadPicture.HDPI_HEIGHT, imageView);
+        LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH_VERTICAL, LoadPicture.HDPI_HEIGHT_VERTICAL, imageView);
 
         final PromptNameMonument promptNameMonument = this;
         final EditText editText = (EditText) rootView.findViewById(R.id.editText_prompname_monument);

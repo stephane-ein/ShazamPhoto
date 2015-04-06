@@ -10,17 +10,20 @@ import java.util.List;
 
 public class MonumentSearchDAO extends ListMonumentDAO{
 
+    public String query;
+
     public MonumentSearchDAO(Context pContext) {
         super(pContext);
     }
 
-    public void insert(long filmId) {
+    public void insert(long filmId, String query) {
         ContentValues value = new ContentValues();
         value.put(DatabaseHandler.SEARCH_MONUMENTS_KEY, filmId);
+        value.put(DatabaseHandler.SEARCH_MONUMENTS_QUERY, query);
         mDb.insert(DatabaseHandler.SEARCH_MONUMENTS_TABLE_NAME, null, value);
     }
-    public void insert(Monument monument) {
-        insert(monument.getId());
+    public void insert(Monument monument, String query) {
+        insert(monument.getId(), query);
     }
 
     public void delete(long id) {
@@ -39,6 +42,7 @@ public class MonumentSearchDAO extends ListMonumentDAO{
         String[] selectionArgs = {Long.toString(id)};
         Cursor c = mDb.query(DatabaseHandler.SEARCH_MONUMENTS_TABLE_NAME, DatabaseHandler.SEARCH_MONUMENTS_ALL_COLUMNS, selection, selectionArgs, null, null, null);
         if(c.moveToFirst()) {
+            query = c.getString(3);
             selection = DatabaseHandler.MONUMENTS_KEY + " = ?";
             Cursor c2 = mDb.query(DatabaseHandler.MONUMENTS_TABLE_NAME, DatabaseHandler.MONUMENTS_ALL_COLUMNS, selection, selectionArgs, null, null, null);
             if(c2.moveToFirst()) {
@@ -54,6 +58,7 @@ public class MonumentSearchDAO extends ListMonumentDAO{
         Cursor c = mDb.query(DatabaseHandler.SEARCH_MONUMENTS_TABLE_NAME, DatabaseHandler.SEARCH_MONUMENTS_ALL_COLUMNS, null, null, null, null, null);
         while(c.moveToNext()) {
             long filmId = c.getLong(0);
+            query = c.getString(3);
             String selection = DatabaseHandler.MONUMENTS_KEY + " = ?";
             String[] selectionArgs = {Long.toString(filmId)};
             Cursor c2 = mDb.query(DatabaseHandler.MONUMENTS_TABLE_NAME, DatabaseHandler.MONUMENTS_ALL_COLUMNS, selection, selectionArgs, null, null, null);

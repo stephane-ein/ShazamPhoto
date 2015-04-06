@@ -3,6 +3,7 @@ package fr.isen.shazamphoto.ui.CustomAdapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import java.util.List;
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.utils.GetImageURLTask;
+import fr.isen.shazamphoto.utils.LoadPicture;
 
 public class ResultListAdapter extends BaseAdapter {
 
@@ -67,8 +69,7 @@ public class ResultListAdapter extends BaseAdapter {
         //visitor.setText(m.getNbVisitors());
         //description.setText(m.getDescription());
         //like.setText(m.getNbLike());
-        GetImageURLTask getImageURLTask = new GetImageURLTask(image);
-        getImageURLTask.execute(m.getPhotoPath());
+        LoadPicture.setPicture(m, LoadPicture.IMAGE_PROCESS_WIDTH, LoadPicture.IMAGE_PROCESS_HEIGHT, image);
 
         return convertView;
     }
