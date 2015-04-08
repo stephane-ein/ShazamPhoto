@@ -11,16 +11,15 @@ import java.util.ArrayList;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventInternetTask;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
-import fr.isen.shazamphoto.ui.NetworkInfoArea;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
 
 public class GetMonumentByLocalization extends GetMonumentTask {
 
     private SearchMonumentsByLocalization searchMonumentsByLocalization;
 
-    public GetMonumentByLocalization(SearchMonumentsByLocalization item, NetworkInfoArea networkInfoArea,
+    public GetMonumentByLocalization(SearchMonumentsByLocalization item,
                                      Activity activity, Double latitude, Double longitude) {
-        super(networkInfoArea, activity);
+        super(activity);
         this.searchMonumentsByLocalization = item;
         setUrlWithArguments("la=" + latitude + "&lo=" + longitude + "&o=" + ConfigurationShazam.DELTA_LOCALIZATION);
     }

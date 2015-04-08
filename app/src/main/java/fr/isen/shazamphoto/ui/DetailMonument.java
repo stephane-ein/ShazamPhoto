@@ -68,7 +68,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     private TextView nbLikes;
     private TextView noNearestMonument;
     private Button buttonLike;
-    private NetworkInfoArea networkInfo;
     private ImageView photoView;
 
     @Override
@@ -80,7 +79,6 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(0, 0, 0, 0)));
 
         //Retrieve the several items
-        networkInfo = (NetworkInfoArea) findViewById(R.id.adm_info_network);
         ADMScrollView scrollView = (ADMScrollView) findViewById(R.id.adm_scrollview);
         gridView = (GridView) findViewById(R.id.gridView_nearestMonuments);
         TextView title = (TextView) findViewById(R.id.adm_title);
@@ -143,7 +141,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         } else if (monument.getLocalization() != null) {
             Localization l = monument.getLocalization();
             GetMonumentByLocalization getMonumentByLocalization =
-                    new GetMonumentByLocalization(this, networkInfo, this, l.getLatitude(), l.getLongitude());
+                    new GetMonumentByLocalization(this, this, l.getLatitude(), l.getLongitude());
             getMonumentByLocalization.execute();
         } else {
             noNearestMonument.setVisibility(View.VISIBLE);
@@ -195,7 +193,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     public void upDateMonument() {
         GetMonumentsByName getMonumentsByName =
-                new GetMonumentsByName(networkInfo, this, this, monument.getName());
+                new GetMonumentsByName(this, this, monument.getName());
         getMonumentsByName.execute();
     }
 
@@ -249,7 +247,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                 FunctionsDB.addMonumentToDB(monument, getApplication());
                 Monument mDB = FunctionsDB.getMonument(monument, getApplication());
                 GetMonumentsByName getMonumentsByName =
-                        new GetMonumentsByName(networkInfo, detailMonument, detailMonument, mDB.getName());
+                        new GetMonumentsByName(detailMonument, detailMonument, mDB.getName());
                 getMonumentsByName.execute();
 
             }
@@ -331,7 +329,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                 monument.setLiked(1);
                 FunctionsDB.editMonument(monument, getApplication());
                 updateButtonLike();
-                AddLikeTask task = new AddLikeTask(networkInfo, detailMonument, detailMonument);
+                AddLikeTask task = new AddLikeTask(detailMonument, detailMonument);
                 task.execute(monument);
             }
         });

@@ -15,11 +15,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 
 import fr.isen.shazamphoto.events.EventInternetTask;
-import fr.isen.shazamphoto.events.EventLoadingSearchMonument;
-import fr.isen.shazamphoto.model.ModelNavigation;
-import fr.isen.shazamphoto.ui.Home;
-import fr.isen.shazamphoto.ui.NetworkInfoArea;
-import fr.isen.shazamphoto.ui.Shazam;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
 import fr.isen.shazamphoto.utils.InternetTask;
 
@@ -29,8 +24,8 @@ public abstract class GetMonumentTask extends InternetTask<String, Void, EventIn
     private HttpClient client;
     private String urlWithArguments;
 
-    public GetMonumentTask(NetworkInfoArea networkInfoArea, Activity activity) {
-        super(networkInfoArea, activity);
+    public GetMonumentTask(Activity activity) {
+        super(activity);
         client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
                 "android");

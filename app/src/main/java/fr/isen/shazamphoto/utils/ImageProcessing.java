@@ -2,14 +2,10 @@ package fr.isen.shazamphoto.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;

@@ -36,7 +36,6 @@ public class Home extends ActionBarActivity implements SearchableItem {
     private ViewPager mViewPager;
     private SectionsPagerAdapter sectionsPagerAdapter;
     private ModelNavigation modelNavigation;
-    private NetworkInfoArea networkInfo;
     private Menu menu;
 
     @Override
@@ -58,8 +57,6 @@ public class Home extends ActionBarActivity implements SearchableItem {
 
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
-
-        networkInfo = (NetworkInfoArea) findViewById(R.id.home_info_network);
 
         this.getSupportActionBar().setDisplayShowCustomEnabled(true);
         this.getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -135,7 +132,7 @@ public class Home extends ActionBarActivity implements SearchableItem {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // Make the search
-                GetMonumentsByName getMonumentsByName = new GetMonumentsByName(networkInfo, home, home, query);
+                GetMonumentsByName getMonumentsByName = new GetMonumentsByName(home, home, query);
                 getMonumentsByName.execute();
 
                 // Display the loading UI in Shazam fragment

@@ -1,9 +1,7 @@
 package fr.isen.shazamphoto.utils;
 
 import android.content.Context;
-import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 

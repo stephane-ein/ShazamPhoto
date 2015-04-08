@@ -9,17 +9,15 @@ import java.util.ArrayList;
 
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventInternetTask;
-import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
-import fr.isen.shazamphoto.ui.NetworkInfoArea;
 
 public class GetMonumentsByName extends GetMonumentTask {
     private SearchableItem searchableItem;
     private String searchName;
 
-    public GetMonumentsByName(NetworkInfoArea networkInfoArea, Activity activity,
+    public GetMonumentsByName(Activity activity,
                               SearchableItem searchableItem, String searchName) {
-        super(networkInfoArea, activity);
+        super(activity);
         this.searchableItem = searchableItem;
         searchName = searchName.replace(" ", "+");
         setUrlWithArguments("n="+searchName);

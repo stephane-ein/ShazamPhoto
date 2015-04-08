@@ -62,7 +62,6 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     private Button buttonModeCircuit;
     private Button buttonBack;
     private LinearLayout linearLayoutActionsCircuit;
-    private NetworkInfoArea networkInfo;
 
 
     private boolean isSend = false;
@@ -107,7 +106,6 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         buttonModeCircuit = (Button) view.findViewById(R.id.fnm_button_modecircuit);
         textViewInformation = (TextView) view.findViewById(R.id.fnm_textview_informationfdm);
         linearLayoutActionsCircuit = (LinearLayout) view.findViewById(R.id.fnm_linearlayout_actionscircuit);
-        networkInfo = (NetworkInfoArea) getActivity().findViewById(R.id.home_info_network);
         progressBar = (LinearLayout) view.findViewById(R.id.fnm_ll_progress_bar);
         textViewInfoSearch = (TextView) view.findViewById(R.id.fnm_tv_info_search);
         // Set the several listeners
@@ -162,7 +160,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     public void executeGetMonumentByLocalization() {
         // Retrieve the nearest monuments with the localization of the user
         getMonumentByLocalization =
-                new GetMonumentByLocalization(this, networkInfo, getActivity(),localization.getLatitude(), localization.getLongitude());
+                new GetMonumentByLocalization(this, getActivity(),localization.getLatitude(), localization.getLongitude());
         getMonumentByLocalization.execute();
     }
 

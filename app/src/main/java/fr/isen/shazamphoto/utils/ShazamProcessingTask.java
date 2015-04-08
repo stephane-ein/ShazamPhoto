@@ -1,8 +1,6 @@
 package fr.isen.shazamphoto.utils;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
@@ -29,11 +27,13 @@ import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.EventInternetTask;
+import fr.isen.shazamphoto.events.EventMonumentUpdated;
 import fr.isen.shazamphoto.events.EventUnidentifiedMonument;
 import fr.isen.shazamphoto.model.ModelNavigation;
-import fr.isen.shazamphoto.ui.NetworkInfoArea;
+import fr.isen.shazamphoto.ui.ItemUtils.UpdateMonumentItem;
+import fr.isen.shazamphoto.utils.UpdateMonument.AddVisitorTask;
 
-public class ShazamProcessingTask extends InternetTask<String, Void, EventInternetTask> {
+public class ShazamProcessingTask extends InternetTask<String, Void, EventInternetTask> implements UpdateMonumentItem {
 
     // Attributes to contact thr server
     private HttpClient httpclient = new DefaultHttpClient();
@@ -61,8 +61,8 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
     // Path of the picture of the monument
     private String photoPath;
 
-    public ShazamProcessingTask(NetworkInfoArea networkInfoArea, ModelNavigation modelNavigation, Activity activity) {
-        super(networkInfoArea, activity);
+    public ShazamProcessingTask(ModelNavigation modelNavigation, Activity activity) {
+        super(activity);
         this.localization = null;
         this.descriptors = null;
         this.keyPoints = null;
@@ -186,6 +186,10 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
                     // Add the monument to the monument tagged
                     FunctionsDB.addMonumentToDB(m, activity);
                     FunctionsDB.addMonumentToTaggedMonument(m, activity);
+                    // Increase the number of visitor of this monument
+                    AddVisitorTask addVisitorTask = new AddVisitorTask(getActivity(), this);
+                    addVisitorTask.createArguments(m);
+                    addVisitorTask.execute();
                     // Display the monument identified
                     modelNavigation.changeAppView(new EventDisplayDetailMonument(activity, m, null));
                 }
@@ -195,5 +199,10 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
         } catch (Exception e) {
             Log.e("Shazam", "Exception in SPT OPR: "+e.getMessage());
         }
+    }
+
+    @Override
+    public void monumentUpdated(EventMonumentUpdated eventLocalizationFound) {
+
     }
 }

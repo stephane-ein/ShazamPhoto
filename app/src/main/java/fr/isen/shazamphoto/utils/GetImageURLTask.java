@@ -1,15 +1,9 @@
 package fr.isen.shazamphoto.utils;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-
-import java.io.InputStream;
 
 import fr.isen.shazamphoto.R;
 

@@ -61,22 +61,20 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
     private LocateManager locateManager;
     private ModelNavigation modelNavigation;
     private ShazamProcessingTask shazamProcessingTask;
-    private NetworkInfoArea networkInfo;
 
     private static String query;
 
     private Activity activity;
 
     public static Shazam newInstance(LocationManager locationManager, ModelNavigation modelNavigation,
-                                     Activity activity, NetworkInfoArea networkInfoArea) {
+                                     Activity activity) {
         Shazam shazam = new Shazam();
         Bundle args = new Bundle();
         args.putSerializable(ModelNavigation.KEY, modelNavigation);
         shazam.setLocateManager(new LocateManager(locationManager, shazam));
         shazam.setArguments(args);
         shazam.setModelNavigation(modelNavigation);
-        shazam.setShazamProcessingTask(new ShazamProcessingTask(networkInfoArea, modelNavigation, activity));
-        shazam.setNetworkInfo(networkInfoArea);
+        shazam.setShazamProcessingTask(new ShazamProcessingTask(modelNavigation, activity));
         shazam.setActivity(activity);
         return shazam;
     }
@@ -141,7 +139,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                 ExifInterface exifInterface = new ExifInterface(photoPath);
                 float[] localisation = new float[2];
 
-                this.shazamProcessingTask = new ShazamProcessingTask(networkInfo, modelNavigation, getActivity());
+                this.shazamProcessingTask = new ShazamProcessingTask(modelNavigation, getActivity());
                 // Set the localization of the monument to the request to identify the monument
                 if (exifInterface.getLatLong(localisation)) {
                     this.shazamProcessingTask.setLocalization(new Localization(-1,
@@ -207,7 +205,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         }
 
         // Display the monuments found
-        ArrayList<Monument> monumentsDB = FunctionsDB.getAllMonumentSearch(activity);
+        final ArrayList<Monument> monumentsDB = FunctionsDB.getAllMonumentSearch(activity);
         ResultListAdapter adapter = new ResultListAdapter(activity, monumentsDB);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -219,7 +217,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
                                     int position, long arg3) {
                 MonumentSearchDAO monumentSearchDAO = new MonumentSearchDAO(activity);
                 monumentSearchDAO.open();
-                Monument mDB = monumentSearchDAO.select(monuments.get(position).getId());
+                Monument mDB = monumentSearchDAO.select(monumentsDB.get(position).getId());
                 // Change the view by displaying the detail about monument retrieved in the db
 
                 modelNavigation.changeAppView(new EventDisplayDetailMonument(activity,
@@ -295,10 +293,6 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
 
     public void setShazamProcessingTask(ShazamProcessingTask shazamProcessingTask) {
         this.shazamProcessingTask = shazamProcessingTask;
-    }
-
-    public void setNetworkInfo(NetworkInfoArea networkInfo) {
-        this.networkInfo = networkInfo;
     }
 
     public ArrayList<Monument> getMonumentSearch() {

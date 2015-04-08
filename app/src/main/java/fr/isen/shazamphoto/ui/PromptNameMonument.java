@@ -74,7 +74,7 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
                 buttonSend.setEnabled(false);
                 //buttonSend.setBackgroundResource(R.drawable.button_selected);
                 monumentName = editText.getText().toString();
-                GetMonumentsByName getMonumentsByName = new GetMonumentsByName(null, getActivity(),promptNameMonument,
+                GetMonumentsByName getMonumentsByName = new GetMonumentsByName(getActivity(),promptNameMonument,
                         editText.getText().toString());
                 getMonumentsByName.execute();
 
@@ -87,7 +87,7 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
 
         // Check if the monument retrieve has a localization in order to retrieve the monument rear the user
         if(monument.getLocalization() != null){
-            GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(this, null, getActivity(),
+            GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(this, getActivity(),
                     monument.getLocalization().getLatitude(), monument.getLocalization().getLongitude());
             getMonumentByLocalization.execute();
         }else{
@@ -118,7 +118,7 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
             // the picture took by the user will increase the descriptor for the monument
             Monument m = monuments.get(0);
             monument.setDatabaseId(m.getDatabaseId());
-            AddDescriptorsKeyPointsTask addDescriptorsKeyPointsTask = new AddDescriptorsKeyPointsTask(null, getActivity(), this);
+            AddDescriptorsKeyPointsTask addDescriptorsKeyPointsTask = new AddDescriptorsKeyPointsTask(getActivity(), this);
             addDescriptorsKeyPointsTask.execute(monument);
         }
     }
@@ -135,7 +135,7 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
         // Localization has been retrieved thanks to the network
         locateManager.stopListening();
         Localization localization1 = eventLocalizationFound.getLocalization();
-        GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(this, null, getActivity(),
+        GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(this, getActivity(),
                 localization1.getLatitude(),localization1.getLongitude());
         getMonumentByLocalization.execute();
     }

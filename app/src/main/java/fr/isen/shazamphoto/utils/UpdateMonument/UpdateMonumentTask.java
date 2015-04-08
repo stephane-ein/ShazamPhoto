@@ -1,7 +1,6 @@
 package fr.isen.shazamphoto.utils.UpdateMonument;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -20,7 +19,6 @@ import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventInternetTask;
 import fr.isen.shazamphoto.events.EventMonumentUpdated;
 import fr.isen.shazamphoto.ui.ItemUtils.UpdateMonumentItem;
-import fr.isen.shazamphoto.ui.NetworkInfoArea;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
 import fr.isen.shazamphoto.utils.InternetTask;
 
@@ -28,8 +26,8 @@ public abstract class UpdateMonumentTask extends InternetTask<Monument, Void, Ev
 
     private UpdateMonumentItem updateMonumentItem;
 
-    protected UpdateMonumentTask(NetworkInfoArea networkInfo, Activity activity, UpdateMonumentItem updateMonumentItem) {
-        super(networkInfo, activity);
+    protected UpdateMonumentTask(Activity activity, UpdateMonumentItem updateMonumentItem) {
+        super(activity);
         this.updateMonumentItem = updateMonumentItem;
     }
 

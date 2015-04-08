@@ -3,7 +3,6 @@ package fr.isen.shazamphoto.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.InputStream;

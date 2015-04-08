@@ -16,7 +16,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.File;
 
 import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.ui.UnidentifiedMonument;
 
 public class AddMonument extends AsyncTask<Monument, Void, Boolean> {
 
