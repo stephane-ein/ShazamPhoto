@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -105,13 +107,23 @@ public class NearestListAdapter extends BaseAdapter {
             visitor.setText(Integer.valueOf(m.getNbVisitors()).toString() + " visitors");
             Localization destionLocalization = m.getLocalization();
             float[] result = new float[3];
-            Location.distanceBetween(
-                    destionLocalization.getLatitude(), destionLocalization.getLongitude(),
-                    localizationUser.getLatitude(), localizationUser.getLongitude(),
-                    result);
-            distance.setText("to "+Float.valueOf(result[0]).toString()+"m");
-           /* GetDistance getDistance = new GetDistance();
-            getDistance.execute(localizationUser, destionLocalization);*/
+            if(destionLocalization != null){
+                Location.distanceBetween(
+                        destionLocalization.getLatitude(), destionLocalization.getLongitude(),
+                        localizationUser.getLatitude(), localizationUser.getLongitude(),
+                        result);
+                distance.setText("to "+Float.valueOf(result[0]).toString()+"m");
+            }
+
+            LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.lrnm_linearlayout);
+            if(m.isFirstCircuit()){
+                linearLayout.setBackgroundResource(R.drawable.list_row_nearest_monument_start);
+            }else if(m.isSelectedCircuit()) {
+                linearLayout.setBackgroundResource(R.drawable.list_row_nearestmonument_selected);
+            }else{
+                linearLayout.setBackgroundResource(R.drawable.list_row_bg);
+            }
+            notifyDataSetChanged();
         }
 
         return convertView;

@@ -27,6 +27,8 @@ public class Monument implements Serializable {
     private int idNearest;
     private int databaseId;
     private int liked;
+    private boolean isFirstCircuit = false;
+    private boolean isSelectedCircuit = false;
 
     public static final String NAME_SERIALIZABLE = "fr.isen.shazamphoto.database.monument_serializable";
 
@@ -271,7 +273,7 @@ public class Monument implements Serializable {
 
     @Override
     public String toString(){
-        return getName() +" "+Long.valueOf(getId()).toString();
+        return getName() +" "+Long.valueOf(getId()).toString() +" id nearest: " +getIdNearest();
     }
 
     public int getIdNearest() {
@@ -304,6 +306,22 @@ public class Monument implements Serializable {
 
     public void setPhotoPathLocal(String photoPathLocal) {
         this.photoPathLocal = photoPathLocal;
+    }
+
+    public boolean isFirstCircuit() {
+        return isFirstCircuit;
+    }
+
+    public void setFirstCircuit(boolean isFirstCircuit) {
+        this.isFirstCircuit = isFirstCircuit;
+    }
+
+    public boolean isSelectedCircuit() {
+        return isSelectedCircuit;
+    }
+
+    public void setSelectedCircuit(boolean isSelectedCircuit) {
+        this.isSelectedCircuit = isSelectedCircuit;
     }
 }
 

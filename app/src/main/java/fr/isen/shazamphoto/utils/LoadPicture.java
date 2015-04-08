@@ -78,7 +78,7 @@ public class LoadPicture {
             bitmap = truncateBitmap(oldBitmap, reqWidth, reqHeight);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.v("Shazam", "Exception in LP : "+e.getMessage());
+            //Log.e("Shazam", "Exception in LP : "+e.getMessage());
         }
 
         return bitmap;

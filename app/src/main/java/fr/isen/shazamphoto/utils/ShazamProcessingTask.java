@@ -69,7 +69,6 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
         this.modelNavigation = modelNavigation;
         this.activity = activity;
         this.isSend = false;
-        this.localization = new Localization(-1, 0.0, 0.0);
     }
 
     public void setLocalization(Localization localization) {
@@ -104,9 +103,9 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
                     timerHandler.removeCallbacks(timerRunnable);
 
                     if(checkSendRequest()){
-                        Log.v("Shazam", "identify a monument with localization");
+                        Log.v("Shazam", "identify a monument with localization : "+localization);
                     }else if(seconds >= 5){
-                        Log.v("Shazam", "identify a monument without localization");
+                        Log.v("Shazam", "identify a monument without localization : "+localization);
                     }
 
                 }

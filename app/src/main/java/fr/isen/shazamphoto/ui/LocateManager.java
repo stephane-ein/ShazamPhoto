@@ -7,13 +7,13 @@ import android.os.Bundle;
 
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
-import fr.isen.shazamphoto.events.RequestLocalization;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 
 public class LocateManager {
 
     private LocationManager lm;
-    private LocationListener locationListener;
+    private LocationListener locationListenerNetWork;
+    private LocationListener locationListenerGPS;
     private SearchLocalizationItem searchLocalizationItem;
     public Home home;
 
@@ -24,7 +24,7 @@ public class LocateManager {
 
     public void startListening() {
 
-        locationListener = new LocationListener() {
+        locationListenerNetWork = new LocationListener() {
 
             public void onLocationChanged(Location location) {
                 Localization localization = new Localization(-1, location.getLatitude(),
@@ -44,12 +44,37 @@ public class LocateManager {
             public void onProviderDisabled(String provider) {
             }
         };
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, locationListener);
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, locationListenerNetWork);
+
+        locationListenerGPS = new LocationListener() {
+
+            public void onLocationChanged(Location location) {
+                Localization localization = new Localization(-1, location.getLatitude(),
+                        location.getLongitude());
+                searchLocalizationItem.foundLocalization(new EventLocalizationFound(localization));
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+            }
+        };
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, locationListenerGPS);
     }
 
     public void stopListening() {
-        if (locationListener != null) {
-            lm.removeUpdates(locationListener);
+        if (locationListenerNetWork != null) {
+            lm.removeUpdates(locationListenerNetWork);
+        }
+        if (locationListenerGPS != null) {
+            lm.removeUpdates(locationListenerGPS);
         }
     }
 }

@@ -5,6 +5,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
-import fr.isen.shazamphoto.events.RequestNearestMonuments;
 import fr.isen.shazamphoto.ui.CustomAdapter.NearestListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
@@ -100,7 +100,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         networkInfo = (NetworkInfoArea) getActivity().findViewById(R.id.home_info_network);
         // Set the several listeners
         setListenerListView(listView);
-        setListenerNearestMonuments(buttonNearestMonuments, this);
+        setListenerNearestMonuments(buttonNearestMonuments);
         setListenerMakeCircuit(buttonMakeCircuit);
         setListenerModeCircuit(buttonModeCircuit);
         setListenerCancelCircuit(buttonCancelCircuit);
@@ -116,11 +116,14 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     }
 
     private void reset(){
-        // Restore the default value
+        // Restore the default value by deactivating the circuit mode and remove the first monument selected
+        // and clearing the list of monument selected
         startedCircuitMode = false;
         startMonument = null;
-        monumentsForCircuit = new HashMap<>();
+        monumentsForCircuit.clear();
         i = 1;
+        textViewInformation.setText("");
+        resetAttributeCircuit(this.monuments);
     }
 
     @Override
@@ -143,10 +146,6 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         // Retrieve the nearest monuments with the localization of the user
         GetMonumentByLocalization getMonumentByLocalization =
                 new GetMonumentByLocalization(this, networkInfo, getActivity(),localization.getLatitude(), localization.getLongitude());
-       /* getMonumentByLocalization.execute(
-                Double.valueOf(localization.getLatitude()).toString(),
-                Double.valueOf(localization.getLongitude()).toString(),
-                ConfigurationShazam.DELTA_LOCALIZATION);*/
         getMonumentByLocalization.execute();
     }
 
@@ -157,7 +156,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         // Display the list view
         this.monumentsNearest = monuments;
         this.monuments = monuments;
-        NearestListAdapter adapter = new NearestListAdapter(getActivity(), monuments, localization);
+        resetAttributeCircuit(this.monuments);
+        NearestListAdapter adapter = new NearestListAdapter(getActivity(), this.monuments, localization);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         listView.setVisibility(View.VISIBLE);
@@ -168,6 +168,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
     public void setListCircuitMonuments(ArrayList<Monument> monuments) {
         this.monuments = monuments;
+        resetAttributeCircuit(this.monuments);
+        textViewInformation.setText("The circuit has been generated");
         NearestListAdapter adapter = new NearestListAdapter(getActivity(), monuments, localization);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -175,7 +177,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         displayCircuitActivated();
     }
 
-    private void setListenerListView(ListView listView) {
+    private void setListenerListView(final ListView listView) {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -187,35 +189,31 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                     intent.putExtra(Monument.NAME_SERIALIZABLE, m);
                     startActivity(intent);
                 } else {
-                    // Initialise the color of the background
-                    int background = R.drawable.list_row_nearestmonument_selected;
+                    // Check if the monument has not been selected
+                    if(monumentsForCircuit.get(m.getIdNearest()) == null){
+                        // Retrieve the first monument to visit
+                        if (startMonument == null){
+                            startMonument = m;
+                            m.setFirstCircuit(true);
+                        }else{
+                            m.setSelectedCircuit(true);
+                        }
 
-                    // Retrieve the first monument to visit
-                    if (startMonument == null){
-                        startMonument = m;
-                        background = R.drawable.list_row_nearest_monument_start;
+                        textViewInformation.setText("... and the other monuments to visit");
+
+                        // We add the monument to visit in the hasp map
+                        m.setIdNearest(i);
+                        monumentsForCircuit.put(m.getIdNearest(), m);
+                        i++;
+                        ((NearestListAdapter)listView.getAdapter()).notifyDataSetChanged();
                     }
-
-                    textViewInformation.setText("... and the other monuments to visit");
-
-                    // We add the monument to visit in the hasp map
-                    m.setIdNearest(i);
-                    monumentsForCircuit.put(m.getIdNearest(), m);
-                    i++;
-
-                    LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.lrnm_linearlayout);
-                    linearLayout.setBackgroundResource(background);
                 }
             }
         });
     }
 
     public void displayDefaultUI(){
-        // Deactivate the circuit mode and remove the first monument selected
-        // and clearing the list of monument selected
-        startedCircuitMode = false;
-        startMonument = null;
-        monumentsForCircuit.clear();
+        reset();
 
         // Set the default UI for the fragment
         linearLayoutActionsCircuit.setVisibility(View.INVISIBLE);
@@ -276,7 +274,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         });
     }
 
-    private void setListenerNearestMonuments(Button button, final NearestMonumentsFragment fragment) {
+    private void setListenerNearestMonuments(Button button) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -399,26 +397,14 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         this.locateManager = locateManager;
     }
 
-    public String toStringArray(int[][] array, int size) {
-        String result = "";
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                result += Integer.valueOf(array[i][j]).toString() + "    ";
-            }
-            result += "\n";
+    public void resetAttributeCircuit(ArrayList<Monument> monuments){
+        for(Monument m : monuments){
+            m.setSelectedCircuit(false);
+            m.setFirstCircuit(false);
+            // we don't reinitialise the monument with th eid -2 because is the first monument to visit
+            // and the picture of the flag depend on this id
+            // and when we are in the selection mode, this monument will be already unselected thanks to his id negative
+            if(m.getIdNearest() != -2) m.setIdNearest(-1);
         }
-
-        return result;
-    }
-
-    public String toStringPath(List<Monument> arrayList) {
-        String result = "";
-
-        for (Monument p : arrayList) {
-            result += (p == null ? "null " : p.getName()+ " "+p.getIdNearest() +"   ");
-        }
-
-        return result;
     }
 }
