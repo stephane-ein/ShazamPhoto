@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,13 +53,22 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     private LocateManager locateManager;
 
     private TextView textViewInformation;
-    private Button buttonNearestMonuments;
+    private static Button buttonNearestMonuments;
+    private static LinearLayout progressBar;
+    private static TextView textViewInfoSearch;
+    private GetMonumentByLocalization getMonumentByLocalization;
     private Button buttonMakeCircuit;
     private Button buttonCancelCircuit;
     private Button buttonModeCircuit;
     private Button buttonBack;
     private LinearLayout linearLayoutActionsCircuit;
     private NetworkInfoArea networkInfo;
+
+
+    private boolean isSend = false;
+    private long startTime = 0;
+    private Handler timerHandler = new Handler();
+    private Runnable timerRunnable;
 
     public static NearestMonumentsFragment newInstance(LocationManager locationManager) {
         NearestMonumentsFragment fragment = new NearestMonumentsFragment();
@@ -98,6 +108,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         textViewInformation = (TextView) view.findViewById(R.id.fnm_textview_informationfdm);
         linearLayoutActionsCircuit = (LinearLayout) view.findViewById(R.id.fnm_linearlayout_actionscircuit);
         networkInfo = (NetworkInfoArea) getActivity().findViewById(R.id.home_info_network);
+        progressBar = (LinearLayout) view.findViewById(R.id.fnm_ll_progress_bar);
+        textViewInfoSearch = (TextView) view.findViewById(R.id.fnm_tv_info_search);
         // Set the several listeners
         setListenerListView(listView);
         setListenerNearestMonuments(buttonNearestMonuments);
@@ -112,6 +124,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
         reset();
         setRetainInstance(true);
+        isSend=false;
         return view;
     }
 
@@ -122,6 +135,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         startMonument = null;
         monumentsForCircuit.clear();
         i = 1;
+        isSend=false;
         textViewInformation.setText("");
         resetAttributeCircuit(this.monuments);
     }
@@ -134,6 +148,9 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
         // Retrieve the nearest monumentsNearest
         executeGetMonumentByLocalization();
+
+        // Stop the chronometer
+        timerHandler.removeCallbacks(timerRunnable);
     }
 
     @Override
@@ -144,12 +161,13 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
     public void executeGetMonumentByLocalization() {
         // Retrieve the nearest monuments with the localization of the user
-        GetMonumentByLocalization getMonumentByLocalization =
+        getMonumentByLocalization =
                 new GetMonumentByLocalization(this, networkInfo, getActivity(),localization.getLatitude(), localization.getLongitude());
         getMonumentByLocalization.execute();
     }
 
     public void setListNearestMonuments(ArrayList<Monument> monuments) {
+        progressBar.setVisibility(View.GONE);
         // Stop he listener on the network
         locateManager.stopListening();
 
@@ -161,6 +179,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         listView.setVisibility(View.VISIBLE);
+
 
         // Change the UI
         displayModeCircuit();
@@ -284,6 +303,40 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                 } else {
                     executeGetMonumentByLocalization();
                 }
+                progressBar.setVisibility(View.VISIBLE);
+                buttonNearestMonuments.setVisibility(View.GONE);
+                textViewInfoSearch.setVisibility(View.GONE);
+
+                // Set the timer
+                timerRunnable = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        long millis = System.currentTimeMillis() - startTime;
+                        int seconds = (int) (millis / 1000);
+                        seconds = seconds % 60;
+
+                        // Check if the request has not been already sent and if we have all the argument in
+                        // the remaining time
+                        if( !isSend && seconds >= 10 && getMonumentByLocalization == null){
+                            isSend = true;
+                            // Stop the listener looking for localization
+                            locateManager.stopListening();
+                            // Remove the timer
+                            timerHandler.removeCallbacks(timerRunnable);
+                            // Display the information
+                            textViewInfoSearch.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            buttonNearestMonuments.setVisibility(View.VISIBLE);
+                        }
+                        timerHandler.postDelayed(this, 500);
+                    }
+                };
+
+
+                // Start the timer
+                startTime = System.currentTimeMillis();
+                timerHandler.postDelayed(timerRunnable, 0);
             }
         });
     }
@@ -385,6 +438,17 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         });
     }
 
+    public void resetAttributeCircuit(ArrayList<Monument> monuments){
+        for(Monument m : monuments){
+            m.setSelectedCircuit(false);
+            m.setFirstCircuit(false);
+            // we don't reinitialise the monument with the id -2 because is the first monument to visit
+            // and the picture of the flag depend on this id
+            // and when we are in the selection mode, this monument will be already unselected thanks to his id negative
+            if(m.getIdNearest() != -2) m.setIdNearest(-1);
+        }
+    }
+
     public Localization getLocalization() {
         return localization;
     }
@@ -397,14 +461,4 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         this.locateManager = locateManager;
     }
 
-    public void resetAttributeCircuit(ArrayList<Monument> monuments){
-        for(Monument m : monuments){
-            m.setSelectedCircuit(false);
-            m.setFirstCircuit(false);
-            // we don't reinitialise the monument with th eid -2 because is the first monument to visit
-            // and the picture of the flag depend on this id
-            // and when we are in the selection mode, this monument will be already unselected thanks to his id negative
-            if(m.getIdNearest() != -2) m.setIdNearest(-1);
-        }
-    }
 }

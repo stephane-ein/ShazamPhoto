@@ -94,13 +94,40 @@
     </LinearLayout>
 
 
-    <Button
-        android:id="@+id/fnm_button_searchnearestmonument"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/button"
-        android:text="@string/searchnearestmonuments" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fnm_tv_info_search"
+            android:gravity="center"
+            android:text="No localization found with your network \nPlease activate your GPS"
+            android:fontFamily="sans-serif-thin"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"/>
+        <Button
+            android:id="@+id/fnm_button_searchnearestmonument"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/button"
+            android:text="@string/searchnearestmonuments" />
+
+        <LinearLayout
+            android:id="@+id/fnm_ll_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ProgressBar style="@style/GenericProgressIndicator" />
+        </LinearLayout>
+    </LinearLayout>
 
 
 </FrameLayout>
