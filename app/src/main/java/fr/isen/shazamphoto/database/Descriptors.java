@@ -13,7 +13,6 @@ import java.io.IOException;
 public class Descriptors {
 
     public static final String KEY = "descriptors";
-    public static Activity activity;
     public static String base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     public static JSONArray toJson(Mat descriptors) {

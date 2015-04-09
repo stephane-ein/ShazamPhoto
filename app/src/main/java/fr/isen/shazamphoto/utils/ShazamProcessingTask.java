@@ -129,7 +129,6 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
     protected EventInternetTask doInBackground(String... params) {
 
         JSONObject jsonResponse = null;
-        Descriptors.activity = activity;
         boolean isInternetFound = false;
         try {
             isInternetFound = checkNetwork();
