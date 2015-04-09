@@ -187,8 +187,7 @@ public class ShazamProcessingTask extends InternetTask<String, Void, EventIntern
                     FunctionsDB.addMonumentToTaggedMonument(m, activity);
                     // Increase the number of visitor of this monument
                     AddVisitorTask addVisitorTask = new AddVisitorTask(getActivity(), this);
-                    addVisitorTask.createArguments(m);
-                    addVisitorTask.execute();
+                    addVisitorTask.execute(m);
                     // Display the monument identified
                     modelNavigation.changeAppView(new EventDisplayDetailMonument(activity, m, null));
                 }

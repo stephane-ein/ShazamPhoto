@@ -22,7 +22,7 @@ import fr.isen.shazamphoto.ui.ItemUtils.UpdateMonumentItem;
 import fr.isen.shazamphoto.utils.ConfigurationShazam;
 import fr.isen.shazamphoto.utils.InternetTask;
 
-public abstract class UpdateMonumentTask extends InternetTask<Monument, Void, EventInternetTask> {
+public abstract class   UpdateMonumentTask extends InternetTask<Monument, Void, EventInternetTask> {
 
     private UpdateMonumentItem updateMonumentItem;
 
