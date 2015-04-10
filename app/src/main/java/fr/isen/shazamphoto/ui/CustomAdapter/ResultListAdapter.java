@@ -59,16 +59,14 @@ public class ResultListAdapter extends BaseAdapter {
         TextView title = (TextView) convertView.findViewById(R.id.lrrs_title);
         TextView visitor = (TextView) convertView.findViewById(R.id.lrrs_nb_visitor);
         TextView like = (TextView) convertView.findViewById(R.id.lrrs_nb_like);
-        TextView description = (TextView) convertView.findViewById(R.id.lrrs_description);
 
         // Getting movie data for the row
         Monument m = monumentItems.get(position);
 
         // Set the several about the monument
         title.setText(m.getName());
-        //visitor.setText(m.getNbVisitors());
-        //description.setText(m.getDescription());
-        //like.setText(m.getNbLike());
+        visitor.setText(Integer.valueOf(m.getNbVisitors()).toString());
+        like.setText(Integer.valueOf(m.getNbLike()).toString());
         LoadPicture.setPicture(m, LoadPicture.IMAGE_PROCESS_WIDTH, LoadPicture.IMAGE_PROCESS_HEIGHT, image);
 
         return convertView;
