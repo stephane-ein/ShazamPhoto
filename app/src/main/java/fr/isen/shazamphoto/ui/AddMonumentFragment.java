@@ -55,6 +55,9 @@ public class AddMonumentFragment extends Fragment {
         // Add the listener to close the keyboard
         final EditText editTextName = (EditText) view.findViewById(R.id.editText_name_monument);
         addListenerCloseKeyboard(editTextName);
+        if(monument.getName() != null && !monument.getName().isEmpty()){
+            editTextName.setText(monument.getName());
+        }
         final EditText editTextDate = (EditText) view.findViewById(R.id.editText_date_monument);
         addListenerCloseKeyboard(editTextDate);
         final EditText editTextDescription = (EditText) view.findViewById(R.id.editText_description_monument);
@@ -74,7 +77,6 @@ public class AddMonumentFragment extends Fragment {
                 monument.setName(editTextName.getText().toString());
                 monument.setDescription(editTextDescription.getText().toString());
 
-                //TOMODIFY
                 String year = editTextDate.getText().toString();
                 if(isInteger(year)){
                     monument.setYear(Integer.valueOf(year));

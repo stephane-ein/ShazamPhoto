@@ -3,9 +3,11 @@ package fr.isen.shazamphoto.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.InputStream;
+import java.net.URL;
 
 import fr.isen.shazamphoto.database.Monument;
 
@@ -50,9 +52,7 @@ public class LoadPicture {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        Bitmap oldBitmap = BitmapFactory.decodeFile(photoPath, options);
-        Bitmap bitmap = truncateBitmap(oldBitmap, reqWidth, reqHeight);
-        return bitmap;
+        return BitmapFactory.decodeFile(photoPath, options);
     }
 
     public static Bitmap getPictureFromURL(String url, int reqWidth, int reqHeight) {
@@ -75,9 +75,10 @@ public class LoadPicture {
             Bitmap oldBitmap = BitmapFactory.decodeStream(in, null, options);
             // Truncate the bitmap
             bitmap = truncateBitmap(oldBitmap, reqWidth, reqHeight);
+
         } catch (Exception e) {
             e.printStackTrace();
-            //Log.e("Shazam", "Exception in LP : "+e.getMessage());
+            Log.e("Shazam", "Exception in LP : "+e.getMessage());
         }
 
         return bitmap;

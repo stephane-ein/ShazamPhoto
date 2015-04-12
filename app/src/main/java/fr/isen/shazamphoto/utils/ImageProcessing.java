@@ -2,6 +2,7 @@ package fr.isen.shazamphoto.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -70,8 +71,7 @@ public class ImageProcessing {
                     imgFile = new File(path);
                     if (imgFile != null && imgFile.exists()) {
 
-                        //Bitmap myBitmap = BitmapFactory.decodeFile(path);
-                        Bitmap myBitmap = LoadPicture.getPictureFromFile(photoPath, LoadPicture.IMAGE_PROCESS_WIDTH, LoadPicture.IMAGE_PROCESS_HEIGHT);
+                        Bitmap myBitmap = LoadPicture.getPictureFromFile(photoPath, 640, 480);
                         FeatureDetector detector = FeatureDetector.create(FeatureDetector.ORB);
                         DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
 
