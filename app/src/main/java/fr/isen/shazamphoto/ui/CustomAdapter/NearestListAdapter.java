@@ -112,7 +112,7 @@ public class NearestListAdapter extends BaseAdapter {
                         destionLocalization.getLatitude(), destionLocalization.getLongitude(),
                         localizationUser.getLatitude(), localizationUser.getLongitude(),
                         result);
-                distance.setText("to "+Float.valueOf(result[0]).toString()+"m");
+                distance.setText("to "+Integer.valueOf((int)result[0]).toString()+" m");
             }
 
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.lrnm_linearlayout);

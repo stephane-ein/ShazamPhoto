@@ -32,7 +32,6 @@
                 android:layout_alignParentLeft="true"
                 android:layout_gravity="center"
                 android:contentDescription="@string/image_text"
-                android:src="@drawable/image_not_found"
                 android:visibility="visible" />
 
         </LinearLayout>

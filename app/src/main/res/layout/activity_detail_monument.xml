@@ -21,8 +21,7 @@
                 android:id="@+id/imageView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:src="@drawable/image_not_found" />
+                android:adjustViewBounds="true"/>
 
             <LinearLayout
                 android:id="@+id/linearLayoutLike"
