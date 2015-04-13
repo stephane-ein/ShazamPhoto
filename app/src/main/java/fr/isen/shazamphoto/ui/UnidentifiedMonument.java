@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.model.ModelNavigation;
 
 public class UnidentifiedMonument extends ActionBarActivity {
 
@@ -17,6 +18,7 @@ public class UnidentifiedMonument extends ActionBarActivity {
         PromptNameMonument promptNameMonument = new PromptNameMonument();
         Bundle args = new Bundle();
         args.putSerializable(Monument.NAME_SERIALIZABLE, getIntent().getExtras().getSerializable(Monument.NAME_SERIALIZABLE));
+        args.putSerializable(ModelNavigation.KEY, getIntent().getExtras().getSerializable(ModelNavigation.KEY));
         promptNameMonument.setArguments(args);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

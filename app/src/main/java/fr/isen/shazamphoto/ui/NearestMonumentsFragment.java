@@ -144,6 +144,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         localization = eventLocalizationFound.getLocalization();
         locateManager.stopListening();
 
+        Log.v("Shazam", "NMF Localization found : "+localization);
         // Retrieve the nearest monumentsNearest
         executeGetMonumentByLocalization();
 
@@ -155,6 +156,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     public void monumentsFoundByLocalization(ArrayList<Monument> monuments) {
         //Set the several nearest monument found
         setListNearestMonuments(monuments);
+        Log.v("Shazam", "NMF monuments found : "+monuments.size());
     }
 
     public void executeGetMonumentByLocalization() {
@@ -298,8 +300,10 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                 // Search a localization if we don't have it
                 if (localization == null) {
                     locateManager.startListening();
+                    Log.v("Shazam", "NMF Looking for localization");
                 } else {
                     executeGetMonumentByLocalization();
+                    Log.v("Shazam", "NMF Get monument by localization");
                 }
                 progressBar.setVisibility(View.VISIBLE);
                 buttonNearestMonuments.setVisibility(View.GONE);

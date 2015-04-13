@@ -84,7 +84,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="4dp"
                         android:fontFamily="sans-serif-thin"
-                        android:text="visitors"
+                        android:text="tags"
                         android:textSize="@dimen/abc_text_size_body_2_material" />
                 </LinearLayout>
 

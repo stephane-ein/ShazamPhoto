@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,8 +22,10 @@ import java.util.ArrayList;
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
 import fr.isen.shazamphoto.events.EventMonumentUpdated;
+import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.CustomAdapter.NearestListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
@@ -42,8 +45,18 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
     private LocateManager locateManager;
     private Button buttonSend;
     private LinearLayout llProgessBar;
+    private ArrayList<Monument> monuments;
+    private ModelNavigation modelNavigation;
 
     public PromptNameMonument() {
+    }
+
+    public ModelNavigation getModelNavigation() {
+        return modelNavigation;
+    }
+
+    public void setModelNavigation(ModelNavigation modelNavigation) {
+        this.modelNavigation = modelNavigation;
     }
 
     @Override
@@ -60,8 +73,17 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
         llProgessBar = (LinearLayout) rootView.findViewById(R.id.fpnm_progress_bar);
         ImageView imageView = (ImageView) rootView.findViewById(R.id.fpnm_iv_monument);
 
+        // Set the listener
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(monuments != null && !monuments.isEmpty() && monuments.get(i)!=null && modelNavigation != null){
+                    modelNavigation.changeAppView(new EventDisplayDetailMonument(getActivity(), monuments.get(i), modelNavigation));
+                }
+            }
+        });
         // Display the picture taken
-        LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH_VERTICAL, LoadPicture.HDPI_HEIGHT_VERTICAL, imageView);
+        LoadPicture.setPictureFromFile(monument.getPhotoPathLocal(), imageView, LoadPicture.HDPI_WIDTH_VERTICAL, LoadPicture.HDPI_HEIGHT_VERTICAL);
 
         final PromptNameMonument promptNameMonument = this;
         final EditText editText = (EditText) rootView.findViewById(R.id.editText_prompname_monument);
@@ -125,6 +147,7 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
 
     @Override
     public void monumentsFoundByLocalization(ArrayList<Monument> monuments) {
+        this.monuments = monuments;
         NearestListAdapter adapter = new NearestListAdapter(getActivity(), monuments,  monument.getLocalization());
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();

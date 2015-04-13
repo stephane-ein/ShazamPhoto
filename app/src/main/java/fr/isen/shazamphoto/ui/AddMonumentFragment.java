@@ -26,7 +26,6 @@ import fr.isen.shazamphoto.utils.LoadPicture;
 public class AddMonumentFragment extends Fragment {
 
     private Monument monument;
-    private TextView textView;
 
     public static AddMonumentFragment newInstance() {
         AddMonumentFragment fragment = new AddMonumentFragment();
@@ -62,7 +61,6 @@ public class AddMonumentFragment extends Fragment {
         addListenerCloseKeyboard(editTextDate);
         final EditText editTextDescription = (EditText) view.findViewById(R.id.editText_description_monument);
         addListenerCloseKeyboard(editTextDescription);
-        textView = (TextView) view.findViewById(R.id.adm_logJSON);
 
         // Set the picture
         ImageView imageView = (ImageView) view.findViewById(R.id.fam_imageview_monument);

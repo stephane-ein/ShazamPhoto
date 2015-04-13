@@ -23,6 +23,7 @@ public class LoadPicture {
     public static void setPictureFromFile(String photoPath, ImageView imageView, int reqWidth, int reqHeight) {
         // Retrieve the bitmap sampled and set the image view with the bitmap
         Bitmap bitmap = getPictureFromFile(photoPath, reqWidth, reqHeight);
+        truncateBitmap(bitmap, reqWidth, reqHeight);
         imageView.setImageBitmap(bitmap);
     }
 
