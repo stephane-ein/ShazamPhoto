@@ -64,7 +64,7 @@ public class GridFavrouriteAdapter extends BaseAdapter {
         }else{
             picture.setImageResource(R.drawable.image_not_found);
         }*/
-        LoadPicture.setPicture(m, LoadPicture.IMAGE_PROCESS_WIDTH, LoadPicture.IMAGE_PROCESS_HEIGHT, picture);
+        LoadPicture.setPicture(m, LoadPicture.getImageProcessWidth(), LoadPicture.getImageProcessHeight(), picture);
         name.setText(m.getName());
 
         return v;

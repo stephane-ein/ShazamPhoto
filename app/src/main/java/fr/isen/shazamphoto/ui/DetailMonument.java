@@ -101,9 +101,9 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
         //Set the picture
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH_VERTICAL, LoadPicture.HDPI_HEIGHT_VERTICAL, photoView);
+            LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthVertical(this), LoadPicture.getHdpiHeightVertical(this), photoView);
         }else{
-            LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH_HORIZONTAL, LoadPicture.HDPI_HEIGHT_HORIZONTAL, photoView);
+            LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthHorizontal(this), LoadPicture.getHdpiHeightHorizontal(this), photoView);
         }
 
 
@@ -157,9 +157,9 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
         //Set the picture
         if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH_VERTICAL, LoadPicture.HDPI_HEIGHT_VERTICAL, photoView);
+            LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthVertical(this), LoadPicture.getHdpiHeightVertical(this), photoView);
         }else{
-            LoadPicture.setPicture(monument, LoadPicture.HDPI_WIDTH_HORIZONTAL, LoadPicture.HDPI_HEIGHT_HORIZONTAL, photoView);
+            LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthHorizontal(this), LoadPicture.getHdpiHeightHorizontal(this), photoView);
         }
 
     }

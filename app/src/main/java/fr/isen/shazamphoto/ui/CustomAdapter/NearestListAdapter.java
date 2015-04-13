@@ -83,7 +83,7 @@ public class NearestListAdapter extends BaseAdapter {
             // Case where the monument is not at the end of the circuit
             // Set the image of the monument
             if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
-                GetImageURLTask getImageURLTask = new GetImageURLTask(image, LoadPicture.HDPI_WIDTH_VERTICAL, LoadPicture.HDPI_HEIGHT_VERTICAL);
+                GetImageURLTask getImageURLTask = new GetImageURLTask(image, LoadPicture.getHdpiWidthVertical(activity), LoadPicture.getHdpiHeightVertical(activity));
                 getImageURLTask.execute(m.getPhotoPath());
             }else{
                 // Default image

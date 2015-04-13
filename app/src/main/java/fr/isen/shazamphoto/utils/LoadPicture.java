@@ -1,9 +1,12 @@
 package fr.isen.shazamphoto.utils;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.Display;
 import android.widget.ImageView;
 
 import java.io.InputStream;
@@ -13,12 +16,56 @@ import fr.isen.shazamphoto.database.Monument;
 
 public class LoadPicture {
 
-    public static final int HDPI_WIDTH_VERTICAL = 800;
-    public static final int HDPI_HEIGHT_VERTICAL = 800;
-    public static final int HDPI_WIDTH_HORIZONTAL = 1300;
-    public static final int HDPI_HEIGHT_HORIZONTAL = 800;
-    public static final int IMAGE_PROCESS_WIDTH = 210;
-    public static final int IMAGE_PROCESS_HEIGHT = 260;
+    private static int HDPI_WIDTH_VERTICAL = -1;
+    private static int HDPI_HEIGHT_VERTICAL = -1;
+    private static int HDPI_WIDTH_HORIZONTAL = -1;
+    private static int HDPI_HEIGHT_HORIZONTAL = -1;
+    private static int IMAGE_PROCESS_WIDTH = 210;
+    private static int IMAGE_PROCESS_HEIGHT = 260;
+
+    public static Point getSize(Activity activity){
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return  size;
+    }
+
+    public static int getHdpiWidthVertical(Activity activity) {
+        if(HDPI_WIDTH_VERTICAL == -1){
+            HDPI_WIDTH_VERTICAL = getSize(activity).x;
+        }
+
+        return HDPI_WIDTH_VERTICAL;
+    }
+
+    public static int getHdpiHeightVertical(Activity activity) {
+        if(HDPI_HEIGHT_VERTICAL == -1){
+            HDPI_HEIGHT_VERTICAL = (int) Math.round(0.66 * getSize(activity).y);
+        }
+        return HDPI_HEIGHT_VERTICAL;
+    }
+
+    public static int getHdpiWidthHorizontal(Activity activity) {
+        if(HDPI_WIDTH_HORIZONTAL == -1){
+            HDPI_WIDTH_HORIZONTAL = getSize(activity).x;
+        }
+        return HDPI_WIDTH_HORIZONTAL;
+    }
+
+    public static int getHdpiHeightHorizontal(Activity activity) {
+        if(HDPI_HEIGHT_HORIZONTAL == -1){
+            HDPI_HEIGHT_HORIZONTAL = getSize(activity).y;
+        }
+        return HDPI_HEIGHT_HORIZONTAL;
+    }
+
+    public static int getImageProcessWidth() {
+        return IMAGE_PROCESS_WIDTH;
+    }
+
+    public static int getImageProcessHeight() {
+        return IMAGE_PROCESS_HEIGHT;
+    }
 
     public static void setPictureFromFile(String photoPath, ImageView imageView, int reqWidth, int reqHeight) {
         // Retrieve the bitmap sampled and set the image view with the bitmap

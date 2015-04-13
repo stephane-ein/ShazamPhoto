@@ -83,7 +83,7 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
             }
         });
         // Display the picture taken
-        LoadPicture.setPictureFromFile(monument.getPhotoPathLocal(), imageView, LoadPicture.HDPI_WIDTH_VERTICAL, LoadPicture.HDPI_HEIGHT_VERTICAL);
+        LoadPicture.setPictureFromFile(monument.getPhotoPathLocal(), imageView, LoadPicture.getHdpiWidthVertical(getActivity()), LoadPicture.getHdpiHeightVertical(getActivity()));
 
         final PromptNameMonument promptNameMonument = this;
         final EditText editText = (EditText) rootView.findViewById(R.id.editText_prompname_monument);
