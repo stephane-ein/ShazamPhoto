@@ -4,6 +4,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
@@ -44,7 +45,7 @@ public class LocateManager {
             public void onProviderDisabled(String provider) {
             }
         };
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, locationListenerNetWork);
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetWork);
 
         locationListenerGPS = new LocationListener() {
 
@@ -66,15 +67,17 @@ public class LocateManager {
             public void onProviderDisabled(String provider) {
             }
         };
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, locationListenerGPS);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerGPS);
     }
 
     public void stopListening() {
         if (locationListenerNetWork != null) {
             lm.removeUpdates(locationListenerNetWork);
+            Log.v("Shazam", "LM ListenerNetwork removed");
         }
         if (locationListenerGPS != null) {
             lm.removeUpdates(locationListenerGPS);
+            Log.v("Shazam", "LM ListenerGPS removed");
         }
     }
 }

@@ -140,7 +140,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(FAVOURITE_MONUMENTS_TABLE_CREATE);
         db.execSQL(VISITED_MONUMENTS_TABLE_CREATE);
         db.execSQL(TO_IDENTIFY_MONUMENTS_TABLE_CREATE);
-        db.execSQL(LOCALIZATION_TABLE_CREATE);
+       // db.execSQL(LOCALIZATION_TABLE_CREATE);
         db.execSQL(NEAREST_MONUMENTS_TABLE_CREATE);
         db.execSQL(SEARCH_MONUMENTS_TABLE_CREATE);
     }
@@ -153,7 +153,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(FAVOURITE_MONUMENTS_TABLE_DROP);
         db.execSQL(VISITED_MONUMENTS_TABLE_DROP);
         db.execSQL(TO_IDENTIFY_MONUMENTS_TABLE_DROP);
-        db.execSQL(LOCALIZATION_TABLE_DROP);
+     //   db.execSQL(LOCALIZATION_TABLE_DROP);
         db.execSQL(NEAREST_MONUMENTS_TABLE_DROP);
         db.execSQL(SEARCH_MONUMENTS_TABLE_DROP);
         onCreate(db);

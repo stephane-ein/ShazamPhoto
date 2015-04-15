@@ -35,7 +35,7 @@ public class TaggedMonument extends MonumentList {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favourite_monument, container, false);
 
-        setAdapter(new GridFavrouriteAdapter(getActivity(), getTaggedMonuments()));
+        setAdapter(new GridFavrouriteAdapter(getActivity(), getTaggedMonuments(), getActivity()));
         setAbsListView((GridView) view.findViewById(R.id.ffm_gridview));
 
         // The the monuments in the grid view
@@ -51,7 +51,7 @@ public class TaggedMonument extends MonumentList {
     public void onResume() {
         super.onResume();
         if (getActivity() != null) {
-            setAdapter(new GridFavrouriteAdapter(getActivity(), getTaggedMonuments()));
+            setAdapter(new GridFavrouriteAdapter(getActivity(), getTaggedMonuments(), getActivity()));
             setListMonuments(getTaggedMonuments(), getAdapter(), getAbsListView());
         }
     }

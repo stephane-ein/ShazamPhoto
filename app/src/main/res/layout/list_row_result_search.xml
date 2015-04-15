@@ -52,6 +52,7 @@
                 android:layout_toRightOf="@+id/imageView"
                 android:fontFamily="sans-serif-medium"
                 android:text="Title"
+                android:maxLines="1"
                 android:textSize="@dimen/title" />
 
             <LinearLayout

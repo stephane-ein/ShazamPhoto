@@ -68,6 +68,7 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
 
         View rootView = inflater.inflate(R.layout.fragment_prompt_name_monument, container, false);
         monument = (Monument) getArguments().getSerializable(Monument.NAME_SERIALIZABLE);
+        modelNavigation = (ModelNavigation) getArguments().getSerializable(ModelNavigation.KEY);
         listView = (ListView) rootView.findViewById(R.id.fpnm_lv_nearest_monument);
         buttonSend = (Button) rootView.findViewById(R.id.fpnm_but_send);
         llProgessBar = (LinearLayout) rootView.findViewById(R.id.fpnm_progress_bar);

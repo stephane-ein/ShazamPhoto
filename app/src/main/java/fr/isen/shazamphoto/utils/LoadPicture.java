@@ -1,61 +1,61 @@
 package fr.isen.shazamphoto.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
 import android.widget.ImageView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 
 import fr.isen.shazamphoto.database.Monument;
 
 public class LoadPicture {
 
-    private static int HDPI_WIDTH_VERTICAL = -1;
-    private static int HDPI_HEIGHT_VERTICAL = -1;
-    private static int HDPI_WIDTH_HORIZONTAL = -1;
-    private static int HDPI_HEIGHT_HORIZONTAL = -1;
+    private static int HDPI_WIDTH_VERTICAL;
+    private static int HDPI_HEIGHT_VERTICAL;
+    private static int HDPI_WIDTH_HORIZONTAL;
+    private static int HDPI_HEIGHT_HORIZONTAL;
     private static int IMAGE_PROCESS_WIDTH = 210;
     private static int IMAGE_PROCESS_HEIGHT = 260;
 
-    public static Point getSize(Activity activity){
+    public static Point getSize(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        return  size;
+        return size;
     }
 
     public static int getHdpiWidthVertical(Activity activity) {
-        if(HDPI_WIDTH_VERTICAL == -1){
-            HDPI_WIDTH_VERTICAL = getSize(activity).x;
-        }
+        HDPI_WIDTH_VERTICAL = getSize(activity).x;
 
         return HDPI_WIDTH_VERTICAL;
     }
 
     public static int getHdpiHeightVertical(Activity activity) {
-        if(HDPI_HEIGHT_VERTICAL == -1){
-            HDPI_HEIGHT_VERTICAL = (int) Math.round(0.66 * getSize(activity).y);
-        }
+        HDPI_HEIGHT_VERTICAL = (int) Math.round(0.66 * getSize(activity).y);
+
         return HDPI_HEIGHT_VERTICAL;
     }
 
     public static int getHdpiWidthHorizontal(Activity activity) {
-        if(HDPI_WIDTH_HORIZONTAL == -1){
-            HDPI_WIDTH_HORIZONTAL = getSize(activity).x;
-        }
+        HDPI_WIDTH_HORIZONTAL = getSize(activity).x;
         return HDPI_WIDTH_HORIZONTAL;
     }
 
     public static int getHdpiHeightHorizontal(Activity activity) {
-        if(HDPI_HEIGHT_HORIZONTAL == -1){
-            HDPI_HEIGHT_HORIZONTAL = getSize(activity).y;
-        }
+        HDPI_HEIGHT_HORIZONTAL = getSize(activity).y;
         return HDPI_HEIGHT_HORIZONTAL;
     }
 
@@ -74,19 +74,18 @@ public class LoadPicture {
         imageView.setImageBitmap(bitmap);
     }
 
-    public static Bitmap setPicture(Monument monument, int reqWidth, int reqHeight, ImageView imageView) {
-        Bitmap bitmap = null;
+    public static void setPicture(Monument monument, int reqWidth, int reqHeight, ImageView imageView, Activity activity) {
+        Boolean getFromFile = false;
         if (monument.getPhotoPathLocal() != null && !monument.getPhotoPathLocal().isEmpty()) {
-            bitmap = getPictureFromFile(monument.getPhotoPathLocal(), reqWidth, reqHeight);
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-            }
-        }
-        if (bitmap == null && monument.getPhotoPath() != null && !monument.getPhotoPath().isEmpty()) {
-            GetImageURLTask getImageURLTask = new GetImageURLTask(imageView, reqWidth, reqHeight);
+            Log.v("Shazam", "LP setPicture from file... "+monument.getName());
+            GetImageFromFile getImageFromFile = new GetImageFromFile(monument.getPhotoPathLocal(), reqWidth, reqHeight, imageView);
+            getImageFromFile.execute();
+            getFromFile = true;
+        }else if(!getFromFile && monument.getPhotoPath() != null && !monument.getPhotoPath().isEmpty()) {
+            Log.v("Shazam", "LP setPicture from URL..."+monument.getName());
+            GetImageURLTask getImageURLTask = new GetImageURLTask(imageView, reqWidth, reqHeight, monument, activity);
             getImageURLTask.execute(monument.getPhotoPath());
         }
-        return bitmap;
     }
 
     public static Bitmap getPictureFromFile(String photoPath, int reqWidth, int reqHeight) {
@@ -103,7 +102,7 @@ public class LoadPicture {
         return BitmapFactory.decodeFile(photoPath, options);
     }
 
-    public static Bitmap getPictureFromURL(String url, int reqWidth, int reqHeight) {
+    public static Bitmap getPictureFromURL(String url, int reqWidth, int reqHeight, Monument monument, Activity activity) {
 
         Bitmap bitmap = null;
         try {
@@ -120,18 +119,15 @@ public class LoadPicture {
             in.close();
             in = new java.net.URL(url).openStream();
             options.inJustDecodeBounds = false;
-            Bitmap oldBitmap = BitmapFactory.decodeStream(in, null, options);
-            // Truncate the bitmap
-            bitmap = truncateBitmap(oldBitmap, reqWidth, reqHeight);
+            bitmap = BitmapFactory.decodeStream(in, null, options);
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("Shazam", "Exception in LP : "+e.getMessage());
+            Log.e("Shazam", "Exception in LP getPictureFromURL : " + e.getMessage());
         }
 
         return bitmap;
     }
-
 
     public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -170,26 +166,26 @@ public class LoadPicture {
         return bitmapFinal;
     }
 
-    public static Bitmap truncateBitmap(Bitmap bitmap, int widthWanted, int heightWanted){
+    public static Bitmap truncateBitmap(Bitmap bitmap, int widthWanted, int heightWanted) {
         Bitmap result = null;
 
-        if(bitmap != null){
-            int widthValidate, heightValidate, x=0, y=0;
-
-            if(bitmap.getWidth() < widthWanted){
+        if (bitmap != null) {
+            int widthValidate, heightValidate, x = 0, y = 0;
+            //Log.v("Shazam", "Truncate widthWanted : " + widthWanted + " heightWanted : " + heightWanted + " widthBitmap : " + bitmap.getWidth() + " heightBitmap : " + bitmap.getHeight());
+            if (bitmap.getWidth() < widthWanted) {
                 widthValidate = bitmap.getWidth();
-            }else{
+            } else {
                 widthValidate = widthWanted;
                 int diffWidth = bitmap.getWidth() - widthValidate;
-                x = diffWidth/2;
+                x = diffWidth / 2;
             }
 
-            if(bitmap.getHeight() < heightWanted){
+            if (bitmap.getHeight() < heightWanted) {
                 heightValidate = bitmap.getHeight();
-            }else{
+            } else {
                 heightValidate = heightWanted;
-                int diffHeigt = bitmap.getHeight() -  heightValidate;
-                y = diffHeigt/2;
+                int diffHeigt = bitmap.getHeight() - heightValidate;
+                y = diffHeigt / 2;
             }
 
             result = Bitmap.createBitmap(bitmap, x, y, widthValidate, heightValidate);
@@ -197,5 +193,32 @@ public class LoadPicture {
 
         return result;
 
+    }
+
+    public static void saveImageToFile(Bitmap image, String fileName) {
+        OutputStream outputStream = null;
+        try {
+            String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/ShazamBuffer/";
+            File file = new File(path);
+            file.mkdirs();
+            file = new File(path + fileName);
+            outputStream = new FileOutputStream(file);
+
+            image.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            Log.v("Shazam", "LP saveImageToFile saved : " + fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Shazam", "Exception in LP saveImageToFile : " + e.getMessage());
+        } finally {
+            try {
+                if (outputStream != null) {
+                    outputStream.flush();
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("Shazam", "LP exception in saveImageToFile finally : " + e.getMessage());
+            }
+        }
     }
 }

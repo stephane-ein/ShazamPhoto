@@ -2,6 +2,7 @@ package fr.isen.shazamphoto.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -38,6 +39,8 @@ import fr.isen.shazamphoto.ui.CustomAdapter.ResultListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.ImageProcessing;
+import fr.isen.shazamphoto.utils.LoadPicture;
+import fr.isen.shazamphoto.utils.SaveImageURLTask;
 import fr.isen.shazamphoto.utils.ShazamProcessingTask;
 
 public class Shazam extends Fragment implements SearchLocalizationItem {

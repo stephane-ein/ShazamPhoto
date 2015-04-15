@@ -40,6 +40,6 @@ public abstract class InternetTask<Params, Progress, Result> extends AsyncTask<P
     }
 
     public void displayUINoNetwork() {
-        Toast.makeText(getActivity(), "No internet found", Toast.LENGTH_LONG).show();
+        if(getActivity() != null) Toast.makeText(getActivity(), "No internet found", Toast.LENGTH_LONG).show();
     }
 }

@@ -41,11 +41,11 @@ public class MonumentDAO extends ShazamDAO {
         Cursor c = mDb.query(DatabaseHandler.MONUMENTS_TABLE_NAME, DatabaseHandler.MONUMENTS_ALL_COLUMNS, DatabaseHandler.MONUMENTS_KEY + " = ?", args, "", "", "");
         if(c.moveToFirst()) {
             monument =  cursorToMonument(c);
-            String args2[] = {String.valueOf(c.getLong(7))};
+           /* String args2[] = {String.valueOf(c.getLong(7))};
             c = mDb.query(DatabaseHandler.LOCALIZATION_TABLE_NAME, DatabaseHandler.LOCALIZATION_ALL_COLUMNS, DatabaseHandler.LOCALIZATION_KEY + " = ?", args2, "", "", "");
             if(c.moveToFirst()) {
                 monument.setLocalization(new Localization(c.getLong(0), c.getDouble(1), c.getDouble(2)));
-            }
+            }*/
         }
         return monument;
     }

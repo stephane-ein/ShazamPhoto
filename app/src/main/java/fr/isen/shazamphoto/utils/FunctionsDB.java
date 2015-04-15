@@ -26,6 +26,19 @@ public class FunctionsDB {
         }
     }
 
+    public static void addMoumentsToDB(ArrayList<Monument> monuments, Context context){
+        MonumentDAO dao = new MonumentDAO(context);
+        dao.open();
+        for(Monument monument: monuments){
+            long id = dao.getMonumentId(monument);
+            if (id == -1) {
+                id = dao.insert(monument);
+            }
+            monument.setId(id);
+        }
+        dao.close();
+    }
+
     public static Monument getMonument(Monument monument, Context context){
         MonumentDAO monumentDAO = new MonumentDAO(context);
         monumentDAO.open();

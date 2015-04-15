@@ -1,6 +1,6 @@
 package fr.isen.shazamphoto.ui;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -23,10 +23,14 @@ import java.util.List;
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.database.MonumentSearchDAO;
+import fr.isen.shazamphoto.events.EventDisplayDetailMonument;
 import fr.isen.shazamphoto.events.EventLocalizationFound;
+import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.CustomAdapter.NearestListAdapter;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchLocalizationItem;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchMonumentsByLocalization;
+import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.Little.Little;
 import fr.isen.shazamphoto.utils.Little.Point;
@@ -63,15 +67,17 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
     private Button buttonBack;
     private LinearLayout linearLayoutActionsCircuit;
 
+    private ModelNavigation modelNavigation;
 
     private boolean isSend = false;
     private long startTime = 0;
     private Handler timerHandler = new Handler();
     private Runnable timerRunnable;
 
-    public static NearestMonumentsFragment newInstance(LocationManager locationManager) {
+    public static NearestMonumentsFragment newInstance(LocationManager locationManager, ModelNavigation modelNavigation) {
         NearestMonumentsFragment fragment = new NearestMonumentsFragment();
         fragment.setLocateManager(new LocateManager(locationManager, fragment));
+        fragment.setModelNavigation(modelNavigation);
         return fragment;
     }
 
@@ -118,7 +124,9 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
         // Check if we have a monumentsForCircuit of nearest monument already found
         // Case for sweeping fragment
-        if (!monumentsNearest.isEmpty()) setListNearestMonuments(monumentsNearest);
+        if (!monumentsNearest.isEmpty()){
+            setListNearestMonuments(monumentsNearest);
+        }
 
         reset();
         setRetainInstance(true);
@@ -171,6 +179,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         // Stop he listener on the network
         locateManager.stopListening();
 
+        //Add the monuments in the db
+        FunctionsDB.addMoumentsToDB(monuments, getActivity());
         // Display the list view
         this.monumentsNearest = monuments;
         this.monuments = monuments;
@@ -179,7 +189,6 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         listView.setVisibility(View.VISIBLE);
-
 
         // Change the UI
         displayModeCircuit();
@@ -204,9 +213,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                 if (!startedCircuitMode) {
                     // If the user did not activate the circuit mode
                     // we just display the detail about the monument selected
-                    Intent intent = new Intent(getActivity(), DetailMonument.class);
-                    intent.putExtra(Monument.NAME_SERIALIZABLE, m);
-                    startActivity(intent);
+                    modelNavigation.changeAppView(new EventDisplayDetailMonument(getActivity(),
+                            FunctionsDB.getMonument(m, getActivity()), modelNavigation));
                 } else {
                     // Check if the monument has not been selected
                     if(monumentsForCircuit.get(m.getIdNearest()) == null){
@@ -300,6 +308,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                 // Search a localization if we don't have it
                 if (localization == null) {
                     locateManager.startListening();
+                    isSend = false;
                     Log.v("Shazam", "NMF Looking for localization");
                 } else {
                     executeGetMonumentByLocalization();
@@ -463,4 +472,11 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
         this.locateManager = locateManager;
     }
 
+    public ModelNavigation getModelNavigation() {
+        return modelNavigation;
+    }
+
+    public void setModelNavigation(ModelNavigation modelNavigation) {
+        this.modelNavigation = modelNavigation;
+    }
 }

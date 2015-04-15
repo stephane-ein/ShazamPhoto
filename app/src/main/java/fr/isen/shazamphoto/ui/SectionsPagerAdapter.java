@@ -47,7 +47,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 if (fragments.get(NearestMonumentsFragment.POSITION) == null) {
                     fragments.add(NearestMonumentsFragment.POSITION,
                             NearestMonumentsFragment.newInstance((LocationManager)
-                                    home.getSystemService(Context.LOCATION_SERVICE)));
+                                    home.getSystemService(Context.LOCATION_SERVICE), home.getModelNavigation()));
                 }
                 result = fragments.get(NearestMonumentsFragment.POSITION);
                 break;

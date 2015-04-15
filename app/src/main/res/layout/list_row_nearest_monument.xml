@@ -30,8 +30,7 @@
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_gravity="center"
-                android:contentDescription="@string/image_text" />
+                android:layout_gravity="center" />
 
         </LinearLayout>
 
@@ -51,6 +50,7 @@
                 android:layout_toRightOf="@+id/imageView"
                 android:fontFamily="sans-serif-medium"
                 android:text="Title"
+                android:maxLines="1"
                 android:textSize="@dimen/title" />
 
             <LinearLayout

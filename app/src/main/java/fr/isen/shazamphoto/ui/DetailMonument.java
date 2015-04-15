@@ -48,6 +48,7 @@ import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
 import fr.isen.shazamphoto.utils.LoadPicture;
+import fr.isen.shazamphoto.utils.SaveImageURLTask;
 import fr.isen.shazamphoto.utils.UpdateMonument.AddLikeTask;
 
 
@@ -99,12 +100,25 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
         setTitle("");
 
-        //Set the picture
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthVertical(this), LoadPicture.getHdpiHeightVertical(this), photoView);
+        if(monument.getPhotoPathLocal() == null || monument.getPhotoPathLocal().isEmpty()){
+            SaveImageURLTask saveImageURLTask;
+            Log.v("Shazam", "DM save the image...");
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                saveImageURLTask = new SaveImageURLTask(this, monument, LoadPicture.getHdpiWidthVertical(this), LoadPicture.getHdpiHeightVertical(this), photoView);
+            }else{
+                saveImageURLTask = new SaveImageURLTask(this, monument, LoadPicture.getHdpiWidthHorizontal(this), LoadPicture.getHdpiHeightHorizontal(this), photoView);
+            }
+            saveImageURLTask.execute();
         }else{
-            LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthHorizontal(this), LoadPicture.getHdpiHeightHorizontal(this), photoView);
+            //Set the picture
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthVertical(this), LoadPicture.getHdpiHeightVertical(this), photoView, this);
+            }else{
+                LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthHorizontal(this), LoadPicture.getHdpiHeightHorizontal(this), photoView, this);
+            }
         }
+
+
 
 
         //Set the monument information
@@ -157,9 +171,9 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
         //Set the picture
         if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthVertical(this), LoadPicture.getHdpiHeightVertical(this), photoView);
+            LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthVertical(this), LoadPicture.getHdpiHeightVertical(this), photoView, this);
         }else{
-            LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthHorizontal(this), LoadPicture.getHdpiHeightHorizontal(this), photoView);
+            LoadPicture.setPicture(monument, LoadPicture.getHdpiWidthHorizontal(this), LoadPicture.getHdpiHeightHorizontal(this), photoView, this);
         }
 
     }
@@ -232,7 +246,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
 
     public void setGridViewArrayList(final ArrayList<Monument> m) {
         // Set the grid view of the nearest monuments
-        GridFavrouriteAdapter gridViewAdapter = new GridFavrouriteAdapter(this, m);
+        GridFavrouriteAdapter gridViewAdapter = new GridFavrouriteAdapter(this, m, this);
         gridView.setAdapter(gridViewAdapter);
         gridViewAdapter.notifyDataSetChanged();
 
@@ -303,6 +317,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
     }
 
     public void setListenerFavorite(final Button button) {
+        final DetailMonument detailMonument = this;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -315,6 +330,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
                 } else {
                     favouriteMonumentDAO.insert(monument);
                     button.setText("REMOVE FROM FAV.");
+
                 }
                 favouriteMonumentDAO.close();
             }

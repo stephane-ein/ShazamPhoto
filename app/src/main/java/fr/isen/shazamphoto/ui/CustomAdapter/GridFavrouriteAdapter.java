@@ -1,5 +1,6 @@
 package fr.isen.shazamphoto.ui.CustomAdapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +20,12 @@ import fr.isen.shazamphoto.utils.LoadPicture;
 public class GridFavrouriteAdapter extends BaseAdapter {
     private final List<Monument> mItems;
     private final LayoutInflater mInflater;
+    private Activity activity;
 
-    public GridFavrouriteAdapter(Context context, ArrayList<Monument> monuments) {
+    public GridFavrouriteAdapter(Context context, ArrayList<Monument> monuments, Activity activity) {
         mInflater = LayoutInflater.from(context);
         this.mItems = monuments;
+        this.activity = activity;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class GridFavrouriteAdapter extends BaseAdapter {
         }else{
             picture.setImageResource(R.drawable.image_not_found);
         }*/
-        LoadPicture.setPicture(m, LoadPicture.getImageProcessWidth(), LoadPicture.getImageProcessHeight(), picture);
+        LoadPicture.setPicture(m, LoadPicture.getImageProcessWidth(), LoadPicture.getImageProcessHeight(), picture, activity);
         name.setText(m.getName());
 
         return v;

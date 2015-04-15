@@ -83,8 +83,7 @@ public class NearestListAdapter extends BaseAdapter {
             // Case where the monument is not at the end of the circuit
             // Set the image of the monument
             if (m.getPhotoPath() != null && !m.getName().isEmpty()) {
-                GetImageURLTask getImageURLTask = new GetImageURLTask(image, LoadPicture.getHdpiWidthVertical(activity), LoadPicture.getHdpiHeightVertical(activity));
-                getImageURLTask.execute(m.getPhotoPath());
+                LoadPicture.setPicture(m, LoadPicture.getImageProcessWidth(), LoadPicture.getImageProcessHeight(), image, activity);
             }else{
                 // Default image
                 image.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(),
@@ -104,7 +103,7 @@ public class NearestListAdapter extends BaseAdapter {
             });
 
             // Set the number of visitor and the distance between the monument and the user
-            visitor.setText(Integer.valueOf(m.getNbVisitors()).toString() + " visitors");
+            visitor.setText(Integer.valueOf(m.getNbVisitors()).toString() + " tags");
             Localization destionLocalization = m.getLocalization();
             float[] result = new float[3];
             if(destionLocalization != null){
