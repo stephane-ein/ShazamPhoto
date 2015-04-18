@@ -51,6 +51,15 @@ public class MonumentDAO extends ShazamDAO {
     }
 
 
+    public Monument select(String name) {
+        String args[] = {name};
+        Monument monument = null;
+        Cursor c = mDb.query(DatabaseHandler.MONUMENTS_TABLE_NAME, DatabaseHandler.MONUMENTS_ALL_COLUMNS, DatabaseHandler.MONUMENTS_NAME + " = ?", args, "", "", "");
+        if(c.moveToFirst()) {
+            monument =  cursorToMonument(c);
+        }
+        return monument;
+    }
     public List<Monument> getAllMonuments() {
         List<Monument> monuments = new ArrayList<Monument>();
 

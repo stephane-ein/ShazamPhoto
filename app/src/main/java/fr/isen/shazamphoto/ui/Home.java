@@ -3,8 +3,10 @@ package fr.isen.shazamphoto.ui;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,7 +14,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import fr.isen.shazamphoto.R;
@@ -22,6 +26,8 @@ import fr.isen.shazamphoto.events.EventResultSearchMonument;
 import fr.isen.shazamphoto.model.ModelNavigation;
 import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 import fr.isen.shazamphoto.ui.SlidingTab.SlidingTabLayout;
+import fr.isen.shazamphoto.utils.ConfigurationShazam;
+import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
 import fr.isen.shazamphoto.views.ViewDetailMonument;
 import fr.isen.shazamphoto.views.ViewDisplaySearchResult;
@@ -104,6 +110,9 @@ public class Home extends ActionBarActivity implements SearchableItem {
                 searchView.setIconified(false);
                 searchView.requestFocusFromTouch();
                 break;
+            case R.id.action_clear_cache:
+                clearCache();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -164,6 +173,22 @@ public class Home extends ActionBarActivity implements SearchableItem {
         //Set the view on the shazam fragment
         mViewPager.setCurrentItem(Shazam.POSITION);
         sectionsPagerAdapter.getItem(Shazam.POSITION);
+    }
+
+    public void clearCache(){
+        File dir = new File(ConfigurationShazam.DIRECTORY_CACHE);
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                String name = children[i];
+                Monument m = FunctionsDB.getMonumentByName(name, this);
+                m.setPhotoPathLocal("");
+                FunctionsDB.editMonument(m, this);
+                new File(dir, children[i]).delete();
+            }
+        }
+
+        Toast.makeText(this, "The cache has been cleared", Toast.LENGTH_LONG).show();
     }
 
     public SectionsPagerAdapter getSectionsPagerAdapter() {

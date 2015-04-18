@@ -47,6 +47,14 @@ public class FunctionsDB {
         return monument1;
     }
 
+    public static Monument getMonumentByName(String name, Context context){
+        MonumentDAO monumentDAO = new MonumentDAO(context);
+        monumentDAO.open();
+        Monument monument1 = monumentDAO.select(name);
+        monumentDAO.close();
+        return monument1;
+    }
+
     public static void addMonumentToTaggedMonument(Monument monument, Context context) {
         TaggedMonumentDAO taggedMonumentDAO = new TaggedMonumentDAO(context);
         taggedMonumentDAO.open();

@@ -1,7 +1,6 @@
-package fr.isen.shazamphoto.utils;
+package fr.isen.shazamphoto.utils.Images;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -16,8 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-import java.util.ArrayList;
 
 import fr.isen.shazamphoto.database.Monument;
 

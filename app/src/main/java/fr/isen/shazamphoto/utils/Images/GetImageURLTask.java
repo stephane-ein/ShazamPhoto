@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.utils;
+package fr.isen.shazamphoto.utils.Images;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

@@ -20,7 +20,7 @@ import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Localization;
 import fr.isen.shazamphoto.database.Monument;
 import fr.isen.shazamphoto.utils.AddMonument;
-import fr.isen.shazamphoto.utils.LoadPicture;
+import fr.isen.shazamphoto.utils.Images.LoadPicture;
 
 
 public class AddMonumentFragment extends Fragment {

@@ -33,7 +33,7 @@ import fr.isen.shazamphoto.ui.ItemUtils.SearchableItem;
 import fr.isen.shazamphoto.ui.ItemUtils.UpdateMonumentItem;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
-import fr.isen.shazamphoto.utils.LoadPicture;
+import fr.isen.shazamphoto.utils.Images.LoadPicture;
 import fr.isen.shazamphoto.utils.UpdateMonument.AddDescriptorsKeyPointsTask;
 
 public class PromptNameMonument extends Fragment implements SearchableItem, SearchMonumentsByLocalization, SearchLocalizationItem,

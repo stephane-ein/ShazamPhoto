@@ -1,4 +1,4 @@
-package fr.isen.shazamphoto.utils;
+package fr.isen.shazamphoto.utils.Images;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.utils.FunctionsDB;
 
 public class SaveImageURLTask extends AsyncTask<String, Void, Bitmap> {
 
@@ -42,7 +43,7 @@ public class SaveImageURLTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         if(bitmap != null){
-            String fileName = monument.getName().replace(" ", "")+".png";
+            String fileName = monument.getName();//.replace(" ", "")+".png";
             monument.setPhotoPathLocal(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() +"/ShazamBuffer/"+fileName);
             LoadPicture.saveImageToFile(bitmap, fileName);
             FunctionsDB.editMonument(monument, activity);

@@ -14,8 +14,7 @@ import java.util.List;
 
 import fr.isen.shazamphoto.R;
 import fr.isen.shazamphoto.database.Monument;
-import fr.isen.shazamphoto.utils.GetImageURLTask;
-import fr.isen.shazamphoto.utils.LoadPicture;
+import fr.isen.shazamphoto.utils.Images.LoadPicture;
 
 public class GridFavrouriteAdapter extends BaseAdapter {
     private final List<Monument> mItems;

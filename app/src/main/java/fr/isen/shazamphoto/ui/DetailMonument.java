@@ -47,8 +47,8 @@ import fr.isen.shazamphoto.ui.ScrollView.ScrollViewListener;
 import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
-import fr.isen.shazamphoto.utils.LoadPicture;
-import fr.isen.shazamphoto.utils.SaveImageURLTask;
+import fr.isen.shazamphoto.utils.Images.LoadPicture;
+import fr.isen.shazamphoto.utils.Images.SaveImageURLTask;
 import fr.isen.shazamphoto.utils.UpdateMonument.AddLikeTask;
 
 
