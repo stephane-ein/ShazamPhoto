@@ -1,5 +1,7 @@
 package fr.isen.shazamphoto.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -14,8 +16,11 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 import fr.isen.shazamphoto.database.Monument;
+import fr.isen.shazamphoto.utils.Images.LoadPicture;
 
 public class AddMonument extends AsyncTask<Monument, Void, Boolean> {
 
@@ -27,6 +32,13 @@ public class AddMonument extends AsyncTask<Monument, Void, Boolean> {
         Boolean returnValue = false;
         try {
             File file = new File(monument.getPhotoPath());
+/*
+            FileOutputStream outputStream = new FileOutputStream(file);
+            Bitmap image = LoadPicture.getPictureFromFile(monument.getPhotoPath(), 700, 700);
+            Log.v("Shazam", "AM bitmap: "+image);
+            image.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+*/
+
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost("http://"+ConfigurationShazam.IP_SERVER+"/shazam/api.php");
             httppost.setHeader("enctype", "multipart/form-data");

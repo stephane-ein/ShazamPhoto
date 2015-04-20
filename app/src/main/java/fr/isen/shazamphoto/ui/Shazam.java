@@ -159,6 +159,7 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
         }
     }
 
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -188,6 +189,11 @@ public class Shazam extends Fragment implements SearchLocalizationItem {
             if (photoFile != null) {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         Uri.fromFile(photoFile));
+                takePictureIntent.putExtra("outputX", 700);
+                takePictureIntent.putExtra("outputY", 700);
+                takePictureIntent.putExtra("aspectX", 1);
+                takePictureIntent.putExtra("aspectY", 1);
+                takePictureIntent.putExtra("scale", true);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
