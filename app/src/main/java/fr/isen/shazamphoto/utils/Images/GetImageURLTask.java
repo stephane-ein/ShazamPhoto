@@ -44,7 +44,7 @@ public class GetImageURLTask extends AsyncTask<String, Void, Bitmap> {
         if (bitmap != null) {
             bitmap = LoadPicture.truncateBitmap(bitmap, reqWith, reqHeight);
             imageView.setImageBitmap(bitmap);
-            Log.v("Shazam", "GIURLT setPiture from URL... done");
+           // Log.v("Shazam", "GIURLT setPiture from URL... done");
         } else {
             imageView.setImageResource(R.drawable.image_not_found);
 

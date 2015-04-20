@@ -225,7 +225,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                         }else{
                             m.setSelectedCircuit(true);
                         }
-
+                        Log.v("Shazam", "NMF monuments added in the circuit : "+m);
                         textViewInformation.setText("... and the other monuments to visit");
 
                         // We add the monument to visit in the hasp map
@@ -370,7 +370,7 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
                 for (Integer i : monumentsForCircuit.keySet()) {
                     Monument monument = monumentsForCircuit.get(i);
-
+                    Log.v("Shazam", "NMF Monument in the circuit : "+monument);
                     Localization startLocalization = monument.getLocalization();
 
                     // Put the id of the monument in the matrix
@@ -404,8 +404,10 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                 }
 
                 // Do the little
+                displayLittleMatrix(littleMatrix);
                 Little little = new Little(monumentsForCircuit.size(), littleMatrix);
                 little.doLittle();
+                displayLittleMatrix(littleMatrix);
                 List<Point> shortPath = little.getShortPath();
                 ArrayList<Monument> monumentPath = new ArrayList<>(monumentsForCircuit.size());
                 Point start = null;
@@ -432,6 +434,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
                     // Add the first monument to the end of the circuit with a specific id
                     Monument end = new Monument(-2, startMonument.getLocalization(), startMonument.getName());
                     monumentPath.add(end);
+
+                    for(Monument m : monumentPath) Log.v("Shazam", "NMF monumentPath : "+m);
 
                     // Display the result
                     setListCircuitMonuments(monumentPath);
@@ -478,5 +482,16 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
     public void setModelNavigation(ModelNavigation modelNavigation) {
         this.modelNavigation = modelNavigation;
+    }
+
+    public void displayLittleMatrix(int[][] littleMatrix){
+        String line = "";
+        for(int i = 0; i < littleMatrix[0].length; i++){
+            for(int j = 0; j < littleMatrix[0].length; j++){
+                line+=" "+littleMatrix[i][j];
+            }
+            Log.v("Shazam",""+line+"\n");
+            line = "";
+        }
     }
 }

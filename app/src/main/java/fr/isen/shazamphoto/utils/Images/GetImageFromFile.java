@@ -45,6 +45,6 @@ public class GetImageFromFile extends AsyncTask<String, Void, Bitmap>{
         }else{
             imageView.setImageResource(R.drawable.image_not_found);
         }
-        Log.v("Shazam", "LP setPicture from file... done");
+        //Log.v("Shazam", "LP setPicture from file... done");
     }
 }

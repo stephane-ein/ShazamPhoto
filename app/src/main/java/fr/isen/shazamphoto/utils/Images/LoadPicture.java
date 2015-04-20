@@ -20,13 +20,6 @@ import fr.isen.shazamphoto.database.Monument;
 
 public class LoadPicture {
 
-    private static int HDPI_WIDTH_VERTICAL;
-    private static int HDPI_HEIGHT_VERTICAL;
-    private static int HDPI_WIDTH_HORIZONTAL;
-    private static int HDPI_HEIGHT_HORIZONTAL;
-    private static int IMAGE_PROCESS_WIDTH = 210;
-    private static int IMAGE_PROCESS_HEIGHT = 260;
-
     public static Point getSize(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -35,33 +28,29 @@ public class LoadPicture {
     }
 
     public static int getHdpiWidthVertical(Activity activity) {
-        HDPI_WIDTH_VERTICAL = getSize(activity).x;
-
-        return HDPI_WIDTH_VERTICAL;
+        return getSize(activity).x;
     }
 
     public static int getHdpiHeightVertical(Activity activity) {
-        HDPI_HEIGHT_VERTICAL = (int) Math.round(0.66 * getSize(activity).y);
-
-        return HDPI_HEIGHT_VERTICAL;
+        return (int) Math.round(0.66 * getSize(activity).y);
     }
 
     public static int getHdpiWidthHorizontal(Activity activity) {
-        HDPI_WIDTH_HORIZONTAL = getSize(activity).x;
-        return HDPI_WIDTH_HORIZONTAL;
+        return getSize(activity).x;
     }
 
     public static int getHdpiHeightHorizontal(Activity activity) {
-        HDPI_HEIGHT_HORIZONTAL = getSize(activity).y;
-        return HDPI_HEIGHT_HORIZONTAL;
+        return getSize(activity).y;
     }
 
-    public static int getImageProcessWidth() {
-        return IMAGE_PROCESS_WIDTH;
+    public static int getImageProcessWidth(Activity activity) {
+
+        return (int) Math.round(getSize(activity).x * 0.33);
     }
 
-    public static int getImageProcessHeight() {
-        return IMAGE_PROCESS_HEIGHT;
+    public static int getImageProcessHeight(Activity activity) {
+
+        return (int) Math.round(getSize(activity).y * 0.25);
     }
 
     public static void setPictureFromFile(String photoPath, ImageView imageView, int reqWidth, int reqHeight) {
@@ -74,12 +63,12 @@ public class LoadPicture {
     public static void setPicture(Monument monument, int reqWidth, int reqHeight, ImageView imageView, Activity activity) {
         Boolean getFromFile = false;
         if (monument.getPhotoPathLocal() != null && !monument.getPhotoPathLocal().isEmpty()) {
-            Log.v("Shazam", "LP setPicture from file... "+monument.getName());
+            //Log.v("Shazam", "LP setPicture from file... "+monument.getName());
             GetImageFromFile getImageFromFile = new GetImageFromFile(monument.getPhotoPathLocal(), reqWidth, reqHeight, imageView);
             getImageFromFile.execute();
             getFromFile = true;
         }else if(!getFromFile && monument.getPhotoPath() != null && !monument.getPhotoPath().isEmpty()) {
-            Log.v("Shazam", "LP setPicture from URL..."+monument.getName());
+            //Log.v("Shazam", "LP setPicture from URL..."+monument.getName());
             GetImageURLTask getImageURLTask = new GetImageURLTask(imageView, reqWidth, reqHeight, monument, activity);
             getImageURLTask.execute(monument.getPhotoPath());
         }

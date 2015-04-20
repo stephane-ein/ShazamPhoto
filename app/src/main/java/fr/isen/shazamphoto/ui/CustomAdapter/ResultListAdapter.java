@@ -66,7 +66,7 @@ public class ResultListAdapter extends BaseAdapter {
         visitor.setText(Integer.valueOf(m.getNbVisitors()).toString());
         like.setText(Integer.valueOf(m.getNbLike()).toString());
 
-        LoadPicture.setPicture(m, LoadPicture.getImageProcessWidth(), LoadPicture.getImageProcessHeight(), image, activity);
+        LoadPicture.setPicture(m, LoadPicture.getImageProcessWidth(activity), LoadPicture.getImageProcessHeight(activity), image, activity);
 
         return convertView;
     }
