@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.utils.Images;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -19,6 +20,9 @@ import java.io.OutputStream;
 import fr.isen.shazamphoto.database.Monument;
 
 public class LoadPicture {
+
+    public static int widthImageProcess = -1;
+    public static int heightImageProcess;
 
     public static Point getSize(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
@@ -44,13 +48,26 @@ public class LoadPicture {
     }
 
     public static int getImageProcessWidth(Activity activity) {
+        int result = 500;
+        if(widthImageProcess ==-1 && activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
 
-        return (int) Math.round(getSize(activity).x * 0.33);
+            result = (int) Math.round(getSize(activity).x * 0.33);
+            widthImageProcess = result;
+        }
+
+        return result;
     }
 
     public static int getImageProcessHeight(Activity activity) {
 
-        return (int) Math.round(getSize(activity).y * 0.25);
+        int result = 600;
+        if(heightImageProcess ==-1 && activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+
+            result =(int) Math.round(getSize(activity).y * 0.25);
+            heightImageProcess = result;
+        }
+
+        return result;
     }
 
     public static void setPictureFromFile(String photoPath, ImageView imageView, int reqWidth, int reqHeight) {

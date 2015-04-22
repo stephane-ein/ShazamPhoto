@@ -83,6 +83,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         ADMScrollView scrollView = (ADMScrollView) findViewById(R.id.adm_scrollview);
         gridView = (GridView) findViewById(R.id.gridView_nearestMonuments);
         TextView title = (TextView) findViewById(R.id.adm_title);
+        TextView description = (TextView) findViewById(R.id.adm_textview_description);
         nbVisitors = (TextView) findViewById(R.id.adm_nb_visitor);
         nbLikes = (TextView) findViewById(R.id.adm_nb_likes);
         noNearestMonument = (TextView) findViewById(R.id.adm_textview_nonearestmonument);
@@ -99,6 +100,7 @@ public class DetailMonument extends ActionBarActivity implements ScrollViewListe
         setColumnWidthView(getResources().getConfiguration().orientation);
 
         setTitle("");
+        description.setText(monument.getDescription());
 
         if(monument.getPhotoPathLocal() == null || monument.getPhotoPathLocal().isEmpty()){
             SaveImageURLTask saveImageURLTask;

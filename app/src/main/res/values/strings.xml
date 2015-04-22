@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SPhoto</string>
+    <string name="app_name">Vara</string>
     <string name="action_settings">Clear the cache</string>
     <string name="about">An application under development</string>
     <string name="search_hint">Search a monument...</string>

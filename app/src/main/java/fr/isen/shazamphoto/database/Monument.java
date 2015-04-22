@@ -29,6 +29,7 @@ public class Monument implements Serializable {
     private int liked;
     private boolean isFirstCircuit = false;
     private boolean isSelectedCircuit = false;
+    private int distanceToDest = 0;
 
     public static final String NAME_SERIALIZABLE = "fr.isen.shazamphoto.database.monument_serializable";
 
@@ -322,6 +323,14 @@ public class Monument implements Serializable {
 
     public void setSelectedCircuit(boolean isSelectedCircuit) {
         this.isSelectedCircuit = isSelectedCircuit;
+    }
+
+    public int getDistanceToDest() {
+        return distanceToDest;
+    }
+
+    public void setDistanceToDest(int distanceToDest) {
+        this.distanceToDest = distanceToDest;
     }
 }
 

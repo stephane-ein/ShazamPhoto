@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import fr.isen.shazamphoto.ui.ItemUtils.UpdateMonumentItem;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentsByName;
 import fr.isen.shazamphoto.utils.Images.LoadPicture;
+import fr.isen.shazamphoto.utils.Sort;
 import fr.isen.shazamphoto.utils.UpdateMonument.AddDescriptorsKeyPointsTask;
 
 public class PromptNameMonument extends Fragment implements SearchableItem, SearchMonumentsByLocalization, SearchLocalizationItem,
@@ -47,6 +49,7 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
     private LinearLayout llProgessBar;
     private ArrayList<Monument> monuments;
     private ModelNavigation modelNavigation;
+    private Localization localization1;
 
     public PromptNameMonument() {
     }
@@ -148,6 +151,7 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
 
     @Override
     public void monumentsFoundByLocalization(ArrayList<Monument> monuments) {
+        if(monument.getPhotoPathLocal() != null) Sort.sortArrayMonument(monument.getLocalization(), monuments);
         this.monuments = monuments;
         NearestListAdapter adapter = new NearestListAdapter(getActivity(), monuments,  monument.getLocalization());
         listView.setAdapter(adapter);
@@ -158,7 +162,8 @@ public class PromptNameMonument extends Fragment implements SearchableItem, Sear
     public void foundLocalization(EventLocalizationFound eventLocalizationFound) {
         // Localization has been retrieved thanks to the network
         locateManager.stopListening();
-        Localization localization1 = eventLocalizationFound.getLocalization();
+        localization1 = eventLocalizationFound.getLocalization();
+        Log.v("Shazam", "PNM localization : "+localization1);
         GetMonumentByLocalization getMonumentByLocalization = new GetMonumentByLocalization(this, getActivity(),
                 localization1.getLatitude(),localization1.getLongitude());
         getMonumentByLocalization.execute();

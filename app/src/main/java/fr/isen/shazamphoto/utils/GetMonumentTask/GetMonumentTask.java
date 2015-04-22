@@ -40,6 +40,8 @@ public abstract class GetMonumentTask extends InternetTask<String, Void, EventIn
 
         JSONObject jsonResponse = null;
         boolean network = false;
+
+        Log.v("Shazam", "Get Monument task doInBackground : "+urlWithArguments);
         try {
             network = checkNetwork();
             if(network){
@@ -55,6 +57,8 @@ public abstract class GetMonumentTask extends InternetTask<String, Void, EventIn
                     result.append(line);
                 }
                 jsonResponse = new JSONObject(result.toString());
+
+                Log.v("Shazam", "Get Monument task : "+urlWithArguments);
             }
         } catch (Exception e) {
             e.printStackTrace();

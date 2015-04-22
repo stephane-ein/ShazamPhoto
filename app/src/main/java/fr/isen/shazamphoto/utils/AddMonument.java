@@ -32,12 +32,6 @@ public class AddMonument extends AsyncTask<Monument, Void, Boolean> {
         Boolean returnValue = false;
         try {
             File file = new File(monument.getPhotoPath());
-/*
-            FileOutputStream outputStream = new FileOutputStream(file);
-            Bitmap image = LoadPicture.getPictureFromFile(monument.getPhotoPath(), 700, 700);
-            Log.v("Shazam", "AM bitmap: "+image);
-            image.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
-*/
 
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost("http://"+ConfigurationShazam.IP_SERVER+"/shazam/api.php");

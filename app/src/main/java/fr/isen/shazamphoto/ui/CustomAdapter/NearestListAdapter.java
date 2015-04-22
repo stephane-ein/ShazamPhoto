@@ -102,7 +102,7 @@ public class NearestListAdapter extends BaseAdapter {
 
             // Set the number of visitor and the distance between the monument and the user
             visitor.setText(Integer.valueOf(m.getNbVisitors()).toString() + " tags");
-            Localization destionLocalization = m.getLocalization();
+           /* Localization destionLocalization = m.getLocalization();
             float[] result = new float[3];
             if(destionLocalization != null){
                 Location.distanceBetween(
@@ -110,7 +110,8 @@ public class NearestListAdapter extends BaseAdapter {
                         localizationUser.getLatitude(), localizationUser.getLongitude(),
                         result);
                 distance.setText("to "+Integer.valueOf((int)result[0]).toString()+" m");
-            }
+            }*/
+            distance.setText("to "+m.getDistanceToDest()+" m");
 
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.lrnm_linearlayout);
             if(m.isFirstCircuit()){

@@ -34,6 +34,7 @@ import fr.isen.shazamphoto.utils.FunctionsDB;
 import fr.isen.shazamphoto.utils.GetMonumentTask.GetMonumentByLocalization;
 import fr.isen.shazamphoto.utils.Little.Little;
 import fr.isen.shazamphoto.utils.Little.Point;
+import fr.isen.shazamphoto.utils.Sort;
 
 public class NearestMonumentsFragment extends Fragment implements SearchLocalizationItem,
         SearchMonumentsByLocalization {
@@ -181,6 +182,8 @@ public class NearestMonumentsFragment extends Fragment implements SearchLocaliza
 
         //Add the monuments in the db
         FunctionsDB.addMoumentsToDB(monuments, getActivity());
+        // Sort the list
+        Sort.sortArrayMonument(localization, monuments);
         // Display the list view
         this.monumentsNearest = monuments;
         this.monuments = monuments;

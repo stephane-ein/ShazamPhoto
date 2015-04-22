@@ -1,6 +1,7 @@
 package fr.isen.shazamphoto.utils.GetMonumentTask;
 
 import android.app.Activity;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,6 +23,7 @@ public class GetMonumentsByName extends GetMonumentTask {
         searchName = searchName.replace(" ", "+");
         setUrlWithArguments("n="+searchName);
         this.searchName = searchName;
+        Log.v("Shazam", "GetMonumentTask searchName : "+searchName);
     }
 
     public void onPostExecute(EventInternetTask result) {
@@ -42,6 +44,7 @@ public class GetMonumentsByName extends GetMonumentTask {
             }
 
             this.searchableItem.onPostSearch(monuments, searchName);
+            Log.v("Shazam", "GMBN name : "+searchName+" found : "+monuments.size());
         }
     }
 }

@@ -159,12 +159,13 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textview_descirption"
+                    android:id="@+id/adm_textview_description"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/abc_text_size_body_2_material"
                     android:layout_marginTop="@dimen/abc_text_size_body_2_material"
                     android:fontFamily="sans-serif-thin"
+                    android:maxLines="6"
                     android:text="@string/description_nofound"
                     android:textSize="@dimen/abc_text_size_body_2_material" />
             </LinearLayout>
