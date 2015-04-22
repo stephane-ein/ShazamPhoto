@@ -22,7 +22,7 @@ import fr.isen.shazamphoto.database.Monument;
 public class LoadPicture {
 
     public static int widthImageProcess = -1;
-    public static int heightImageProcess;
+    public static int heightImageProcess = -1;
 
     public static Point getSize(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
